@@ -64,7 +64,22 @@ apps/kamigami-zukan/index.html をブラウザで開く
 
 ## 共有する
 
-### 1. 公開リンク（Artifact）
+### 1. 一般公開URL（GitHub Pages）
+
+```
+https://tomoyuki0168.github.io/-/kamigami-zukan/
+```
+
+誰でも開ける。`.github/workflows/pages-kamigami.yml` が、
+このリポジトリの `apps/kamigami-zukan/**` への変更を検知して自動で更新する。
+
+> **注意 — このリポジトリの Pages には先客がいる。**
+> ルビカメラが `gh-pages` ブランチの直下を使っており、その公開処理は
+> ブランチを force push で丸ごと入れ替える。図鑑は `/kamigami-zukan/` 配下に
+> 置いて共存させているが、**ルビカメラが次に公開したときこの配下は消える。**
+> 恒久的には両者の公開処理を1本に統合する必要がある（未着手）。
+
+### 2. 限定リンク（Artifact）
 
 そのままブラウザで開けるURL。相手にリンクを送るだけでよい。
 
@@ -75,7 +90,7 @@ https://claude.ai/code/artifact/a689ba2b-a210-45dd-881b-56a64466d62e
 既定は非公開で、オーナーがページの共有メニューから明示的に共有した相手だけが開ける。
 更新するときは `node build.js` でビルドし直し、同じURLへ再公開する。
 
-### 2. 1ファイルのHTMLを渡す
+### 3. 1ファイルのHTMLを渡す
 
 ```bash
 node build.js        # → dist/kamigami-zukan.html（約190KB）
@@ -85,7 +100,7 @@ CSS・JS・データをすべて1ファイルに流し込んだ完全版。**外
 メール添付・USB・社内共有フォルダのいずれでも、オフラインのまま同じように動く。
 相手にインストールも設定も要らない。
 
-### 3. 社内・自社サイトに置く
+### 4. 別のサーバに置く
 
 `apps/kamigami-zukan/` をディレクトリごと静的ホスティングに上げるだけ。
 サーバ側の設定・ビルド工程は不要。
