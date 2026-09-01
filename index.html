@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="ja" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>天津神・国津神 図鑑</title>
+  <meta name="description" content="『古事記』『日本書紀』に記された天津神・国津神を、系譜・神話・ご利益・祀られる社から引ける図鑑。">
+  <link rel="stylesheet" href="assets/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⛩️</text></svg>">
+</head>
+<body>
+  <a class="skip-link" href="#results">本文へスキップ</a>
+
+  <header class="masthead">
+    <div class="masthead__inner">
+      <div class="brand">
+        <span class="brand__mark" aria-hidden="true">⛩</span>
+        <div class="brand__text">
+          <h1>天津神・国津神 図鑑</h1>
+          <p>記紀にあらわれる神々を、系譜と物語からたどる</p>
+        </div>
+      </div>
+      <div class="masthead__actions">
+        <button id="randomBtn" class="btn btn--ghost" type="button">
+          <span aria-hidden="true">🎴</span> 今日の一柱
+        </button>
+        <button id="themeBtn" class="btn btn--icon" type="button" aria-label="配色を切り替える" title="配色を切り替える">
+          <span class="theme-icon" aria-hidden="true"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="controls" aria-label="検索と絞り込み">
+      <div class="controls__inner">
+        <div class="searchbox">
+          <span class="searchbox__icon" aria-hidden="true">🔍</span>
+          <input id="search" type="search" autocomplete="off" spellcheck="false"
+                 placeholder="神名・かな・神社・ご利益・神話で検索（/ で移動）"
+                 aria-label="検索">
+          <button id="clearSearch" class="searchbox__clear" type="button" aria-label="検索語を消す" hidden>✕</button>
+        </div>
+
+        <div class="filters">
+          <div class="filter-row" role="group" aria-label="神格の区分">
+            <span class="filter-row__label">区分</span>
+            <div id="groupFilters" class="chips"></div>
+          </div>
+          <div class="filter-row" role="group" aria-label="ご利益">
+            <span class="filter-row__label">ご利益</span>
+            <div id="benefitFilters" class="chips chips--scroll"></div>
+          </div>
+          <div class="filter-row" role="group" aria-label="神話">
+            <span class="filter-row__label">神話</span>
+            <div id="mythFilters" class="chips chips--scroll"></div>
+          </div>
+        </div>
+
+        <div class="statusbar">
+          <p id="count" class="count" role="status" aria-live="polite"></p>
+          <div class="statusbar__right">
+            <label class="sortlabel" for="sort">並び順</label>
+            <select id="sort">
+              <option value="canonical">記紀の順</option>
+              <option value="kana">五十音順</option>
+              <option value="group">区分順</option>
+            </select>
+            <button id="resetBtn" class="btn btn--text" type="button">条件をリセット</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="results" class="results" aria-label="神々の一覧">
+      <div id="grid" class="grid"></div>
+      <p id="empty" class="empty" hidden>
+        該当する神はいません。<br><span>検索語を短くするか、条件をリセットしてください。</span>
+      </p>
+    </section>
+
+    <section class="about">
+      <h2>この図鑑について</h2>
+      <div class="about__grid">
+        <div>
+          <h3>天津神（あまつかみ）</h3>
+          <p>高天原に生まれ、あるいは高天原から地上へ降った神々。天照大御神を中心とする、いわば「天の系譜」です。天孫降臨によって地上を治める側に立ちました。</p>
+        </div>
+        <div>
+          <h3>国津神（くにつかみ）</h3>
+          <p>葦原中国（＝地上）に土着する神々。大国主神を筆頭に、山・海・草木・穀物といった土地そのものに根ざします。国譲りによって天津神に地上を明け渡しました。</p>
+        </div>
+        <div>
+          <h3>別天津神・神世七代</h3>
+          <p>天地開闢の直後に成った、天津神よりさらに古い層の神々。姿を持たず物語にも現れませんが、後の神道理論では宇宙の根源に位置づけられます。</p>
+        </div>
+      </div>
+      <p class="about__note">
+        典拠は『古事記』『日本書紀』および各社の社伝。神名の表記は原則『古事記』に従い、異表記は各項の「別名」に併記しています。
+        区分は記紀の文脈にもとづく一般的な分類であり、須佐之男命のように複数の性格をあわせ持つ神もいます。
+      </p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>天津神・国津神 図鑑 — 静的サイト（ビルド不要）。<code>index.html</code> をブラウザで開くだけで動きます。</p>
+  </footer>
+
+  <!-- 詳細ダイアログ -->
+  <div id="overlay" class="overlay" hidden>
+    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetName">
+      <button id="sheetClose" class="sheet__close" type="button" aria-label="閉じる">✕</button>
+      <div id="sheetBody" class="sheet__body"></div>
+      <nav class="sheet__nav">
+        <button id="prevBtn" class="btn btn--ghost" type="button">← 前の神</button>
+        <button id="nextBtn" class="btn btn--ghost" type="button">次の神 →</button>
+      </nav>
+    </div>
+  </div>
+
+  <script src="data/deities.js"></script>
+  <script src="assets/app.js"></script>
+</body>
+</html>
