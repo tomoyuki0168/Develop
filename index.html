@@ -17,7 +17,7 @@
         <span class="brand__mark" aria-hidden="true">⛩</span>
         <div class="brand__text">
           <h1>天津神・国津神 図鑑</h1>
-          <p>記紀にあらわれる神々を、系譜と物語からたどる</p>
+          <p>記紀の神々を、名前・別名・ご利益・神社から引く</p>
         </div>
       </div>
       <div class="masthead__actions">
@@ -34,13 +34,21 @@
   <main>
     <section class="controls" aria-label="検索と絞り込み">
       <div class="controls__inner">
-        <div class="searchbox">
-          <span class="searchbox__icon" aria-hidden="true">🔍</span>
-          <input id="search" type="search" autocomplete="off" spellcheck="false"
-                 placeholder="神名・かな・神社・ご利益・神話で検索（/ で移動）"
-                 aria-label="検索">
-          <button id="clearSearch" class="searchbox__clear" type="button" aria-label="検索語を消す" hidden>✕</button>
+        <div class="searchwrap">
+          <div class="searchbox">
+            <span class="searchbox__icon" aria-hidden="true">🔍</span>
+            <input id="search" type="search" autocomplete="off" spellcheck="false"
+                   placeholder="神様の名前を入力（例: おおくにぬし / 大黒天 / 出雲大社 / 縁結び）"
+                   aria-label="神名で検索" role="combobox" aria-expanded="false"
+                   aria-autocomplete="list" aria-controls="suggest">
+            <button id="clearSearch" class="searchbox__clear" type="button" aria-label="検索語を消す" hidden>✕</button>
+          </div>
+          <ul id="suggest" class="suggest" role="listbox" aria-label="神名の候補" hidden></ul>
         </div>
+        <p class="searchhint">
+          神名・かな・ローマ字・<b>別名</b>・<b>ご利益</b>・<b>主な神社</b>・神話・解説文をまとめて検索します。
+          <kbd>/</kbd> で入力欄へ、<kbd>↑</kbd><kbd>↓</kbd> で候補選択、<kbd>Enter</kbd> でその神を開きます。
+        </p>
 
         <div class="filters">
           <div class="filter-row" role="group" aria-label="神格の区分">
@@ -60,6 +68,10 @@
         <div class="statusbar">
           <p id="count" class="count" role="status" aria-live="polite"></p>
           <div class="statusbar__right">
+            <div class="viewtoggle" role="group" aria-label="表示形式">
+              <button id="viewCard" class="viewtoggle__btn" type="button" aria-pressed="true">カード</button>
+              <button id="viewTable" class="viewtoggle__btn" type="button" aria-pressed="false">一覧表</button>
+            </div>
             <label class="sortlabel" for="sort">並び順</label>
             <select id="sort">
               <option value="canonical">記紀の順</option>
@@ -74,6 +86,17 @@
 
     <section id="results" class="results" aria-label="神々の一覧">
       <div id="grid" class="grid"></div>
+      <div id="tableWrap" class="tablewrap" hidden>
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">神名</th><th scope="col">区分</th><th scope="col">別名</th>
+              <th scope="col">ご利益</th><th scope="col">主な神社</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
       <p id="empty" class="empty" hidden>
         該当する神はいません。<br><span>検索語を短くするか、条件をリセットしてください。</span>
       </p>
@@ -96,6 +119,8 @@
         </div>
       </div>
       <p class="about__note">
+        <b>収録範囲</b>は『古事記』『日本書紀』の神代から神武東征まで、および『出雲国風土記』『古語拾遺』
+        『大祓詞』に見える神々です。菅原道真・応神天皇など、人が神として祀られた「人神」は収めていません。<br>
         典拠は『古事記』『日本書紀』および各社の社伝。神名の表記は原則『古事記』に従い、異表記は各項の「別名」に併記しています。
         区分は記紀の文脈にもとづく一般的な分類であり、須佐之男命のように複数の性格をあわせ持つ神もいます。
       </p>
