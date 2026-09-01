@@ -1,0 +1,3197 @@
+<title>天津神・国津神 図鑑</title>
+<style>
+/* ── 天津神・国津神 図鑑 ─────────────────────────────
+   配色は和の伝統色から: 墨(sumi) / 生成り(kinari) / 朱(shu) / 金(kin) / 藍(ai)
+   ────────────────────────────────────────────── */
+
+:root {
+  color-scheme: light;
+
+  --kinari: #f6f1e7;
+  --washi:  #fffdf8;
+  --sumi:   #211d1a;
+  --sumi-2: #4a423b;
+  --sumi-3: #7d7268;
+  --keisen: #e2d8c7;
+  --keisen-2: #efe7d8;
+
+  --shu:    #b7332c;
+  --shu-dim:#8e2822;
+  --kin:    #a8862b;
+  --ai:     #2c4f76;
+  --matsu:  #3c6255;
+  --murasaki:#5c4b78;
+
+  --bg: var(--kinari);
+  --surface: var(--washi);
+  --surface-2: #fbf7ef;
+  --text: var(--sumi);
+  --text-2: var(--sumi-2);
+  --text-3: var(--sumi-3);
+  --line: var(--keisen);
+  --line-soft: var(--keisen-2);
+  --accent: var(--shu);
+  --accent-text: #fff;
+
+  --shadow-sm: 0 1px 2px rgba(33,29,26,.06), 0 2px 8px rgba(33,29,26,.05);
+  --shadow-md: 0 4px 12px rgba(33,29,26,.09), 0 12px 32px rgba(33,29,26,.08);
+  --shadow-lg: 0 12px 28px rgba(33,29,26,.16), 0 40px 80px rgba(33,29,26,.18);
+
+  --r-sm: 6px;
+  --r-md: 12px;
+  --r-lg: 18px;
+
+  --serif: "Hiragino Mincho ProN", "Yu Mincho", "YuMincho", "Noto Serif JP", "Songti SC", serif;
+  --sans: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", "Noto Sans JP", system-ui, sans-serif;
+
+  --g-koto:  var(--murasaki);
+  --g-nanayo:var(--ai);
+  --g-ama:   var(--shu);
+  --g-kuni:  var(--matsu);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #14120f;
+    --surface: #1d1a16;
+    --surface-2: #232019;
+    --text: #efe7d8;
+    --text-2: #c8bda9;
+    --text-3: #968b79;
+    --line: #322d25;
+    --line-soft: #2a2620;
+    --accent: #d4645b;
+    --accent-text: #14120f;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,.4);
+    --shadow-md: 0 4px 12px rgba(0,0,0,.45);
+    --shadow-lg: 0 12px 28px rgba(0,0,0,.55), 0 40px 80px rgba(0,0,0,.5);
+    --g-koto:  #a48fd0;
+    --g-nanayo:#7ba7d8;
+    --g-ama:   #e0796f;
+    --g-kuni:  #79b39c;
+    --kin: #d8b455;
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #14120f;
+  --surface: #1d1a16;
+  --surface-2: #232019;
+  --text: #efe7d8;
+  --text-2: #c8bda9;
+  --text-3: #968b79;
+  --line: #322d25;
+  --line-soft: #2a2620;
+  --accent: #d4645b;
+  --accent-text: #14120f;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.4);
+  --shadow-md: 0 4px 12px rgba(0,0,0,.45);
+  --shadow-lg: 0 12px 28px rgba(0,0,0,.55), 0 40px 80px rgba(0,0,0,.5);
+  --g-koto:  #a48fd0;
+  --g-nanayo:#7ba7d8;
+  --g-ama:   #e0796f;
+  --g-kuni:  #79b39c;
+  --kin: #d8b455;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(circle at 12% -5%, color-mix(in srgb, var(--accent) 7%, transparent), transparent 45%),
+    radial-gradient(circle at 92% 0%, color-mix(in srgb, var(--kin) 9%, transparent), transparent 40%);
+  background-attachment: fixed;
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, .serif { font-family: var(--serif); font-weight: 600; }
+
+.skip-link {
+  position: absolute; left: -9999px; top: 0;
+  background: var(--accent); color: var(--accent-text);
+  padding: 10px 16px; z-index: 100; border-radius: 0 0 var(--r-sm) 0;
+}
+.skip-link:focus { left: 0; }
+
+/* ── ヘッダー ───────────────────────────── */
+.masthead {
+  border-bottom: 1px solid var(--line);
+  background: color-mix(in srgb, var(--surface) 85%, transparent);
+  backdrop-filter: blur(10px);
+  position: sticky; top: 0; z-index: 30;
+}
+.masthead__inner {
+  max-width: 1180px; margin: 0 auto; padding: 14px 20px;
+  display: flex; align-items: center; gap: 16px; justify-content: space-between; flex-wrap: wrap;
+}
+.brand { display: flex; align-items: center; gap: 14px; min-width: 0; }
+.brand__mark {
+  font-size: 26px; line-height: 1;
+  width: 46px; height: 46px; flex: none;
+  display: grid; place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--surface-2);
+  color: var(--accent);
+}
+.brand__text h1 {
+  margin: 0; font-size: 21px; letter-spacing: .06em; line-height: 1.3;
+}
+.brand__text p {
+  margin: 2px 0 0; font-size: 12px; color: var(--text-3); letter-spacing: .04em;
+}
+.masthead__actions { display: flex; gap: 8px; align-items: center; }
+
+/* ── ボタン ───────────────────────────── */
+.btn {
+  font: inherit; font-size: 13px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--text-2);
+  padding: 7px 14px;
+  cursor: pointer;
+  transition: background .15s, color .15s, border-color .15s, transform .1s;
+  white-space: nowrap;
+}
+.btn:hover { border-color: var(--accent); color: var(--accent); }
+.btn:active { transform: translateY(1px); }
+.btn:disabled { opacity: .35; cursor: default; border-color: var(--line); color: var(--text-3); }
+.btn:disabled:hover { border-color: var(--line); color: var(--text-3); }
+.btn--icon { width: 36px; height: 36px; padding: 0; display: grid; place-items: center; }
+.btn--text { border: none; background: none; padding: 4px 6px; color: var(--text-3); text-decoration: underline; text-underline-offset: 3px; }
+.btn--text:hover { color: var(--accent); }
+
+.theme-icon::before { content: "☾"; font-size: 15px; }
+:root[data-theme="dark"] .theme-icon::before { content: "☀"; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .theme-icon::before { content: "☀"; }
+  :root[data-theme="dark"] .theme-icon::before { content: "☀"; }
+}
+
+/* ── 検索・絞り込み ─────────────────────── */
+.controls { border-bottom: 1px solid var(--line); background: color-mix(in srgb, var(--surface) 45%, transparent); }
+.controls__inner { max-width: 1180px; margin: 0 auto; padding: 20px; }
+
+.searchbox {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 0 14px;
+  box-shadow: var(--shadow-sm);
+  transition: border-color .15s, box-shadow .15s;
+}
+.searchbox:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 15%, transparent); }
+.searchbox__icon { opacity: .5; font-size: 14px; }
+.searchbox input {
+  flex: 1; min-width: 0;
+  font: inherit; font-size: 15px;
+  border: none; background: none; color: var(--text);
+  padding: 13px 0;
+  outline: none;
+}
+.searchbox input::placeholder { color: var(--text-3); }
+.searchbox input::-webkit-search-cancel-button,
+.searchbox input::-webkit-search-decoration { -webkit-appearance: none; appearance: none; }
+.searchbox__clear {
+  border: none; background: none; cursor: pointer;
+  color: var(--text-3); font-size: 13px; padding: 4px 6px; border-radius: 50%;
+}
+.searchbox__clear:hover { color: var(--accent); background: var(--surface-2); }
+
+.filters { margin-top: 14px; display: grid; gap: 8px; }
+.filter-row { display: flex; align-items: flex-start; gap: 12px; }
+.filter-row__label {
+  flex: none; width: 3.6em; padding-top: 5px;
+  font-size: 11px; letter-spacing: .12em; color: var(--text-3);
+  font-family: var(--serif);
+}
+.chips { display: flex; flex-wrap: wrap; gap: 6px; min-width: 0; }
+.chips--scroll { flex-wrap: wrap; max-height: 105px; overflow-y: auto; padding-right: 4px; }
+.chips--scroll::-webkit-scrollbar { width: 6px; }
+.chips--scroll::-webkit-scrollbar-thumb { background: var(--line); border-radius: 3px; }
+
+.chip {
+  font: inherit; font-size: 12px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--text-2);
+  border-radius: 999px;
+  padding: 4px 11px;
+  cursor: pointer;
+  transition: all .13s;
+  white-space: nowrap;
+}
+.chip:hover { border-color: var(--text-3); color: var(--text); }
+.chip[aria-pressed="true"] {
+  background: var(--accent); border-color: var(--accent); color: var(--accent-text); font-weight: 600;
+}
+.chip__n { opacity: .55; font-size: 11px; margin-left: 4px; }
+.chip[aria-pressed="true"] .chip__n { opacity: .8; }
+
+.statusbar {
+  margin-top: 14px; padding-top: 12px; border-top: 1px dashed var(--line);
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+}
+.count { margin: 0; font-size: 13px; color: var(--text-3); }
+.count b { color: var(--text); font-family: var(--serif); font-size: 16px; margin: 0 2px; }
+.statusbar__right { display: flex; align-items: center; gap: 8px; }
+.sortlabel { font-size: 11px; letter-spacing: .1em; color: var(--text-3); }
+#sort {
+  font: inherit; font-size: 12px;
+  background: var(--surface); color: var(--text);
+  border: 1px solid var(--line); border-radius: var(--r-sm);
+  padding: 5px 8px; cursor: pointer;
+}
+
+/* ── 一覧 ───────────────────────────── */
+.results { max-width: 1180px; margin: 0 auto; padding: 24px 20px 8px; }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 14px;
+}
+
+.card {
+  position: relative;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 16px 16px 14px;
+  cursor: pointer;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.card::before {
+  content: ""; position: absolute; inset: 0 auto 0 0; width: 3px;
+  background: var(--gc, var(--accent));
+}
+.card:hover, .card:focus-visible {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+  border-color: color-mix(in srgb, var(--gc, var(--accent)) 45%, var(--line));
+  outline: none;
+}
+.card__glyph {
+  position: absolute; right: -6px; top: -14px;
+  font-family: var(--serif); font-size: 76px; line-height: 1;
+  color: var(--gc, var(--accent)); opacity: .07;
+  pointer-events: none; user-select: none;
+}
+.card__group {
+  font-size: 10px; letter-spacing: .14em;
+  color: var(--gc, var(--accent));
+  font-family: var(--serif);
+}
+.card__name { margin: 0; font-size: 18px; line-height: 1.4; font-family: var(--serif); letter-spacing: .02em; }
+.card__kana { font-size: 11px; color: var(--text-3); letter-spacing: .08em; margin-top: -4px; }
+.card__epithet {
+  margin: 0; font-size: 12.5px; color: var(--text-2); line-height: 1.65;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.card__tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: auto; padding-top: 6px; }
+.tag {
+  font-size: 10.5px; letter-spacing: .04em;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  padding: 1px 7px; color: var(--text-3);
+  background: var(--surface-2);
+}
+
+.empty { text-align: center; padding: 64px 20px; color: var(--text-3); font-family: var(--serif); }
+.empty span { font-size: 13px; font-family: var(--sans); }
+
+/* ── 解説 ───────────────────────────── */
+.about { max-width: 1180px; margin: 40px auto 0; padding: 32px 20px; border-top: 1px solid var(--line); }
+.about h2 { margin: 0 0 20px; font-size: 16px; letter-spacing: .1em; color: var(--text-2); }
+.about__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; }
+.about__grid h3 { margin: 0 0 6px; font-size: 15px; color: var(--accent); }
+.about__grid p { margin: 0; font-size: 13px; color: var(--text-2); }
+.about__note { margin: 24px 0 0; font-size: 12px; color: var(--text-3); border-left: 2px solid var(--line); padding-left: 14px; }
+
+.footer { max-width: 1180px; margin: 0 auto; padding: 24px 20px 48px; }
+.footer p { margin: 0; font-size: 11.5px; color: var(--text-3); }
+.footer code { background: var(--surface-2); padding: 1px 5px; border-radius: 4px; border: 1px solid var(--line); }
+
+/* ── 詳細シート ─────────────────────────── */
+/* hidden 属性を display 指定より優先させる（指定しないと不可視の膜が全画面のクリックを奪う） */
+.overlay[hidden] { display: none !important; }
+
+.overlay {
+  position: fixed; inset: 0; z-index: 50;
+  background: color-mix(in srgb, var(--sumi) 55%, transparent);
+  backdrop-filter: blur(3px);
+  display: grid; place-items: center;
+  padding: 20px;
+  animation: fade .18s ease;
+}
+@keyframes fade { from { opacity: 0 } to { opacity: 1 } }
+@keyframes rise { from { opacity: 0; transform: translateY(14px) } to { opacity: 1; transform: none } }
+
+.sheet {
+  position: relative;
+  width: min(760px, 100%);
+  max-height: min(88vh, 900px);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-lg);
+  display: flex; flex-direction: column;
+  animation: rise .22s cubic-bezier(.2,.7,.3,1);
+}
+.sheet__close {
+  position: absolute; right: 12px; top: 12px; z-index: 2;
+  width: 32px; height: 32px; border-radius: 50%;
+  border: 1px solid var(--line); background: var(--surface);
+  color: var(--text-3); cursor: pointer; font-size: 13px;
+}
+.sheet__close:hover { color: var(--accent); border-color: var(--accent); }
+.sheet__body { overflow-y: auto; padding: 30px 32px 24px; }
+.sheet__nav {
+  border-top: 1px solid var(--line);
+  padding: 12px 16px;
+  display: flex; justify-content: space-between; gap: 8px;
+  background: var(--surface-2);
+  border-radius: 0 0 var(--r-lg) var(--r-lg);
+}
+
+.d-head { border-bottom: 2px solid var(--gc, var(--accent)); padding-bottom: 16px; margin-bottom: 20px; }
+.d-group {
+  display: inline-block; font-size: 10.5px; letter-spacing: .16em; font-family: var(--serif);
+  color: var(--accent-text); background: var(--gc, var(--accent));
+  padding: 2px 10px; border-radius: 999px; margin-bottom: 10px;
+}
+.d-name { margin: 0; font-size: 30px; line-height: 1.3; letter-spacing: .04em; font-family: var(--serif); }
+.d-kana { font-size: 12px; letter-spacing: .16em; color: var(--text-3); margin-top: 4px; }
+.d-romaji { font-size: 11px; letter-spacing: .1em; color: var(--text-3); font-style: italic; }
+.d-epithet {
+  margin: 14px 0 0; font-family: var(--serif); font-size: 15.5px; color: var(--text);
+  border-left: 3px solid var(--gc, var(--accent)); padding-left: 12px; line-height: 1.7;
+}
+
+.d-desc { margin: 0 0 20px; font-size: 14.5px; line-height: 1.95; }
+
+.d-trivia {
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 14px 16px; margin-bottom: 24px;
+}
+.d-trivia h4 { margin: 0 0 4px; font-size: 11px; letter-spacing: .14em; color: var(--kin); font-family: var(--serif); }
+.d-trivia p { margin: 0; font-size: 13px; color: var(--text-2); line-height: 1.8; }
+
+.d-rows { display: grid; gap: 0; }
+.d-row {
+  display: grid; grid-template-columns: 5.5em 1fr; gap: 14px;
+  padding: 11px 0; border-top: 1px solid var(--line-soft);
+  align-items: baseline;
+}
+.d-row__k { font-size: 11.5px; letter-spacing: .1em; color: var(--text-3); font-family: var(--serif); }
+.d-row__v { font-size: 13.5px; color: var(--text-2); }
+.d-row__v ul { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 6px; }
+
+.pill {
+  font: inherit; font-size: 12px;
+  border: 1px solid var(--line); background: var(--surface-2);
+  color: var(--text-2); border-radius: 999px; padding: 2px 10px;
+}
+.pill--link { cursor: pointer; transition: all .13s; }
+.pill--link:hover { border-color: var(--accent); color: var(--accent); background: color-mix(in srgb, var(--accent) 8%, var(--surface-2)); }
+.pill--benefit { border-color: color-mix(in srgb, var(--kin) 40%, var(--line)); color: color-mix(in srgb, var(--kin) 75%, var(--text-2)); }
+.pill--none { opacity: .5; border-style: dashed; }
+
+@media (max-width: 640px) {
+  .brand__text h1 { font-size: 18px; }
+  .brand__text p { display: none; }
+  .controls__inner, .results { padding-left: 14px; padding-right: 14px; }
+  .filter-row { flex-direction: column; gap: 4px; }
+  .filter-row__label { width: auto; padding-top: 0; }
+  .grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; }
+  .card { padding: 13px; }
+  .card__name { font-size: 15.5px; }
+  .overlay { padding: 0; }
+  .sheet { max-height: 100vh; height: 100%; border-radius: 0; border: none; }
+  .sheet__body { padding: 24px 18px 16px; }
+  .sheet__nav { border-radius: 0; }
+  .d-name { font-size: 24px; }
+  .d-row { grid-template-columns: 1fr; gap: 2px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+  .card:hover { transform: none; }
+}
+
+/* ── 神名サジェスト ─────────────────────── */
+.searchwrap { position: relative; }
+
+.suggest {
+  position: absolute; left: 0; right: 0; top: calc(100% + 6px); z-index: 25;
+  margin: 0; padding: 5px; list-style: none;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-md);
+  max-height: 340px; overflow-y: auto;
+}
+.suggest__item {
+  display: flex; align-items: baseline; gap: 9px; flex-wrap: wrap;
+  padding: 8px 11px; border-radius: var(--r-sm); cursor: pointer;
+}
+.suggest__item:hover, .suggest__item[aria-selected="true"] {
+  background: color-mix(in srgb, var(--accent) 11%, var(--surface));
+}
+.suggest__name { font-family: var(--serif); font-size: 15px; }
+.suggest__kana { font-size: 11px; color: var(--text-3); letter-spacing: .06em; }
+.suggest__via {
+  font-size: 11px; color: var(--accent);
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--line));
+  border-radius: var(--r-sm); padding: 0 6px;
+}
+.suggest__group { margin-left: auto; font-size: 10.5px; color: var(--text-3); font-family: var(--serif); letter-spacing: .1em; }
+
+.searchhint { margin: 9px 2px 0; font-size: 11.5px; color: var(--text-3); line-height: 1.9; }
+.searchhint b { color: var(--text-2); font-weight: 600; }
+.searchhint kbd {
+  font-family: var(--sans); font-size: 10.5px;
+  border: 1px solid var(--line); border-bottom-width: 2px;
+  border-radius: 4px; padding: 0 5px; margin: 0 1px;
+  background: var(--surface); color: var(--text-2);
+}
+
+/* ── カード内の 別名／ご利益／主な社 ───────── */
+.card__metas { display: grid; gap: 3px; margin-top: auto; padding-top: 9px; }
+.card__meta { display: flex; gap: 7px; align-items: baseline; }
+.card__metak {
+  flex: none; width: 3.4em; font-size: 10px; letter-spacing: .06em;
+  color: var(--text-3); font-family: var(--serif);
+}
+.card__metav { display: flex; flex-wrap: wrap; gap: 3px; min-width: 0; }
+
+.mini {
+  font-size: 10.5px; line-height: 1.7; letter-spacing: .02em;
+  border: 1px solid var(--line); border-radius: var(--r-sm);
+  padding: 0 6px; color: var(--text-2); background: var(--surface-2);
+  white-space: nowrap; max-width: 14em; overflow: hidden; text-overflow: ellipsis;
+}
+.mini--benefit { border-color: color-mix(in srgb, var(--kin) 38%, var(--line)); color: color-mix(in srgb, var(--kin) 70%, var(--text-2)); }
+.mini--more { border-style: dashed; color: var(--text-3); }
+.mini--none { border: none; background: none; color: var(--text-3); }
+
+.card__reason {
+  margin-top: 8px; padding-top: 7px; border-top: 1px dashed var(--line);
+  font-size: 10.5px; color: var(--accent);
+}
+
+/* ── 表示形式の切り替え ───────────────── */
+.viewtoggle { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; background: var(--surface); }
+.viewtoggle__btn {
+  font: inherit; font-size: 11.5px; border: none; background: none;
+  color: var(--text-3); padding: 5px 12px; cursor: pointer;
+}
+.viewtoggle__btn[aria-pressed="true"] { background: var(--accent); color: var(--accent-text); font-weight: 600; }
+.viewtoggle__btn:not([aria-pressed="true"]):hover { color: var(--accent); }
+
+/* ── 一覧表 ───────────────────────────── */
+.tablewrap {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+}
+.table { border-collapse: collapse; width: 100%; min-width: 760px; font-size: 13px; }
+.table thead th {
+  position: sticky; top: 0; z-index: 1;
+  text-align: left; font-family: var(--serif); font-size: 11px; letter-spacing: .12em;
+  color: var(--text-3); font-weight: 600;
+  background: var(--surface-2);
+  padding: 10px 14px; border-bottom: 1px solid var(--line); white-space: nowrap;
+}
+.table tbody tr { cursor: pointer; border-bottom: 1px solid var(--line-soft); }
+.table tbody tr:last-child { border-bottom: none; }
+.table tbody tr:hover, .table tbody tr:focus-visible {
+  background: color-mix(in srgb, var(--accent) 7%, var(--surface)); outline: none;
+}
+.table th[scope="row"] { text-align: left; font-weight: 400; padding: 11px 14px; vertical-align: top; white-space: nowrap; }
+.table td { padding: 11px 14px; vertical-align: top; }
+.table td .mini { margin: 0 3px 3px 0; display: inline-block; }
+.t-name { display: block; font-family: var(--serif); font-size: 14.5px; color: var(--text); }
+.t-kana { display: block; font-size: 10.5px; color: var(--text-3); letter-spacing: .06em; }
+.t-group {
+  font-size: 10.5px; font-family: var(--serif); letter-spacing: .08em;
+  color: var(--gc, var(--accent)); border: 1px solid currentColor;
+  border-radius: 999px; padding: 1px 8px; white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .searchhint { display: none; }
+  .card__metak { width: 3em; }
+  .viewtoggle__btn { padding: 5px 9px; }
+}
+
+</style>
+<a class="skip-link" href="#results">本文へスキップ</a>
+
+  <header class="masthead">
+    <div class="masthead__inner">
+      <div class="brand">
+        <span class="brand__mark" aria-hidden="true">⛩</span>
+        <div class="brand__text">
+          <h1>天津神・国津神 図鑑</h1>
+          <p>記紀の神々を、名前・別名・ご利益・神社から引く</p>
+        </div>
+      </div>
+      <div class="masthead__actions">
+        <button id="randomBtn" class="btn btn--ghost" type="button">
+          <span aria-hidden="true">🎴</span> 今日の一柱
+        </button>
+        <button id="themeBtn" class="btn btn--icon" type="button" aria-label="配色を切り替える" title="配色を切り替える">
+          <span class="theme-icon" aria-hidden="true"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="controls" aria-label="検索と絞り込み">
+      <div class="controls__inner">
+        <div class="searchwrap">
+          <div class="searchbox">
+            <span class="searchbox__icon" aria-hidden="true">🔍</span>
+            <input id="search" type="search" autocomplete="off" spellcheck="false"
+                   placeholder="神様の名前を入力（例: おおくにぬし / 大黒天 / 出雲大社 / 縁結び）"
+                   aria-label="神名で検索" role="combobox" aria-expanded="false"
+                   aria-autocomplete="list" aria-controls="suggest">
+            <button id="clearSearch" class="searchbox__clear" type="button" aria-label="検索語を消す" hidden>✕</button>
+          </div>
+          <ul id="suggest" class="suggest" role="listbox" aria-label="神名の候補" hidden></ul>
+        </div>
+        <p class="searchhint">
+          神名・かな・ローマ字・<b>別名</b>・<b>ご利益</b>・<b>主な神社</b>・神話・解説文をまとめて検索します。
+          <kbd>/</kbd> で入力欄へ、<kbd>↑</kbd><kbd>↓</kbd> で候補選択、<kbd>Enter</kbd> でその神を開きます。
+        </p>
+
+        <div class="filters">
+          <div class="filter-row" role="group" aria-label="神格の区分">
+            <span class="filter-row__label">区分</span>
+            <div id="groupFilters" class="chips"></div>
+          </div>
+          <div class="filter-row" role="group" aria-label="ご利益">
+            <span class="filter-row__label">ご利益</span>
+            <div id="benefitFilters" class="chips chips--scroll"></div>
+          </div>
+          <div class="filter-row" role="group" aria-label="神話">
+            <span class="filter-row__label">神話</span>
+            <div id="mythFilters" class="chips chips--scroll"></div>
+          </div>
+        </div>
+
+        <div class="statusbar">
+          <p id="count" class="count" role="status" aria-live="polite"></p>
+          <div class="statusbar__right">
+            <div class="viewtoggle" role="group" aria-label="表示形式">
+              <button id="viewCard" class="viewtoggle__btn" type="button" aria-pressed="true">カード</button>
+              <button id="viewTable" class="viewtoggle__btn" type="button" aria-pressed="false">一覧表</button>
+            </div>
+            <label class="sortlabel" for="sort">並び順</label>
+            <select id="sort">
+              <option value="canonical">記紀の順</option>
+              <option value="kana">五十音順</option>
+              <option value="group">区分順</option>
+            </select>
+            <button id="resetBtn" class="btn btn--text" type="button">条件をリセット</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="results" class="results" aria-label="神々の一覧">
+      <div id="grid" class="grid"></div>
+      <div id="tableWrap" class="tablewrap" hidden>
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">神名</th><th scope="col">区分</th><th scope="col">別名</th>
+              <th scope="col">ご利益</th><th scope="col">主な神社</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+      <p id="empty" class="empty" hidden>
+        該当する神はいません。<br><span>検索語を短くするか、条件をリセットしてください。</span>
+      </p>
+    </section>
+
+    <section class="about">
+      <h2>この図鑑について</h2>
+      <div class="about__grid">
+        <div>
+          <h3>天津神（あまつかみ）</h3>
+          <p>高天原に生まれ、あるいは高天原から地上へ降った神々。天照大御神を中心とする、いわば「天の系譜」です。天孫降臨によって地上を治める側に立ちました。</p>
+        </div>
+        <div>
+          <h3>国津神（くにつかみ）</h3>
+          <p>葦原中国（＝地上）に土着する神々。大国主神を筆頭に、山・海・草木・穀物といった土地そのものに根ざします。国譲りによって天津神に地上を明け渡しました。</p>
+        </div>
+        <div>
+          <h3>別天津神・神世七代</h3>
+          <p>天地開闢の直後に成った、天津神よりさらに古い層の神々。姿を持たず物語にも現れませんが、後の神道理論では宇宙の根源に位置づけられます。</p>
+        </div>
+      </div>
+      <p class="about__note">
+        <b>収録範囲</b>は『古事記』『日本書紀』の神代から神武東征まで、および『出雲国風土記』『古語拾遺』
+        『大祓詞』に見える神々です。菅原道真・応神天皇など、人が神として祀られた「人神」は収めていません。<br>
+        典拠は『古事記』『日本書紀』および各社の社伝。神名の表記は原則『古事記』に従い、異表記は各項の「別名」に併記しています。
+        区分は記紀の文脈にもとづく一般的な分類であり、須佐之男命のように複数の性格をあわせ持つ神もいます。
+      </p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>天津神・国津神 図鑑 — 静的サイト（ビルド不要）。<code>index.html</code> をブラウザで開くだけで動きます。</p>
+  </footer>
+
+  <!-- 詳細ダイアログ -->
+  <div id="overlay" class="overlay" hidden>
+    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetName">
+      <button id="sheetClose" class="sheet__close" type="button" aria-label="閉じる">✕</button>
+      <div id="sheetBody" class="sheet__body"></div>
+      <nav class="sheet__nav">
+        <button id="prevBtn" class="btn btn--ghost" type="button">← 前の神</button>
+        <button id="nextBtn" class="btn btn--ghost" type="button">次の神 →</button>
+      </nav>
+    </div>
+  </div>
+
+  <script>
+/**
+ * 天津神・国津神 図鑑 — 神格データ
+ * 出典: 『古事記』『日本書紀』および各社社伝
+ * 表記は原則として『古事記』に従い、異表記は aliases に記載する。
+ */
+const DEITIES = [
+  // ───────────── 別天津神（ことあまつかみ） ─────────────
+  {
+    id: "amenominakanushi",
+    name: "天之御中主神",
+    kana: "アメノミナカヌシノカミ",
+    romaji: "Ame-no-Minakanushi",
+    group: "別天津神",
+    aliases: ["天御中主尊", "妙見菩薩（習合）"],
+    epithet: "天地のはじめに最初に成った、宇宙の中心",
+    tags: ["創世", "根源", "星辰"],
+    benefits: ["厄除け", "開運", "海上安全"],
+    parents: [], spouse: [], children: [],
+    myths: ["天地開闢"],
+    shrines: ["東京大神宮（東京）", "秩父神社（埼玉）", "水天宮（福岡・東京）"],
+    sources: ["古事記 上巻", "日本書紀 神代上（第四の一書）"],
+    description:
+      "天地が初めて分かれたとき、高天原に最初に現れた神。性別を持たず、姿を見せず、すぐに身を隠した「独神（ひとりがみ）」である。神話にはほとんど登場しないが、後世の神道理論では宇宙の根源神として最上位に置かれ、北極星信仰（妙見信仰）と結びついて広く祀られるようになった。",
+    trivia: "物語をほとんど持たないまま最高神とされた稀有な神。中世以降、天の中心＝北極星と重ねられて信仰が拡大した。"
+  },
+  {
+    id: "takamimusuhi",
+    name: "高御産巣日神",
+    kana: "タカミムスヒノカミ",
+    romaji: "Takami-Musuhi",
+    group: "別天津神",
+    aliases: ["高皇産霊尊", "高木神（たかぎのかみ）"],
+    epithet: "高天原の意思決定を司る、生成の力",
+    tags: ["創世", "生成", "司令"],
+    benefits: ["縁結び", "生成発展", "国土安泰"],
+    parents: [], spouse: [], children: ["omoikane", "ameno-oshihomimi"],
+    myths: ["天地開闢", "国譲り", "天孫降臨"],
+    shrines: ["高皇産霊神社（各地）", "東京大神宮（東京）", "安達太良神社（福島）"],
+    sources: ["古事記 上巻", "日本書紀 神代"],
+    description:
+      "「ムスヒ」は物を生み出す霊力を意味する。二番目に成った独神だが、天之御中主神と違い神話の実務に深く関わる。国譲りや天孫降臨の場面では「高木神」の名で天照大御神と並んで指令を出しており、実質的に高天原の作戦司令塔として機能している。",
+    trivia: "神話の後半では天照大御神とほぼ対等に命令を下す。研究者の間では、天照より古い皇祖神だったとする説が根強い。"
+  },
+  {
+    id: "kamimusuhi",
+    name: "神産巣日神",
+    kana: "カミムスヒノカミ",
+    romaji: "Kami-Musuhi",
+    group: "別天津神",
+    aliases: ["神皇産霊尊"],
+    epithet: "死者を蘇らせ、地上の神を助ける母なる力",
+    tags: ["創世", "生成", "再生"],
+    benefits: ["病気平癒", "再生", "五穀豊穣"],
+    parents: [], spouse: [], children: ["sukunabikona"],
+    myths: ["天地開闢", "大国主の復活", "国造り"],
+    shrines: ["出雲大社 摂社（島根）", "神魂神社（島根）", "東京大神宮（東京）"],
+    sources: ["古事記 上巻", "出雲国風土記"],
+    description:
+      "三番目に成った独神。高御産巣日神が高天原側に立つのに対し、この神は地上（出雲）側を助ける。八十神に二度殺された大国主神を蘇らせ、指の間からこぼれ落ちた少名毘古那神を国造りの相棒として送り出した。",
+    trivia: "出雲系神話における最高神格。天孫系のタカミムスヒと対になる存在として描かれる。"
+  },
+  {
+    id: "umashiashikabihikoji",
+    name: "宇摩志阿斯訶備比古遅神",
+    kana: "ウマシアシカビヒコヂノカミ",
+    romaji: "Umashi-Ashikabi-Hikoji",
+    group: "別天津神",
+    aliases: ["可美葦牙彦舅尊"],
+    epithet: "泥沼から萌え出た葦の芽そのもの",
+    tags: ["創世", "生命力", "植物"],
+    benefits: ["生命力向上", "成長", "農耕"],
+    parents: [], spouse: [], children: [],
+    myths: ["天地開闢"],
+    shrines: ["浮嶋神社（愛媛）", "六甲山神社（兵庫）"],
+    sources: ["古事記 上巻", "日本書紀 神代上"],
+    description:
+      "国土がまだ水に浮かぶ脂のように漂っていた頃、葦の芽（葦牙）が泥から勢いよく伸びる、その生命力が神となったもの。「ウマシ」は美しい・立派だの意。混沌から最初に立ち上がる生命エネルギーの象徴である。",
+    trivia: "抽象概念ではなく「春に葦が伸びる情景」そのものを神格化した、日本神話らしい具体的な創世神。"
+  },
+  {
+    id: "amenotokotachi",
+    name: "天之常立神",
+    kana: "アメノトコタチノカミ",
+    romaji: "Ame-no-Tokotachi",
+    group: "別天津神",
+    aliases: ["天常立尊"],
+    epithet: "天を永久に立たしめる、天空の基礎",
+    tags: ["創世", "天空", "根源"],
+    benefits: ["国土安泰", "開運"],
+    parents: [], spouse: [], children: [],
+    myths: ["天地開闢"],
+    shrines: ["駒形神社（岩手）", "御岩神社（茨城）"],
+    sources: ["古事記 上巻", "日本書紀 神代上"],
+    description:
+      "別天津神の五番目、最後に成った独神。「トコタチ」は永久に立ち続けるの意で、天そのものが恒久的に定まったことを表す。次に現れる国之常立神と対になり、天と地の基礎が据えられたことを示す。",
+    trivia: "ここまでの五柱を「別天津神」と呼び、これ以降の神々と明確に区別する。"
+  },
+
+  // ───────────── 神世七代（かみのよななよ） ─────────────
+  {
+    id: "kuninotokotachi",
+    name: "国之常立神",
+    kana: "クニノトコタチノカミ",
+    romaji: "Kuni-no-Tokotachi",
+    group: "神世七代",
+    aliases: ["国常立尊"],
+    epithet: "大地を永久に立たしめる、国土の根本神",
+    tags: ["創世", "大地", "根源"],
+    benefits: ["国土安泰", "厄除け", "家内安全"],
+    parents: [], spouse: [], children: [],
+    myths: ["天地開闢"],
+    shrines: ["熊野速玉大社（和歌山）", "日枝神社（東京）", "玉置神社（奈良）"],
+    sources: ["古事記 上巻", "日本書紀 神代上（本文冒頭）"],
+    description:
+      "神世七代の最初の神。国土が永久に安定して存在することを表す。『日本書紀』の本文では、この神こそが最初に現れた神とされており、『古事記』とは序列が異なる。中世以降は伊勢神道・吉田神道で根源神として重視された。",
+    trivia: "近代の新宗教（大本など）では、封じられた偉大な神として再登場する。神話の外でも生き続けた神。"
+  },
+  {
+    id: "toyokumono",
+    name: "豊雲野神",
+    kana: "トヨクモノノカミ",
+    romaji: "Toyokumono",
+    group: "神世七代",
+    aliases: ["豊斟渟尊"],
+    epithet: "雲が湧き立つ、豊かな野の始まり",
+    tags: ["創世", "大地", "気象"],
+    benefits: ["五穀豊穣", "雨乞い"],
+    parents: [], spouse: [], children: [],
+    myths: ["天地開闢"],
+    shrines: ["御嶽神社（各地）", "英彦山神宮 摂社（福岡）"],
+    sources: ["古事記 上巻", "日本書紀 神代上"],
+    description:
+      "神世七代の二代目、最後の独神。国土に雲が生じ、野が豊かに広がる段階を表す。以降の神は男女一対で成るため、単独で成った神はこの神が最後となる。",
+    trivia: "この神を境に、神話は「独神の時代」から「男女の対の時代」へ移る。生殖による国生みへの転換点。"
+  },
+  {
+    id: "uhijini",
+    name: "宇比地邇神・須比智邇神",
+    kana: "ウヒヂニノカミ・スヒヂニノカミ",
+    romaji: "Uhijini & Suhijini",
+    group: "神世七代",
+    aliases: ["泥土煮尊・沙土煮尊"],
+    epithet: "泥と砂 ― 最初の男女一対",
+    tags: ["創世", "大地", "対偶神"],
+    benefits: ["夫婦円満", "縁結び"],
+    parents: [], spouse: [], children: [],
+    myths: ["天地開闢"],
+    shrines: ["石都々古和気神社（福島）"],
+    sources: ["古事記 上巻", "日本書紀 神代上"],
+    description:
+      "神世七代の三代目。泥（ウヒヂ）と砂（スヒヂ）を表す男女一対の神で、はじめて性別を持った神とされる。国土がまだ固まりきらず、泥と砂が分離していく段階を示す。",
+    trivia: "以後の四代はすべて男女一対。神話が「生成」から「生殖」へ構造を変えていく。"
+  },
+  {
+    id: "tsunuguhi",
+    name: "角杙神・活杙神",
+    kana: "ツノグヒノカミ・イクグヒノカミ",
+    romaji: "Tsunuguhi & Ikuguhi",
+    group: "神世七代",
+    aliases: ["角樴尊・活樴尊"],
+    epithet: "大地に打ち込まれた最初の杭",
+    tags: ["創世", "大地", "対偶神"],
+    benefits: ["土地鎮め", "基礎固め"],
+    parents: [], spouse: [], children: [],
+    myths: ["天地開闢"],
+    shrines: ["熊野速玉大社 摂社（和歌山）"],
+    sources: ["古事記 上巻", "日本書紀 神代上"],
+    description:
+      "神世七代の四代目。「杙（くい）」は地面に打ち込む杭のことで、固まりはじめた大地に最初の芽・柱が立つ様子を表す。生命が地上に根を張る段階の象徴。",
+    trivia: "建築の地鎮祭で杭を打つ所作は、この神々の段階を再現しているとする解釈がある。"
+  },
+  {
+    id: "ootonoji",
+    name: "意富斗能地神・大斗乃弁神",
+    kana: "オホトノヂノカミ・オホトノベノカミ",
+    romaji: "Ootonoji & Ootonobe",
+    group: "神世七代",
+    aliases: ["大戸之道尊・大苫辺尊"],
+    epithet: "住まいの戸口 ― 場所の完成",
+    tags: ["創世", "住居", "対偶神"],
+    benefits: ["家内安全", "住居守護"],
+    parents: [], spouse: [], children: [],
+    myths: ["天地開闢"],
+    shrines: ["石都々古和気神社（福島）"],
+    sources: ["古事記 上巻", "日本書紀 神代上"],
+    description:
+      "神世七代の五代目。「大きな門・戸」を意味し、大地が人の住める「場所」として完成した段階を表す。国土が単なる泥から、住まいを構えうる空間へ変わった。",
+    trivia: "「トノ（殿）」を宮殿と読む説もあり、後の宮づくり神話の伏線とみなされる。"
+  },
+  {
+    id: "omodaru",
+    name: "淤母陀琉神・阿夜訶志古泥神",
+    kana: "オモダルノカミ・アヤカシコネノカミ",
+    romaji: "Omodaru & Ayakashikone",
+    group: "神世七代",
+    aliases: ["面足尊・惶根尊"],
+    epithet: "「顔かたちが満ち足りた」― 完成された姿",
+    tags: ["創世", "美", "対偶神"],
+    benefits: ["容姿端麗", "縁結び", "厄除け"],
+    parents: [], spouse: [], children: [],
+    myths: ["天地開闢"],
+    shrines: ["大鳥大社 摂社（大阪）", "第六天神社（関東各地）"],
+    sources: ["古事記 上巻", "日本書紀 神代上"],
+    description:
+      "神世七代の六代目。「面（おも）足る」＝顔かたちが十分に整った意で、国土と神の姿がついに完成したことを表す。相手の完成された姿に「あや、かしこ（ああ、畏れ多い）」と感嘆する女神と対になる。",
+    trivia: "中世には第六天魔王と習合し、関東一円に「第六天神社」として広く祀られた。"
+  },
+  {
+    id: "izanagi",
+    name: "伊邪那岐命",
+    kana: "イザナギノミコト",
+    romaji: "Izanagi",
+    group: "神世七代",
+    aliases: ["伊弉諾尊", "伊邪那岐大神"],
+    epithet: "国を生み、神を生んだ、はじまりの父",
+    tags: ["創世", "国生み", "祓", "黄泉"],
+    benefits: ["延命長寿", "厄除け", "夫婦円満"],
+    parents: [], spouse: ["izanami"], children: ["amaterasu", "tsukuyomi", "susanoo", "kagutsuchi", "oyamatsumi", "watatsumi", "sumiyoshi"],
+    myths: ["国生み", "神生み", "黄泉国訪問", "禊祓"],
+    shrines: ["伊弉諾神宮（兵庫・淡路）", "多賀大社（滋賀）", "江田神社（宮崎）"],
+    sources: ["古事記 上巻", "日本書紀 神代上"],
+    description:
+      "神世七代の最後、伊邪那美命とともに天の沼矛で海をかき混ぜ、オノゴロ島を生んだ。夫婦で大八島国と多くの神を生むが、火の神を生んで妻を失う。黄泉国まで追うも、変わり果てた妻の姿を見て逃げ帰り、日向の阿波岐原で禊をした。そのとき左目から天照大御神、右目から月読命、鼻から須佐之男命が生まれた。",
+    trivia: "黄泉から逃げる際、桃の実を投げて追手を撃退した。この桃は「意富加牟豆美命」という神名を授かっている。"
+  },
+  {
+    id: "izanami",
+    name: "伊邪那美命",
+    kana: "イザナミノミコト",
+    romaji: "Izanami",
+    group: "神世七代",
+    aliases: ["伊弉冉尊", "黄泉津大神"],
+    epithet: "国を生んだ母、そして死を司る黄泉の主",
+    tags: ["創世", "国生み", "黄泉", "死"],
+    benefits: ["安産", "縁結び", "夫婦和合"],
+    parents: [], spouse: ["izanagi"], children: ["kagutsuchi", "oyamatsumi", "watatsumi"],
+    myths: ["国生み", "神生み", "黄泉国"],
+    shrines: ["花窟神社（三重）", "揖夜神社（島根）", "比婆山久米神社（島根）"],
+    sources: ["古事記 上巻", "日本書紀 神代上"],
+    description:
+      "伊邪那岐命の妻。日本の島々と多くの神を生んだが、火之迦具土神を生んだ際に陰部を焼かれて死に、黄泉国の主となった。追ってきた夫に「見るな」の禁を破られ、恥をかかされたことに怒って追跡。最後は「お前の国の人を一日千人殺す」と告げ、夫は「ならば一日千五百の産屋を建てる」と応じた。",
+    trivia: "この夫婦の最後のやり取りが、人の死と誕生の数が定まった由来として語られる。日本最古の「別れ話」でもある。"
+  },
+
+  // ───────────── 天津神 ─────────────
+  {
+    id: "amaterasu",
+    name: "天照大御神",
+    kana: "アマテラスオオミカミ",
+    romaji: "Amaterasu-Ōmikami",
+    group: "天津神",
+    aliases: ["天照大神", "大日孁貴神", "天照皇大神"],
+    epithet: "高天原を統べる太陽神、皇室の祖神",
+    tags: ["太陽", "統治", "天岩戸", "皇祖"],
+    benefits: ["国家安泰", "開運招福", "勝運", "産業繁栄"],
+    parents: ["izanagi"], spouse: [], children: ["ameno-oshihomimi", "amenohohi", "munakata"],
+    myths: ["天岩戸", "誓約", "国譲り", "天孫降臨"],
+    shrines: ["伊勢神宮 内宮（三重）", "日室神社ほか全国の神明社"],
+    sources: ["古事記 上巻", "日本書紀 神代上"],
+    description:
+      "伊邪那岐命が禊をした際、左目を洗って生まれた最高神。高天原を治めるよう命じられた。弟・須佐之男命の乱行に耐えかねて天岩戸に隠れ、世界は闇に包まれる。神々の策で外に出た後、葦原中国を子孫が治めるべく国譲りを進め、孫の邇邇芸命を地上へ降した。",
+    trivia: "伊勢神宮では「三種の神器」の一つ八咫鏡を御神体とする。天岩戸から出るきっかけになったのも、この鏡に映った自分の姿だった。"
+  },
+  {
+    id: "tsukuyomi",
+    name: "月読命",
+    kana: "ツクヨミノミコト",
+    romaji: "Tsukuyomi",
+    group: "天津神",
+    aliases: ["月夜見尊", "月弓尊"],
+    epithet: "夜を統べる月の神、沈黙の三貴子",
+    tags: ["月", "夜", "暦"],
+    benefits: ["航海安全", "五穀豊穣", "安産"],
+    parents: ["izanagi"], spouse: [], children: [],
+    myths: ["三貴子の誕生", "保食神殺害（日本書紀）"],
+    shrines: ["月読宮（三重）", "月山神社（山形）", "月読神社（京都・松尾）"],
+    sources: ["古事記 上巻", "日本書紀 神代上（第十一の一書）"],
+    description:
+      "伊邪那岐命の右目から生まれ、夜の食国（をすくに）を治めるよう命じられた三貴子の一柱。しかし『古事記』では以後まったく登場しない。『日本書紀』の一書では、食物を口から出した保食神を汚らわしいと斬り殺し、それを怒った天照大御神と別々に住むようになった。これが昼と夜が分かれた理由とされる。",
+    trivia: "神話上の記述が極端に少ない謎の神。性別すら諸説ある。「ツクヨミ」は月を数える＝暦の意とされる。"
+  },
+  {
+    id: "susanoo",
+    name: "建速須佐之男命",
+    kana: "タケハヤスサノオノミコト",
+    romaji: "Susanoo",
+    group: "天津神",
+    aliases: ["素戔嗚尊", "牛頭天王（習合）", "須佐之男命"],
+    epithet: "追放された荒ぶる神、そして英雄",
+    tags: ["嵐", "海原", "八岐大蛇", "天岩戸", "英雄"],
+    benefits: ["厄除け", "疫病除け", "縁結び", "五穀豊穣"],
+    parents: ["izanagi"], spouse: ["kushinadahime"], children: ["otoshi", "ukanomitama", "isotakeru", "suseribime"],
+    myths: ["三貴子の誕生", "誓約", "天岩戸", "八岐大蛇退治", "根の国"],
+    shrines: ["八坂神社（京都）", "須佐神社（島根）", "氷川神社（埼玉）", "熊野大社（島根）"],
+    sources: ["古事記 上巻", "日本書紀 神代上", "出雲国風土記"],
+    description:
+      "伊邪那岐命の鼻から生まれた三貴子の一柱。海原の統治を命じられたが母のいる根の国を慕って泣き続け、追放される。高天原では田を壊し機屋に馬を投げ込む暴挙で姉を岩戸に隠れさせ、再び追放。出雲に降ると一転して八岐大蛇を退治し、櫛名田比売を娶って日本初の和歌を詠んだ。",
+    trivia: "「八雲立つ 出雲八重垣 妻籠みに 八重垣作る その八重垣を」— 記紀が伝える最初の和歌の作者。乱暴者から文化の祖へと転じる、神話屈指の振れ幅を持つ神。"
+  },
+  {
+    id: "ameno-oshihomimi",
+    name: "天忍穂耳命",
+    kana: "アメノオシホミミノミコト",
+    romaji: "Ame-no-Oshihomimi",
+    group: "天津神",
+    aliases: ["正勝吾勝勝速日天忍穂耳尊"],
+    epithet: "地上行きを断った、天孫の父",
+    tags: ["稲穂", "誓約", "天孫"],
+    benefits: ["五穀豊穣", "産業繁栄", "勝運"],
+    parents: ["amaterasu"], spouse: [], children: ["ninigi"],
+    myths: ["誓約", "国譲り", "天孫降臨"],
+    shrines: ["英彦山神宮（福岡）", "西寒多神社（大分）"],
+    sources: ["古事記 上巻", "日本書紀 神代下"],
+    description:
+      "天照大御神と須佐之男命の誓約によって生まれた長男。当初、葦原中国の統治者として降されるはずだったが、天浮橋から下界を覗いて「大変騒がしい」と引き返してしまう。国譲りが完了した後も自分は降らず、その間に生まれた子・邇邇芸命を代わりに推挙した。",
+    trivia: "名の「オシホ」は「多くの稲穂」。稲作の豊穣を約束する神格でありながら、本人は一度も地上に降りていない。"
+  },
+  {
+    id: "amenohohi",
+    name: "天穂日命",
+    kana: "アメノホヒノミコト",
+    romaji: "Ame-no-Hohi",
+    group: "天津神",
+    aliases: ["天菩比神"],
+    epithet: "寝返った使者、出雲国造家の祖",
+    tags: ["国譲り", "使者", "祭祀"],
+    benefits: ["産業繁栄", "農業守護", "殖産興業"],
+    parents: ["amaterasu"], spouse: [], children: [],
+    myths: ["誓約", "国譲り"],
+    shrines: ["出雲大社（島根・国造家の祖神）", "鷲宮神社（埼玉）", "能義神社（島根）"],
+    sources: ["古事記 上巻", "日本書紀 神代下"],
+    description:
+      "誓約で生まれた天照大御神の第二子。国譲りの最初の使者として葦原中国に派遣されたが、大国主神に心服してしまい、三年間まったく報告を返さなかった。のちに出雲大社の祭祀を司る出雲国造家の祖神とされ、その子孫は現在まで大国主神に仕え続けている。",
+    trivia: "「任務を放棄した使者」でありながら、結果的に出雲祭祀の永続的な担い手となった。裏切りが役職になった珍しい例。"
+  },
+  {
+    id: "amenowakahiko",
+    name: "天若日子",
+    kana: "アメノワカヒコ",
+    romaji: "Ame-no-Wakahiko",
+    group: "天津神",
+    aliases: ["天稚彦"],
+    epithet: "矢に射られて死んだ、二人目の裏切り者",
+    tags: ["国譲り", "使者", "悲劇"],
+    benefits: ["—"],
+    parents: [], spouse: ["shitateruhime"], children: [],
+    myths: ["国譲り", "返し矢"],
+    shrines: ["天若日子神社（各地）", "阿麻氐留神社（長崎）"],
+    sources: ["古事記 上巻", "日本書紀 神代下"],
+    description:
+      "天穂日命に次ぐ二人目の使者。大国主神の娘・下照比売を妻に迎え、自ら葦原中国の王になろうと企んで八年間復命しなかった。様子を見に来た雉を弓で射殺すが、その矢は高天原まで届き、投げ返された矢に胸を貫かれて死ぬ。",
+    trivia: "「返し矢」の語源となった神話。葬儀の場で、瓜二つの友人・阿遅鉏高日子根神が死者と間違われて激怒し、喪屋を蹴り飛ばす場面も名高い。"
+  },
+  {
+    id: "omoikane",
+    name: "思金神",
+    kana: "オモイカネノカミ",
+    romaji: "Omoikane",
+    group: "天津神",
+    aliases: ["思兼神", "八意思兼神"],
+    epithet: "八人分の知恵を一身に集めた参謀",
+    tags: ["知恵", "天岩戸", "参謀"],
+    benefits: ["学業成就", "合格祈願", "知恵授け"],
+    parents: ["takamimusuhi"], spouse: [], children: [],
+    myths: ["天岩戸", "国譲り", "天孫降臨"],
+    shrines: ["戸隠神社 中社（長野）", "秩父神社（埼玉）", "気象神社（東京）"],
+    sources: ["古事記 上巻", "日本書紀 神代上"],
+    description:
+      "高御産巣日神の子。名は「多くの人の思慮を兼ね備える」の意。天岩戸に籠もった天照大御神を出すため、常世の長鳴鳥を鳴かせ、鏡と勾玉を作らせ、天宇受売命に舞わせるという一連の作戦を立案した。国譲りの使者選定でも助言役を務めている。",
+    trivia: "日本神話における最初の「作戦参謀」。武力ではなく段取りで事態を動かす、稀有なタイプの神。"
+  },
+  {
+    id: "amenouzume",
+    name: "天宇受売命",
+    kana: "アメノウズメノミコト",
+    romaji: "Ame-no-Uzume",
+    group: "天津神",
+    aliases: ["天鈿女命", "宮比神"],
+    epithet: "神々を笑わせ、闇を破った芸能の祖",
+    tags: ["芸能", "天岩戸", "舞"],
+    benefits: ["芸能上達", "縁結び", "開運"],
+    parents: [], spouse: ["sarutahiko"], children: [],
+    myths: ["天岩戸", "天孫降臨"],
+    shrines: ["椿大神社 別宮椿岸神社（三重）", "荒立神社（宮崎）", "佐瑠女神社（三重）"],
+    sources: ["古事記 上巻", "日本書紀 神代上"],
+    description:
+      "天岩戸の前で桶を踏み鳴らし、神懸かりして胸をあらわに舞い、八百万の神々を大笑いさせた。その笑い声を不審に思った天照大御神が岩戸を細く開けたことで、世界に光が戻る。天孫降臨では道を塞ぐ猿田毘古神と正面から対峙し、素性を問いただした。",
+    trivia: "後に猿田毘古神の妻となり、その名を継いで「猿女君（さるめのきみ）」という宮廷の神楽を司る一族の祖となった。日本の芸能の原点とされる。"
+  },
+  {
+    id: "tajikarao",
+    name: "天手力男神",
+    kana: "アメノタヂカラオノカミ",
+    romaji: "Ame-no-Tajikarao",
+    group: "天津神",
+    aliases: ["天手力雄神"],
+    epithet: "岩戸を投げ飛ばした、怪力の神",
+    tags: ["怪力", "天岩戸", "武"],
+    benefits: ["スポーツ上達", "力量向上", "開運"],
+    parents: [], spouse: [], children: [],
+    myths: ["天岩戸", "天孫降臨"],
+    shrines: ["戸隠神社 奥社（長野）", "佐那神社（三重）", "雄山神社（富山）"],
+    sources: ["古事記 上巻", "日本書紀 神代上"],
+    description:
+      "天岩戸の脇に隠れ、天照大御神がわずかに顔を出した瞬間、その手を掴んで一気に引き出した。さらに岩戸そのものを投げ飛ばし、二度と閉じられないようにした。天孫降臨にも随行している。",
+    trivia: "投げられた岩戸が飛んでいって信濃国に落ち、戸隠山になったという伝承がある。"
+  },
+  {
+    id: "amenokoyane",
+    name: "天児屋命",
+    kana: "アメノコヤネノミコト",
+    romaji: "Ame-no-Koyane",
+    group: "天津神",
+    aliases: ["天児屋根命"],
+    epithet: "祝詞を唱えた、祭祀の祖",
+    tags: ["祭祀", "祝詞", "天岩戸"],
+    benefits: ["出世開運", "学業成就", "諸願成就"],
+    parents: [], spouse: [], children: [],
+    myths: ["天岩戸", "天孫降臨"],
+    shrines: ["春日大社（奈良）", "枚岡神社（大阪）", "吉田神社（京都）"],
+    sources: ["古事記 上巻", "日本書紀 神代上"],
+    description:
+      "天岩戸の前で見事な祝詞を奏上した神。天孫降臨に五伴緒の一人として随行し、祭祀を担当した。中臣氏（のちの藤原氏）の祖神であり、藤原氏の隆盛とともに春日大社の主祭神として絶大な地位を得た。",
+    trivia: "藤原氏の氏神であることから、平安期以降は最も政治的影響力の強い神格の一つとなった。"
+  },
+  {
+    id: "futodama",
+    name: "布刀玉命",
+    kana: "フトダマノミコト",
+    romaji: "Futodama",
+    group: "天津神",
+    aliases: ["太玉命"],
+    epithet: "供物を捧げ、注連縄を張った神",
+    tags: ["祭祀", "天岩戸", "工"],
+    benefits: ["産業振興", "厄除け", "開運"],
+    parents: [], spouse: [], children: [],
+    myths: ["天岩戸", "天孫降臨"],
+    shrines: ["安房神社（千葉）", "大原神社（東京）", "天太玉命神社（奈良）"],
+    sources: ["古事記 上巻", "日本書紀 神代上", "古語拾遺"],
+    description:
+      "天岩戸神事で榊に鏡と勾玉を掛けた御幣を捧げ持った神。天照大御神が出てきた直後、背後に注連縄を張って「もう中に戻れません」と告げた。忌部（斎部）氏の祖神で、祭具の製作と奉献を司る。",
+    trivia: "神社の注連縄の起源はこの場面。中臣氏の天児屋命と職掌を争い、平安期に忌部氏が『古語拾遺』を著して自氏の正統を主張した。"
+  },
+  {
+    id: "ishikoridome",
+    name: "伊斯許理度売命",
+    kana: "イシコリドメノミコト",
+    romaji: "Ishikoridome",
+    group: "天津神",
+    aliases: ["石凝姥命"],
+    epithet: "八咫鏡を鋳造した、鏡作りの祖",
+    tags: ["工芸", "金属", "天岩戸"],
+    benefits: ["技術向上", "産業繁栄", "鋳造守護"],
+    parents: [], spouse: [], children: [],
+    myths: ["天岩戸", "天孫降臨"],
+    shrines: ["鏡作坐天照御魂神社（奈良）", "日前神宮（和歌山）"],
+    sources: ["古事記 上巻", "日本書紀 神代上"],
+    description:
+      "天岩戸神事のため、天の香山の金を採って八咫鏡を鋳造した女神。この鏡は三種の神器の一つとなり、伊勢神宮内宮の御神体として現在も祀られている。鏡作部（かがみつくりべ）の祖神。",
+    trivia: "最初に鋳た鏡は出来が悪かったため作り直したとされ、その一号機が紀伊国の日前神宮に祀られているという。"
+  },
+  {
+    id: "tamanooya",
+    name: "玉祖命",
+    kana: "タマノオヤノミコト",
+    romaji: "Tamanooya",
+    group: "天津神",
+    aliases: ["玉屋命"],
+    epithet: "八尺瓊勾玉を作った、玉造の祖",
+    tags: ["工芸", "玉", "天岩戸"],
+    benefits: ["技術向上", "商売繁盛", "眼病平癒"],
+    parents: [], spouse: [], children: [],
+    myths: ["天岩戸", "天孫降臨"],
+    shrines: ["玉祖神社（山口）", "玉作湯神社（島根）"],
+    sources: ["古事記 上巻", "日本書紀 神代上"],
+    description:
+      "天岩戸神事で八尺瓊勾玉（やさかにのまがたま）を作った神。この勾玉も三種の神器の一つとなった。天孫降臨に随行した五伴緒の一柱で、玉造部の祖神とされる。",
+    trivia: "出雲の玉造温泉は、この神の系譜を引く玉作部が集住した土地。今も勾玉の名産地である。"
+  },
+  {
+    id: "takemikazuchi",
+    name: "建御雷之男神",
+    kana: "タケミカヅチノオノカミ",
+    romaji: "Takemikazuchi",
+    group: "天津神",
+    aliases: ["武甕槌神", "建布都神", "鹿島神"],
+    epithet: "国譲りを力でまとめた、雷と剣の武神",
+    tags: ["武", "雷", "剣", "国譲り"],
+    benefits: ["勝運", "武道上達", "厄除け", "地震除け"],
+    parents: [], spouse: [], children: [],
+    myths: ["国譲り", "神武東征"],
+    shrines: ["鹿島神宮（茨城）", "春日大社（奈良）", "塩竈神社（宮城）"],
+    sources: ["古事記 上巻", "日本書紀 神代下"],
+    description:
+      "伊邪那岐命が火之迦具土神を斬った剣に付いた血から生まれた神。国譲りの最終使者として出雲に降り、波頭に剣を逆さに突き立ててその切っ先に胡座をかき、大国主神に国の返上を迫った。抵抗した建御名方神とは日本初の力比べを行い、その手を氷柱に、次いで剣に変えて握り潰した。",
+    trivia: "この力比べが相撲の起源とされる。神武東征の危機には、剣「布都御魂」を天から投げ降ろして援護した。"
+  },
+  {
+    id: "futsunushi",
+    name: "経津主神",
+    kana: "フツヌシノカミ",
+    romaji: "Futsunushi",
+    group: "天津神",
+    aliases: ["斎主神", "香取神"],
+    epithet: "刀が物を断つ音 ―「フツ」の剣神",
+    tags: ["武", "剣", "国譲り"],
+    benefits: ["勝運", "武道上達", "災難除け", "旅行安全"],
+    parents: [], spouse: [], children: [],
+    myths: ["国譲り"],
+    shrines: ["香取神宮（千葉）", "春日大社（奈良）", "石上神宮（奈良・関連）"],
+    sources: ["日本書紀 神代下"],
+    description:
+      "『日本書紀』において国譲りの主役として建御雷神と並び派遣された剣の神。『古事記』には登場せず、代わりに建御雷神が単独で活躍する。「フツ」は刀が物を断ち切る擬音とされ、剣そのものの神格化と考えられる。",
+    trivia: "鹿島（建御雷）と香取（経津主）は東国鎮護の二大武神として一対で語られ、江戸期には「鹿島立ち」＝旅立ちの語源にもなった。"
+  },
+  {
+    id: "amenotorifune",
+    name: "天鳥船神",
+    kana: "アメノトリフネノカミ",
+    romaji: "Ame-no-Torifune",
+    group: "天津神",
+    aliases: ["鳥之石楠船神"],
+    epithet: "神々を運ぶ、天翔ける船",
+    tags: ["交通", "船", "国譲り"],
+    benefits: ["交通安全", "海上安全", "運搬業守護"],
+    parents: ["izanagi", "izanami"], spouse: [], children: [],
+    myths: ["神生み", "国譲り"],
+    shrines: ["鳥石楠船神社（各地）", "水神社（茨城）"],
+    sources: ["古事記 上巻"],
+    description:
+      "伊邪那岐・伊邪那美の神生みで生まれた船の神。堅い楠で造った船が神格化したもので、神々の乗り物として機能する。国譲りでは建御雷神に随行し、事代主神のもとへ使者として遣わされた。",
+    trivia: "「神が乗り物として登場する」珍しい例。物そのものが神になる日本神話の特徴をよく示している。"
+  },
+  {
+    id: "ninigi",
+    name: "邇邇芸命",
+    kana: "ニニギノミコト",
+    romaji: "Ninigi",
+    group: "天津神",
+    aliases: ["瓊瓊杵尊", "天津日高日子番能邇邇芸命"],
+    epithet: "三種の神器を携え地上に降った天孫",
+    tags: ["天孫降臨", "稲穂", "皇祖"],
+    benefits: ["五穀豊穣", "産業繁栄", "国土安泰"],
+    parents: ["ameno-oshihomimi"], spouse: ["konohanasakuya"], children: ["hoderi", "hoori"],
+    myths: ["天孫降臨", "木花之佐久夜毘売との結婚"],
+    shrines: ["霧島神宮（鹿児島）", "新田神社（鹿児島）", "箱根神社（神奈川）"],
+    sources: ["古事記 上巻", "日本書紀 神代下"],
+    description:
+      "天照大御神の孫。国譲りの完了後、三種の神器と五伴緒の神々を従えて日向の高千穂峰に降臨した。名の「ニニギ」は稲穂が賑わい実る意。大山津見神の娘・木花之佐久夜毘売を娶るが、姉の石長比売を醜いとして返したため、天孫の寿命は花のように短くなったとされる。",
+    trivia: "この「石長比売を返した」一件が、天皇＝神の子孫でありながら不死ではない理由の説明になっている。"
+  },
+  {
+    id: "hoderi",
+    name: "火照命",
+    kana: "ホデリノミコト",
+    romaji: "Hoderi",
+    group: "天津神",
+    aliases: ["海幸彦", "火闌降命"],
+    epithet: "釣り針を失くされた兄、海幸彦",
+    tags: ["海", "漁業", "海幸山幸"],
+    benefits: ["大漁祈願", "海上安全"],
+    parents: ["ninigi", "konohanasakuya"], spouse: [], children: [],
+    myths: ["海幸山幸"],
+    shrines: ["潮嶽神社（宮崎）", "鹿児島神宮 摂社（鹿児島）"],
+    sources: ["古事記 上巻", "日本書紀 神代下"],
+    description:
+      "邇邇芸命の長男で、海の獲物を得る「海幸彦」。弟と道具を交換したところ、弟が大切な釣り針を海に落としてしまい、執拗に返却を迫った。のちに弟が海神から得た潮満玉・潮乾玉に翻弄されて屈服し、弟に仕えることを誓う。",
+    trivia: "『古事記』は彼を隼人（南九州の一族）の祖とする。中央への服属の由来を語る政治的な神話でもある。"
+  },
+  {
+    id: "hoori",
+    name: "火遠理命",
+    kana: "ホオリノミコト",
+    romaji: "Hoori",
+    group: "天津神",
+    aliases: ["山幸彦", "彦火火出見尊"],
+    epithet: "海神の宮を訪ねた弟、山幸彦",
+    tags: ["山", "狩猟", "海幸山幸", "皇祖"],
+    benefits: ["五穀豊穣", "航海安全", "縁結び"],
+    parents: ["ninigi", "konohanasakuya"], spouse: ["toyotamabime"], children: ["ugayafukiaezu"],
+    myths: ["海幸山幸", "海神宮訪問"],
+    shrines: ["鹿児島神宮（鹿児島）", "青島神社（宮崎）", "高千穂神社（宮崎）"],
+    sources: ["古事記 上巻", "日本書紀 神代下"],
+    description:
+      "邇邇芸命の三男で山の獲物を得る「山幸彦」。兄の釣り針を失くし、塩椎神の助言で海神の宮を訪れる。海神の娘・豊玉毘売と結婚して三年を過ごし、釣り針と潮を操る二つの玉を得て帰還。兄を屈服させ、生まれた子が神武天皇の父となった。",
+    trivia: "妻の出産を「見るな」と言われて覗き、正体（八尋和邇）を見てしまう。イザナギの黄泉と同じ「見るなの禁」が繰り返される。"
+  },
+  {
+    id: "ugayafukiaezu",
+    name: "鵜葺草葺不合命",
+    kana: "ウガヤフキアエズノミコト",
+    romaji: "Ugayafukiaezu",
+    group: "天津神",
+    aliases: ["鸕鶿草葺不合尊"],
+    epithet: "産屋が葺き終わる前に生まれた神",
+    tags: ["誕生", "海", "皇祖"],
+    benefits: ["安産", "子育て", "航海安全"],
+    parents: ["hoori", "toyotamabime"], spouse: ["tamayoribime"], children: ["jimmu"],
+    myths: ["海幸山幸", "神武の誕生"],
+    shrines: ["鵜戸神宮（宮崎）", "宮崎神宮 摂社（宮崎）"],
+    sources: ["古事記 上巻", "日本書紀 神代下"],
+    description:
+      "火遠理命と豊玉毘売の子。海辺に鵜の羽で産屋を葺いている最中に生まれたため、この名がついた。母は正体を見られたことを恥じて海に帰り、代わりに妹の玉依毘売が養育し、後に彼の妻となった。その子が初代神武天皇である。",
+    trivia: "宮崎の鵜戸神宮は海食洞の中に社殿があり、母が乳房を岩に貼り付けて残したという「お乳岩」が今も伝わる。"
+  },
+  {
+    id: "jimmu",
+    name: "神倭伊波礼毘古命",
+    kana: "カムヤマトイワレビコノミコト",
+    romaji: "Kamu-Yamato-Iwarebiko (Jimmu)",
+    group: "天津神",
+    aliases: ["神武天皇", "神日本磐余彦尊"],
+    epithet: "日向を発ち、大和を平定した初代天皇",
+    tags: ["東征", "建国", "皇祖"],
+    benefits: ["開運", "勝運", "国土安泰"],
+    parents: ["ugayafukiaezu", "tamayoribime"], spouse: [], children: [],
+    myths: ["神武東征", "八咫烏の道案内"],
+    shrines: ["橿原神宮（奈良）", "宮崎神宮（宮崎）", "狭野神社（宮崎）"],
+    sources: ["古事記 中巻", "日本書紀 神武紀"],
+    description:
+      "天孫降臨から四代目。天下を治めるにふさわしい地を求めて日向を発ち、瀬戸内海を東へ進む。浪速で長髄彦に敗れて兄を失い、「日に向かって戦ったのが誤り」と悟って熊野へ迂回。建御雷神の剣と八咫烏の導きで大和に入り、橿原宮で即位した。",
+    trivia: "熊野で軍勢が倒れた際、天から降された剣「布都御魂」一振りで全員が目覚めた。この剣は今も石上神宮に祀られる。"
+  },
+  {
+    id: "munakata",
+    name: "宗像三女神",
+    kana: "ムナカタサンジョシン",
+    romaji: "Munakata Three Goddesses",
+    group: "天津神",
+    aliases: ["多紀理毘売命", "市寸島比売命", "多岐都比売命", "弁財天（習合）"],
+    epithet: "玄界灘の航路を守る、海の三姉妹",
+    tags: ["海", "航海", "誓約", "水"],
+    benefits: ["海上安全", "交通安全", "財運", "芸道上達"],
+    parents: ["amaterasu", "susanoo"], spouse: ["okuninushi"], children: ["shitateruhime"],
+    myths: ["誓約"],
+    shrines: ["宗像大社（福岡）", "厳島神社（広島）", "江島神社（神奈川）"],
+    sources: ["古事記 上巻", "日本書紀 神代上"],
+    description:
+      "天照大御神と須佐之男命の誓約の際、須佐之男命の剣から生まれた三柱の女神。沖ノ島（沖津宮）、大島（中津宮）、九州本土（辺津宮）に祀られ、大陸への航路そのものを守護する。長女・多紀理毘売命は大国主神の妻となった。",
+    trivia: "沖ノ島は「海の正倉院」と呼ばれる祭祀遺跡で、2017年に世界文化遺産に登録された。島の掟は今も厳しい。"
+  },
+  {
+    id: "sumiyoshi",
+    name: "住吉三神",
+    kana: "スミヨシサンジン",
+    romaji: "Sumiyoshi Three Deities",
+    group: "天津神",
+    aliases: ["底筒男命", "中筒男命", "表筒男命"],
+    epithet: "禊から生まれた、航海と和歌の守護神",
+    tags: ["海", "航海", "祓", "和歌"],
+    benefits: ["海上安全", "厄除け", "和歌上達", "商売繁盛"],
+    parents: ["izanagi"], spouse: [], children: [],
+    myths: ["禊祓", "神功皇后の三韓征伐"],
+    shrines: ["住吉大社（大阪）", "住吉神社（福岡）", "住吉神社（山口・下関）"],
+    sources: ["古事記 上巻", "日本書紀 神代上"],
+    description:
+      "伊邪那岐命が黄泉の穢れを落とす禊で、水の底・中・表それぞれから生まれた三柱。海と航海を司る。神功皇后の遠征に際して託宣を下し、勝利へ導いたと伝わる。中世以降は和歌の神としても篤く信仰された。",
+    trivia: "住吉大社の本殿は四棟が縦横に並ぶ特異な配置で、海を進む船団を模したとも言われる。"
+  },
+  {
+    id: "sukunabikona",
+    name: "少名毘古那神",
+    kana: "スクナビコナノカミ",
+    romaji: "Sukunabikona",
+    group: "天津神",
+    aliases: ["少彦名命", "少毘古那神"],
+    epithet: "手のひらに乗る小さな神、医薬と酒の祖",
+    tags: ["医薬", "国造り", "酒", "温泉"],
+    benefits: ["病気平癒", "健康長寿", "酒造守護", "温泉守護"],
+    parents: ["kamimusuhi"], spouse: [], children: [],
+    myths: ["国造り"],
+    shrines: ["少彦名神社（大阪・道修町）", "大洗磯前神社（茨城）", "五條天神社（東京）"],
+    sources: ["古事記 上巻", "日本書紀 神代上", "伊予国風土記"],
+    description:
+      "神産巣日神の指の間からこぼれ落ちた、極めて小さな神。ガガイモの実の舟に乗り、蛾の皮を着て海から現れた。大国主神と兄弟の契りを結び、二柱で国造りを進めた。医薬・禁厭（まじない）・酒造・温泉の術を人々に授け、事業半ばで常世国へ渡った。",
+    trivia: "道後温泉で病んだ際、大国主が湯に浸してやると元気を取り戻したという。日本最古の温泉治療の記録とされる。"
+  },
+  {
+    id: "nigihayahi",
+    name: "邇芸速日命",
+    kana: "ニギハヤヒノミコト",
+    romaji: "Nigihayahi",
+    group: "天津神",
+    aliases: ["饒速日命", "天照国照彦天火明櫛玉饒速日尊"],
+    epithet: "神武より先に大和へ降りていた天津神",
+    tags: ["天降り", "物部", "剣"],
+    benefits: ["厄除け", "産業繁栄", "武運長久"],
+    parents: [], spouse: [], children: [],
+    myths: ["神武東征"],
+    shrines: ["石上神宮（奈良）", "磐船神社（大阪）", "籠神社（京都・関連）"],
+    sources: ["古事記 中巻", "日本書紀 神武紀", "先代旧事本紀"],
+    description:
+      "神武天皇が大和に入ったとき、既にこの地を治めていた天津神。天磐船に乗って河内・大和に降臨したという。神武の敵・長髄彦の主君だったが、神武が本物の天津神であることを天羽々矢によって確認すると、長髄彦を討って恭順した。物部氏の祖神。",
+    trivia: "「神武より先に天降った天津神」という設定は、大和にヤマト王権以前の勢力があったことの記憶とみる説が有力。"
+  },
+
+  // ───────────── 国津神 ─────────────
+  {
+    id: "okuninushi",
+    name: "大国主神",
+    kana: "オオクニヌシノカミ",
+    romaji: "Ōkuninushi",
+    group: "国津神",
+    aliases: ["大己貴神", "八千矛神", "葦原色許男神", "大黒天（習合）"],
+    epithet: "葦原中国を造り上げ、そして譲った国津神の王",
+    tags: ["国造り", "国譲り", "縁結び", "医薬"],
+    benefits: ["縁結び", "夫婦和合", "病気平癒", "商売繁盛", "農業守護"],
+    parents: [], spouse: ["suseribime", "yagamihime", "munakata"], children: ["kotoshironushi", "takeminakata", "shitateruhime"],
+    myths: ["因幡の白兎", "根の国訪問", "国造り", "国譲り"],
+    shrines: ["出雲大社（島根）", "大神神社（奈良）", "気多大社（石川）"],
+    sources: ["古事記 上巻", "日本書紀 神代上", "出雲国風土記"],
+    description:
+      "須佐之男命の子孫。八十神にいじめられ二度殺されるが母神の力で蘇り、根の国で須佐之男命の試練を乗り越えて娘・須勢理毘売と駆け落ちする。少名毘古那神とともに国造りを完成させたが、天照大御神の使者・建御雷神の要求を受け、壮大な宮を建ててもらう条件で国を譲った。",
+    trivia: "国譲りの条件として建てられた宮が出雲大社の起源。平安期の記録では高さ48メートルに達したとされ、2000年に巨大な柱跡が発掘されて実在が裏付けられた。"
+  },
+  {
+    id: "kotoshironushi",
+    name: "事代主神",
+    kana: "コトシロヌシノカミ",
+    romaji: "Kotoshironushi",
+    group: "国津神",
+    aliases: ["八重言代主神", "恵比寿（習合）"],
+    epithet: "託宣を告げ、国譲りを即断した長男",
+    tags: ["託宣", "国譲り", "漁業", "商売"],
+    benefits: ["商売繁盛", "大漁祈願", "開運招福"],
+    parents: ["okuninushi"], spouse: [], children: [],
+    myths: ["国譲り"],
+    shrines: ["美保神社（島根）", "今宮戎神社（大阪）", "三嶋大社（静岡）"],
+    sources: ["古事記 上巻", "日本書紀 神代下"],
+    description:
+      "大国主神の長男。国譲りを迫られた父が「息子に聞いてくれ」と答えたため、使者は美保の岬で釣りをしていた彼を訪ねた。彼は即座に承諾し、船を踏み傾けて青柴垣に変え、その中に姿を隠した。名の「コトシロ」は神託を代弁する意。",
+    trivia: "釣り竿を持つ姿から恵比寿神と同一視され、商売繁盛の神として全国に広まった。関西の「えべっさん」はこの神。"
+  },
+  {
+    id: "takeminakata",
+    name: "建御名方神",
+    kana: "タケミナカタノカミ",
+    romaji: "Takeminakata",
+    group: "国津神",
+    aliases: ["建御名方富命", "諏訪明神", "南方刀美神"],
+    epithet: "最後まで抗い、諏訪に封じられた武神",
+    tags: ["武", "国譲り", "狩猟", "風"],
+    benefits: ["勝運", "武道上達", "五穀豊穣", "生命力向上"],
+    parents: ["okuninushi"], spouse: [], children: [],
+    myths: ["国譲り", "力比べ"],
+    shrines: ["諏訪大社（長野）", "全国の諏訪神社"],
+    sources: ["古事記 上巻", "先代旧事本紀"],
+    description:
+      "大国主神の次男。兄が国譲りを承諾したのに対し、千引の岩を軽々と持ち上げて現れ、建御雷神に力比べを挑んだ。しかし相手の手は氷柱となり、次いで剣に変じ、逆に投げ飛ばされる。信濃の諏訪湖まで逃げ、「この地から出ない」と誓って命を許された。",
+    trivia: "諏訪大社では独自の神事が中世まで続き、大社の神職「大祝」は生き神とされた。中央神話に回収されきらない土着信仰の強さで知られる。"
+  },
+  {
+    id: "suseribime",
+    name: "須勢理毘売命",
+    kana: "スセリビメノミコト",
+    romaji: "Suseribime",
+    group: "国津神",
+    aliases: ["須世理姫"],
+    epithet: "夫を試練から救った、正妻の知恵",
+    tags: ["縁結び", "知恵", "根の国"],
+    benefits: ["縁結び", "夫婦和合", "災難除け"],
+    parents: ["susanoo"], spouse: ["okuninushi"], children: [],
+    myths: ["根の国訪問"],
+    shrines: ["出雲大社（島根）", "八重垣神社（島根）", "御井神社（島根）"],
+    sources: ["古事記 上巻"],
+    description:
+      "須佐之男命の娘。根の国に逃れてきた大国主神と一目で恋に落ち、父の課す蛇の室・百足と蜂の室・野火といった試練を、比礼（ひれ）を授けてすべて切り抜けさせた。ともに地上へ駆け落ちし、正妻として出雲大社に並び祀られる。",
+    trivia: "夫の浮気に激しく嫉妬した歌が『古事記』に残る。それに応えた大国主の歌と合わせ、日本最古級の相聞歌とされる。"
+  },
+  {
+    id: "yagamihime",
+    name: "八上比売",
+    kana: "ヤガミヒメ",
+    romaji: "Yagamihime",
+    group: "国津神",
+    aliases: ["八上姫"],
+    epithet: "白兎が縁を結んだ、因幡の美女",
+    tags: ["縁結び", "因幡の白兎"],
+    benefits: ["縁結び", "安産", "美容"],
+    parents: [], spouse: ["okuninushi"], children: [],
+    myths: ["因幡の白兎"],
+    shrines: ["賣沼神社（鳥取）", "八上姫神社（鳥取）"],
+    sources: ["古事記 上巻"],
+    description:
+      "因幡国の美女。八十神たちが競って求婚したが、彼女は荷物持ちとして最後尾を歩いていた大穴牟遅神（大国主）を選んだ。傷ついた白兎を治療した優しさを、兎が予言していた通りである。のちに須勢理毘売を恐れ、生まれた子を木の俣に挟んで因幡へ帰った。",
+    trivia: "「因幡の白兎」は求婚譚であると同時に、日本最古の動物治療の記録でもある（真水で洗い蒲の花粉をまぶす）。"
+  },
+  {
+    id: "kushinadahime",
+    name: "櫛名田比売",
+    kana: "クシナダヒメ",
+    romaji: "Kushinadahime",
+    group: "国津神",
+    aliases: ["奇稲田姫", "櫛稲田姫"],
+    epithet: "八岐大蛇の生贄となるはずだった稲田の姫",
+    tags: ["八岐大蛇", "稲作", "縁結び"],
+    benefits: ["縁結び", "夫婦和合", "五穀豊穣", "安産"],
+    parents: ["ashinazuchi"], spouse: ["susanoo"], children: [],
+    myths: ["八岐大蛇退治"],
+    shrines: ["八重垣神社（島根）", "氷川神社（埼玉）", "須我神社（島根）"],
+    sources: ["古事記 上巻", "日本書紀 神代上"],
+    description:
+      "足名椎・手名椎の八人目の娘。姉七人は八岐大蛇に食われ、彼女も生贄になる寸前だった。須佐之男命は結婚を条件に大蛇退治を引き受け、彼女を櫛に変えて自分の髪に挿して守った。退治後、二柱は須賀の地に宮を建てて暮らした。",
+    trivia: "名の「クシナダ」は「奇し稲田」＝神聖な稲田の意。八岐大蛇を斐伊川の氾濫、姫を水田と読む治水神話の解釈が有力。"
+  },
+  {
+    id: "ashinazuchi",
+    name: "足名椎神・手名椎神",
+    kana: "アシナヅチノカミ・テナヅチノカミ",
+    romaji: "Ashinazuchi & Tenazuchi",
+    group: "国津神",
+    aliases: ["脚摩乳・手摩乳"],
+    epithet: "娘を七人まで奪われた、老いた夫婦神",
+    tags: ["八岐大蛇", "稲作"],
+    benefits: ["夫婦和合", "子孫繁栄", "五穀豊穣"],
+    parents: [], spouse: [], children: ["kushinadahime"],
+    myths: ["八岐大蛇退治"],
+    shrines: ["八重垣神社（島根）", "手名椎神社（島根）"],
+    sources: ["古事記 上巻", "日本書紀 神代上"],
+    description:
+      "大山津見神の子とされる老夫婦。斐伊川の上流で八岐大蛇に毎年娘を差し出しており、須佐之男命と出会ったとき最後の娘・櫛名田比売を残すのみだった。大蛇退治の後、須賀の宮の長（首）に任じられた。",
+    trivia: "名は「足を撫でる・手を撫でる」の意で、娘を慈しむ親の所作から来ているとされる。"
+  },
+  {
+    id: "oyamatsumi",
+    name: "大山津見神",
+    kana: "オオヤマツミノカミ",
+    romaji: "Ōyamatsumi",
+    group: "国津神",
+    aliases: ["大山祇神", "和多志大神"],
+    epithet: "すべての山を統べる、山の総元締め",
+    tags: ["山", "酒", "鉱山"],
+    benefits: ["山林守護", "酒造守護", "鉱山守護", "海上安全"],
+    parents: ["izanagi", "izanami"], spouse: [], children: ["konohanasakuya", "iwanagahime", "kayanohime"],
+    myths: ["神生み", "天孫降臨"],
+    shrines: ["大山祇神社（愛媛）", "三嶋大社（静岡）", "梅宮大社（京都）"],
+    sources: ["古事記 上巻", "日本書紀 神代上"],
+    description:
+      "伊邪那岐・伊邪那美が生んだ山の神の総元締め。木花之佐久夜毘売と石長比売の父。邇邇芸命が姉の石長比売を返したことに深く恥じ入り、「石長比売を添えたのは天孫の命を岩のように永らえさせるためだった」と告げた。",
+    trivia: "娘の出産を祝って狭名田の稲で酒を醸したことから、酒造の神ともされる。大山祇神社は歴代の武将が武具を奉納し、国宝の武具の八割が集中する。"
+  },
+  {
+    id: "konohanasakuya",
+    name: "木花之佐久夜毘売",
+    kana: "コノハナノサクヤビメ",
+    romaji: "Konohanasakuya-hime",
+    group: "国津神",
+    aliases: ["木花開耶姫", "神吾田鹿葦津姫", "浅間大神"],
+    epithet: "桜のように咲き誇り、火中で子を産んだ姫",
+    tags: ["山", "火", "安産", "桜"],
+    benefits: ["安産", "子育て", "縁結び", "火難除け", "酒造守護"],
+    parents: ["oyamatsumi"], spouse: ["ninigi"], children: ["hoderi", "hoori"],
+    myths: ["天孫降臨", "火中出産"],
+    shrines: ["富士山本宮浅間大社（静岡）", "全国の浅間神社", "梅宮大社（京都）"],
+    sources: ["古事記 上巻", "日本書紀 神代下"],
+    description:
+      "大山津見神の娘。邇邇芸命に見初められて結婚するが、一夜で懐妊したため国津神の子ではないかと疑われる。潔白を証明するため戸のない産屋に籠もって火を放ち、燃え盛る炎の中で三柱の子を産んだ。桜のように美しく、また儚い命の象徴とされる。",
+    trivia: "富士山の神として全国1300余社の浅間神社に祀られる。噴火を鎮める神格と、火中出産の神話が重なっている。"
+  },
+  {
+    id: "iwanagahime",
+    name: "石長比売",
+    kana: "イワナガヒメ",
+    romaji: "Iwanaga-hime",
+    group: "国津神",
+    aliases: ["磐長姫"],
+    epithet: "返されたことで、人に死を与えた姫",
+    tags: ["岩", "長寿", "天孫降臨"],
+    benefits: ["延命長寿", "健康", "縁結び"],
+    parents: ["oyamatsumi"], spouse: [], children: [],
+    myths: ["天孫降臨"],
+    shrines: ["雲見浅間神社（静岡）", "伊砂砂神社（滋賀）", "大室山浅間神社（静岡）"],
+    sources: ["古事記 上巻", "日本書紀 神代下"],
+    description:
+      "木花之佐久夜毘売の姉。父・大山津見神は妹とともに邇邇芸命へ差し出したが、容姿が醜いとして送り返された。姉は岩のような永遠の命を、妹は花のような繁栄をもたらす存在であり、姉を退けたことで天孫とその子孫（＝人間）の命は有限になった。",
+    trivia: "「なぜ人は死ぬのか」を説明する日本神話版の起源譚。東南アジアに広く分布する「バナナ型神話」と同型とされる。"
+  },
+  {
+    id: "watatsumi",
+    name: "綿津見神",
+    kana: "ワタツミノカミ",
+    romaji: "Watatsumi",
+    group: "国津神",
+    aliases: ["海神", "大綿津見神", "豊玉彦"],
+    epithet: "海の底を治める、龍宮の主",
+    tags: ["海", "龍宮", "潮"],
+    benefits: ["海上安全", "大漁祈願", "航海守護"],
+    parents: ["izanagi"], spouse: [], children: ["toyotamabime", "tamayoribime"],
+    myths: ["神生み", "禊祓", "海幸山幸"],
+    shrines: ["志賀海神社（福岡）", "海神神社（長崎・対馬）", "穂高神社（長野）"],
+    sources: ["古事記 上巻", "日本書紀 神代上"],
+    description:
+      "伊邪那岐命の禊で底・中・上の三柱として生まれた海の神。海幸山幸神話では海底の壮麗な宮殿の主として登場し、釣り針を失った火遠理命を迎えて娘を娶らせ、潮満玉・潮乾玉を授けて地上へ送り返した。",
+    trivia: "海人族・安曇氏の祖神。安曇氏は内陸の信濃にも移住し、長野県安曇野の地名と穂高神社にその痕跡を残している。"
+  },
+  {
+    id: "toyotamabime",
+    name: "豊玉毘売",
+    kana: "トヨタマビメ",
+    romaji: "Toyotama-hime",
+    group: "国津神",
+    aliases: ["豊玉姫"],
+    epithet: "正体を見られ、海へ帰った龍宮の姫",
+    tags: ["海", "龍宮", "安産"],
+    benefits: ["安産", "子授け", "航海安全", "縁結び"],
+    parents: ["watatsumi"], spouse: ["hoori"], children: ["ugayafukiaezu"],
+    myths: ["海幸山幸"],
+    shrines: ["豊玉姫神社（鹿児島）", "和多都美神社（長崎・対馬）", "鵜戸神宮（宮崎）"],
+    sources: ["古事記 上巻", "日本書紀 神代下"],
+    description:
+      "海神の娘。海宮を訪れた火遠理命と結婚し、三年後に彼が地上へ帰った後、身重の体で追って渡ってきた。「産むときは決して見ないでほしい」と頼んだが、夫は覗いてしまう。そこにいたのは巨大な和邇（鮫・龍）の姿だった。恥じた彼女は子を残して海へ帰り、海と陸の道は閉ざされた。",
+    trivia: "「見るなの禁」を破られる話型は、イザナミ・鶴の恩返しへと連なる日本の物語の骨格の一つ。"
+  },
+  {
+    id: "tamayoribime",
+    name: "玉依毘売",
+    kana: "タマヨリビメ",
+    romaji: "Tamayori-hime",
+    group: "国津神",
+    aliases: ["玉依姫"],
+    epithet: "姉に代わって甥を育て、そして妻となった",
+    tags: ["海", "養育", "皇祖"],
+    benefits: ["子育て", "安産", "縁結び", "海上安全"],
+    parents: ["watatsumi"], spouse: ["ugayafukiaezu"], children: ["jimmu"],
+    myths: ["海幸山幸", "神武の誕生"],
+    shrines: ["賀茂御祖神社／下鴨神社（京都）", "鵜戸神宮（宮崎）", "青島神社（宮崎）"],
+    sources: ["古事記 上巻", "日本書紀 神代下"],
+    description:
+      "豊玉毘売の妹。姉が海に帰った後、残された甥・鵜葺草葺不合命を養育し、成長後にその妻となった。生んだ子の末子が神武天皇である。「タマヨリ」は神霊が依り憑く巫女を意味する普通名詞でもあり、同名の女神が各地に伝わる。",
+    trivia: "京都・下鴨神社の玉依姫は、川上から流れてきた丹塗矢によって賀茂別雷神を身籠ったと伝わる。葵祭の起源である。"
+  },
+  {
+    id: "sarutahiko",
+    name: "猿田毘古神",
+    kana: "サルタヒコノカミ",
+    romaji: "Sarutahiko",
+    group: "国津神",
+    aliases: ["猿田彦大神", "道祖神（習合）"],
+    epithet: "天孫の道を先導した、辻の守り神",
+    tags: ["道", "先導", "天孫降臨", "みちひらき"],
+    benefits: ["交通安全", "方位除け", "みちひらき", "縁結び"],
+    parents: [], spouse: ["amenouzume"], children: [],
+    myths: ["天孫降臨"],
+    shrines: ["椿大神社（三重）", "猿田彦神社（三重）", "白鬚神社（滋賀）"],
+    sources: ["古事記 上巻", "日本書紀 神代下"],
+    description:
+      "天孫降臨の際、天の八衢（やちまた＝分かれ道）に立ちはだかった国津神。鼻の長さ七咫、背丈七尺余、目は赤い鏡のように輝いていたという。天宇受売命に素性を問われ、道案内をするために来たと答え、邇邇芸命を高千穂へ先導した。",
+    trivia: "後に伊勢の阿邪訶で漁をしていて貝に手を挟まれ溺れ死ぬ。強大な神が呆気なく死ぬ、日本神話らしい結末を持つ。"
+  },
+  {
+    id: "ukanomitama",
+    name: "宇迦之御魂神",
+    kana: "ウカノミタマノカミ",
+    romaji: "Uka-no-Mitama",
+    group: "国津神",
+    aliases: ["倉稲魂命", "お稲荷さん", "稲荷大神"],
+    epithet: "稲に宿る霊、日本で最も社数の多い神",
+    tags: ["稲作", "食物", "商売"],
+    benefits: ["五穀豊穣", "商売繁盛", "産業興隆", "家内安全"],
+    parents: ["susanoo"], spouse: [], children: [],
+    myths: ["須佐之男命の系譜"],
+    shrines: ["伏見稲荷大社（京都）", "全国3万社の稲荷神社", "笠間稲荷神社（茨城）"],
+    sources: ["古事記 上巻", "日本書紀 神代上"],
+    description:
+      "須佐之男命と神大市比売の子。「ウカ」は食物、特に稲を意味し、稲に宿る霊力そのものを神格化したもの。奈良時代に秦氏が伏見に祀って以来、農耕神から商工業の神へと信仰を広げ、日本で最も分社の多い神となった。",
+    trivia: "狐は神の使い（眷属）であって神そのものではない。稲荷神社の総数は約3万社、全国の神社の約3割を占める。"
+  },
+  {
+    id: "otoshi",
+    name: "大年神",
+    kana: "オオトシノカミ",
+    romaji: "Ōtoshi",
+    group: "国津神",
+    aliases: ["大歳神", "年神様"],
+    epithet: "正月に家々を訪れる、その年の神",
+    tags: ["稲作", "暦", "正月"],
+    benefits: ["五穀豊穣", "家内安全", "開運招福"],
+    parents: ["susanoo"], spouse: [], children: ["mitoshi"],
+    myths: ["須佐之男命の系譜"],
+    shrines: ["大歳神社（各地）", "葛木御歳神社（奈良）", "飛鳥坐神社（奈良）"],
+    sources: ["古事記 上巻"],
+    description:
+      "須佐之男命と神大市比売の子で、宇迦之御魂神の兄。「トシ」は本来「稲の実り」を意味し、一年の穀物の稔りを司る。正月に各家を訪れる「年神様」として、門松・鏡餅・おせち料理を供える習俗の中心にいる。",
+    trivia: "正月飾りはすべてこの神を迎えるためのもの。門松は依代、鏡餅は御神体、おせちは神と共にいただく直会（なおらい）である。"
+  },
+  {
+    id: "omononushi",
+    name: "大物主神",
+    kana: "オオモノヌシノカミ",
+    romaji: "Ōmononushi",
+    group: "国津神",
+    aliases: ["三輪明神", "倭大物主櫛甕魂命"],
+    epithet: "三輪山そのものを御神体とする、蛇神",
+    tags: ["山", "蛇", "祟り", "酒", "国造り"],
+    benefits: ["国土安泰", "疫病除け", "酒造守護", "縁結び"],
+    parents: [], spouse: [], children: [],
+    myths: ["国造り", "崇神天皇の疫病", "三輪山伝説"],
+    shrines: ["大神神社（奈良）", "金刀比羅宮（香川）", "三輪神社（各地）"],
+    sources: ["古事記 上巻・中巻", "日本書紀 神代上・崇神紀"],
+    description:
+      "少名毘古那神が去って途方に暮れる大国主神の前に、海を照らして現れ「私を大和の三輪山に祀れば国造りは成る」と告げた神。大国主の和魂（にきみたま）＝分身とされる。崇神天皇の代に疫病を起こし、子孫の意富多多泥古に祀らせることで鎮まった。",
+    trivia: "大神神社は本殿を持たず、三輪山そのものが御神体。日本最古の神社形式を今に伝える。夜だけ通う夫の正体が蛇だったという「三輪山型神話」の主でもある。"
+  },
+  {
+    id: "shitateruhime",
+    name: "下照比売",
+    kana: "シタテルヒメ",
+    romaji: "Shitateru-hime",
+    group: "国津神",
+    aliases: ["高比売命", "下照姫"],
+    epithet: "夫の死を歌に詠んだ、光り輝く姫",
+    tags: ["国譲り", "和歌", "光"],
+    benefits: ["縁結び", "夫婦和合", "諸芸上達"],
+    parents: ["okuninushi", "munakata"], spouse: ["amenowakahiko"], children: [],
+    myths: ["国譲り"],
+    shrines: ["賣布神社（島根）", "倭文神社（鳥取）", "高比売神社（奈良）"],
+    sources: ["古事記 上巻", "日本書紀 神代下"],
+    description:
+      "大国主神と多紀理毘売命の娘。高天原から遣わされた天若日子の妻となった。夫が返し矢に射られて死ぬと、その泣き声は高天原まで届いた。葬儀で兄の阿遅鉏高日子根神が夫と間違われて怒ったとき、兄の名を明かす歌を詠んだ。",
+    trivia: "彼女が詠んだ「夷振（ひなぶり）」は、記紀に収められた最古級の歌謡の一つとされる。"
+  },
+  {
+    id: "isotakeru",
+    name: "五十猛神",
+    kana: "イソタケルノカミ",
+    romaji: "Isotakeru",
+    group: "国津神",
+    aliases: ["大屋毘古神", "射楯神"],
+    epithet: "日本中に木を植えた、林業の祖",
+    tags: ["樹木", "林業", "航海"],
+    benefits: ["林業守護", "建築守護", "航海安全", "厄除け"],
+    parents: ["susanoo"], spouse: [], children: [],
+    myths: ["植林神話", "大国主の逃亡"],
+    shrines: ["伊太祁曽神社（和歌山）", "射楯兵主神社（兵庫）", "大屋神社（島根）"],
+    sources: ["日本書紀 神代上（第四・五の一書）", "古事記 上巻"],
+    description:
+      "須佐之男命の子。父とともに新羅に降ったが「この地には居たくない」と言って日本へ渡り、持ってきた樹木の種を筑紫から始めて全国に播いた。そのため日本は青山に覆われたという。『古事記』では大屋毘古神の名で、八十神に追われる大国主神を根の国へ逃した。",
+    trivia: "須佐之男命が髭や体毛から杉・檜・槇・楠を生み出し、それぞれ船・宮・棺に使えと定めた神話とセットで語られる。木材利用の起源譚。"
+  },
+  {
+    id: "kagutsuchi",
+    name: "火之迦具土神",
+    kana: "ヒノカグツチノカミ",
+    romaji: "Kagutsuchi",
+    group: "国津神",
+    aliases: ["火産霊神", "軻遇突智", "秋葉大神"],
+    epithet: "母を焼き殺し、父に斬られた火の神",
+    tags: ["火", "鍛冶", "祓"],
+    benefits: ["火難除け", "鍛冶守護", "厄除け"],
+    parents: ["izanagi", "izanami"], spouse: [], children: ["takemikazuchi", "kanayamabiko"],
+    myths: ["神生み", "迦具土斬殺"],
+    shrines: ["秋葉山本宮秋葉神社（静岡）", "愛宕神社（京都）", "古四王神社（各地）"],
+    sources: ["古事記 上巻", "日本書紀 神代上"],
+    description:
+      "伊邪那岐・伊邪那美が最後に生んだ火の神。誕生時に母の陰部を焼き、伊邪那美を死に至らしめた。怒った父に十拳剣で斬り殺されるが、飛び散った血と切断された体からは、建御雷神をはじめ十六柱もの神々が生まれた。",
+    trivia: "死によって最も多くの神を生んだ神。火は破壊すると同時に鍛冶・金属・山の恵みを生むという二面性が神話化されている。"
+  },
+  {
+    id: "kanayamabiko",
+    name: "金山毘古神",
+    kana: "カナヤマビコノカミ",
+    romaji: "Kanayamabiko",
+    group: "国津神",
+    aliases: ["金山彦神", "金山毘売神（対）"],
+    epithet: "嘔吐から生まれた、鉱山と鍛冶の神",
+    tags: ["金属", "鉱山", "鍛冶"],
+    benefits: ["鉱業守護", "金属加工守護", "金運", "厄除け"],
+    parents: ["izanami"], spouse: [], children: [],
+    myths: ["神生み"],
+    shrines: ["南宮大社（岐阜）", "金山神社（各地）", "黄金山神社（宮城）"],
+    sources: ["古事記 上巻", "日本書紀 神代上"],
+    description:
+      "火の神を生んで苦しむ伊邪那美命の嘔吐物から生まれた神。溶けた鉱石が炉から流れ出る様子を、吐瀉に見立てたものとされる。鉱山・鍛冶・金属加工を司り、たたら製鉄の盛んな地域で篤く信仰された。",
+    trivia: "美濃の南宮大社は全国の鉱山・金属業者の総本宮。刀剣の奉納が多く、関の刃物産業とも深く結びついている。"
+  },
+  {
+    id: "kayanohime",
+    name: "鹿屋野比売神",
+    kana: "カヤノヒメノカミ",
+    romaji: "Kayanohime",
+    group: "国津神",
+    aliases: ["野椎神", "草祖草野姫"],
+    epithet: "草原そのもの、屋根を葺く萱の神",
+    tags: ["草", "野", "農耕"],
+    benefits: ["五穀豊穣", "牧畜守護", "住居守護"],
+    parents: ["izanagi", "izanami"], spouse: ["oyamatsumi"], children: [],
+    myths: ["神生み"],
+    shrines: ["萱津神社（愛知）", "茅野神社（各地）", "野椎神社（島根）"],
+    sources: ["古事記 上巻", "日本書紀 神代上"],
+    description:
+      "伊邪那岐・伊邪那美が生んだ草原の女神。大山津見神と対になり、山と野を分掌する。萱（かや）は屋根を葺き、家畜を養い、田の肥料となる、古代生活の基盤資材だった。この二柱からさらに八柱の山野の神が生まれている。",
+    trivia: "愛知の萱津神社は日本唯一の漬物の神社。この神に野菜と塩を供えたのが漬物の起源と伝わる。"
+  },
+  {
+    id: "ogetsuhime",
+    name: "大宜都比売神",
+    kana: "オオゲツヒメノカミ",
+    romaji: "Ōgetsuhime",
+    group: "国津神",
+    aliases: ["大気都比売神", "保食神（同型）"],
+    epithet: "殺された体から五穀が生まれた食物神",
+    tags: ["食物", "穀物", "死体化生"],
+    benefits: ["五穀豊穣", "食物守護", "商売繁盛"],
+    parents: [], spouse: [], children: [],
+    myths: ["穀物の起源"],
+    shrines: ["上一宮大粟神社（徳島）", "一宮神社（徳島）", "多久頭魂神社（長崎）"],
+    sources: ["古事記 上巻", "日本書紀 神代上（保食神として）"],
+    description:
+      "須佐之男命に食物を求められ、鼻・口・尻からさまざまな食物を取り出して饗した。それを汚らわしいと見た須佐之男命に斬り殺されるが、その死体の頭から蚕、目から稲、耳から粟、鼻から小豆、陰部から麦、尻から大豆が生じた。神産巣日神がこれを回収し、五穀の種となった。",
+    trivia: "殺された神の体から作物が生まれる「ハイヌウェレ型神話」の日本版。東南アジア・オセアニアに広く分布する話型で、日本文化の南方的要素を示す。"
+  },
+  {
+    id: "mitoshi",
+    name: "御年神",
+    kana: "ミトシノカミ",
+    romaji: "Mitoshi",
+    group: "国津神",
+    aliases: ["御歳神", "大御年神"],
+    epithet: "田に祟り、そして実らせる稲の神",
+    tags: ["稲作", "農耕", "祟り"],
+    benefits: ["五穀豊穣", "農業守護", "厄除け"],
+    parents: ["otoshi"], spouse: [], children: [],
+    myths: ["須佐之男命の系譜", "御歳神の祟り"],
+    shrines: ["葛木御歳神社（奈良）", "大歳御祖神社（静岡）"],
+    sources: ["古事記 上巻", "古語拾遺"],
+    description:
+      "大年神の子で、稲の稔りを司る神。『古語拾遺』には、田の神への供物を怠った人々の田に蝗（いなご）を放って稲を枯らし、白猪・白馬・白鶏を供えられてようやく怒りを解いた話が伝わる。豊穣を与える神は、同時に飢饉をもたらす神でもある。",
+    trivia: "この祟りの記録は、日本最古の農業被害と祭祀による対応の記述とされる。奈良の葛木御歳神社は全国の御歳神社の総本社。"
+  },
+  {
+    id: "shinatsuhiko", name: "志那都比古神", kana: "シナツヒコノカミ", romaji: "Shinatsuhiko",
+    group: "国津神", aliases: ["級長津彦命", "級長戸辺命（女神形）", "風神"],
+    epithet: "国土の朝霧を吹き払った、風の神",
+    tags: ["風", "気象", "航海"], benefits: ["風害除け", "航海安全", "五穀豊穣", "厄除け"],
+    parents: ["izanagi", "izanami"], spouse: [], children: [],
+    myths: ["神生み"],
+    shrines: ["龍田大社（奈良）", "伊勢神宮 風日祈宮（三重）", "志那神社（滋賀）"],
+    sources: ["古事記 上巻", "日本書紀 神代上"],
+    description: "伊邪那岐・伊邪那美が、国土を覆う朝霧を息で吹き払ったとき、その息から成った風の神。『日本書紀』では級長戸辺命という女神の名でも記される。台風・凶作を左右する存在として、古代の朝廷は龍田大社で毎年風神祭を行った。",
+    trivia: "元寇の「神風」は、この神を祀る龍田大社と伊勢の風宮に朝廷が祈願した結果とされ、風宮はこれを機に格上げされた。"
+  },
+  {
+    id: "kukunochi", name: "久久能智神", kana: "ククノチノカミ", romaji: "Kukunochi",
+    group: "国津神", aliases: ["句句廼馳", "木の神"],
+    epithet: "立ち上がる木の霊、樹木の総元締め",
+    tags: ["樹木", "山", "林業"], benefits: ["林業守護", "建築守護", "厄除け"],
+    parents: ["izanagi", "izanami"], spouse: [], children: [],
+    myths: ["神生み"],
+    shrines: ["六所神社（各地）", "馬事公苑近隣の木神社（各地）", "杉山神社（神奈川）"],
+    sources: ["古事記 上巻", "日本書紀 神代上"],
+    description: "神生みで生まれた樹木の神。「くく」は茎（くき）と同語源で、まっすぐ立ち上がる木の姿を表すとされる。大山津見神が山を、鹿屋野比売神が野を司るのに対し、この神は木そのものを司る。",
+    trivia: "木材が建築・造船・燃料のすべてを支えた時代、この神は現代でいう基幹インフラの守護神にあたる。"
+  },
+  {
+    id: "mizuhanome", name: "弥都波能売神", kana: "ミヅハノメノカミ", romaji: "Mizuhanome",
+    group: "国津神", aliases: ["罔象女神", "水波能売命"],
+    epithet: "尿から生まれた、井戸と灌漑の水神",
+    tags: ["水", "井戸", "農耕"], benefits: ["祈雨", "止雨", "水難除け", "五穀豊穣"],
+    parents: ["izanami"], spouse: [], children: [],
+    myths: ["神生み"],
+    shrines: ["丹生川上神社（奈良）", "貴船神社（京都）", "水神社（各地）"],
+    sources: ["古事記 上巻", "日本書紀 神代上"],
+    description: "火の神を生んで苦しむ伊邪那美命の尿から生まれた水の神。「ミヅハ」は water の走る様、あるいは灌漑用水路を指すとされる。荒ぶる河川ではなく、田に引く水・井戸の水を司る点に特徴がある。",
+    trivia: "旱魃には黒馬、長雨には白馬を捧げて祈った記録が残る。この風習が絵馬の起源の一つとされる。"
+  },
+  {
+    id: "haniyasu", name: "波邇夜須毘古神・波邇夜須毘売神", kana: "ハニヤスビコノカミ・ハニヤスビメノカミ", romaji: "Haniyasubiko & Haniyasubime",
+    group: "国津神", aliases: ["埴山彦神・埴山姫神"],
+    epithet: "糞から生まれた、粘土と土器の神",
+    tags: ["土", "陶芸", "農耕"], benefits: ["土地鎮め", "陶業守護", "五穀豊穣"],
+    parents: ["izanami"], spouse: [], children: [],
+    myths: ["神生み"],
+    shrines: ["畝火山口神社（奈良）", "波爾布神社（福井）", "愛宕神社（京都・配祀）"],
+    sources: ["古事記 上巻", "日本書紀 神代上"],
+    description: "火の神を生んで苦しむ伊邪那美命の糞から生まれた男女一対の神。「ハニ」は赤みを帯びた粘土のことで、土器・埴輪・壁土の材料を指す。土そのものを司り、地鎮祭で最も重視される神格の一つ。",
+    trivia: "火の神の姉として水と土の神が生まれる構成は、火事を水と土で消す実際の消火法をなぞっているとする読み方がある。"
+  },
+  {
+    id: "wakumusuhi", name: "和久産巣日神", kana: "ワクムスヒノカミ", romaji: "Wakumusuhi",
+    group: "国津神", aliases: ["稚産霊", "若産霊神"],
+    epithet: "頭に蚕と桑、臍に五穀を生じた神",
+    tags: ["穀物", "養蚕", "生成"], benefits: ["五穀豊穣", "養蚕守護", "産業繁栄"],
+    parents: ["izanami"], spouse: [], children: ["toyouke"],
+    myths: ["神生み"],
+    shrines: ["御食津神社（各地）", "水尾神社（滋賀）", "多久頭魂神社（長崎）"],
+    sources: ["古事記 上巻", "日本書紀 神代上（第二の一書）"],
+    description: "瀕死の伊邪那美命から生まれた、若々しい生成力の神。『日本書紀』では、この神の頭から蚕と桑が、臍から五穀が生じたとされる。娘は伊勢外宮の豊宇気毘売神で、食物神の系譜の起点にあたる。",
+    trivia: "死にゆく母から食物と養蚕が生まれるという構図は、大宜都比売の死体化生神話と同じ発想に立つ。"
+  },
+  {
+    id: "toyouke", name: "豊宇気毘売神", kana: "トヨウケビメノカミ", romaji: "Toyouke",
+    group: "天津神", aliases: ["豊受大神", "止由気大神", "御饌津神"],
+    epithet: "天照大御神の食事を司る、伊勢外宮の主神",
+    tags: ["食物", "穀物", "祭祀"], benefits: ["五穀豊穣", "産業繁栄", "衣食住の守護", "開運"],
+    parents: ["wakumusuhi"], spouse: [], children: [],
+    myths: ["神生み", "伊勢外宮の鎮座"],
+    shrines: ["伊勢神宮 外宮（三重）", "元伊勢籠神社（京都）", "全国の豊受神社"],
+    sources: ["古事記 上巻", "止由気宮儀式帳", "丹後国風土記逸文"],
+    description: "和久産巣日神の子で、食物・穀物を司る女神。雄略天皇の夢に天照大御神が現れ「一人では食事が安らかでない。丹波の豊受大神を近くに呼べ」と告げたため、伊勢の外宮に迎えられたと伝わる。",
+    trivia: "伊勢神宮では毎日朝夕二度、外宮の御饌殿で神々に食事を供える日別朝夕大御饌祭が、千五百年にわたり途切れず続いている。"
+  },
+  {
+    id: "hayaakitsuhiko", name: "速秋津日子神・速秋津比売神", kana: "ハヤアキツヒコノカミ・ハヤアキツヒメノカミ", romaji: "Hayaakitsuhiko & Hayaakitsuhime",
+    group: "国津神", aliases: ["水戸神", "湊の神"],
+    epithet: "河口で、川と海の境を守る神",
+    tags: ["水", "河口", "祓"], benefits: ["水難除け", "港湾守護", "厄祓い"],
+    parents: ["izanagi", "izanami"], spouse: [], children: [],
+    myths: ["神生み"],
+    shrines: ["速秋津神社（各地）", "湊神社（各地）", "佐波波地祇神社（茨城）"],
+    sources: ["古事記 上巻", "日本書紀 神代上"],
+    description: "神生みで生まれた河口（水戸）の男女神。川が海に注ぐ境目を司り、そこからさらに八柱の水の神を生んだ。大祓詞では、罪穢れを川から海へと流し出す最初の関門として登場する。",
+    trivia: "大祓詞は、この神の司る河口 → 荒潮 → 根の国という三段階で穢れを運び去る。水系を用いた古代の「処理フロー」である。"
+  },
+  {
+    id: "amenoiwatowake", name: "天石戸別神", kana: "アメノイワトワケノカミ", romaji: "Ame-no-Iwatowake",
+    group: "天津神", aliases: ["櫛石窓神", "豊石窓神", "門の神"],
+    epithet: "門を守り、外の災いを通さない神",
+    tags: ["門", "守護", "天孫降臨"], benefits: ["家内安全", "厄除け", "盗難除け"],
+    parents: [], spouse: [], children: [],
+    myths: ["神生み", "天孫降臨"],
+    shrines: ["御門主神社（各地）", "櫛石窓神社（兵庫）", "宮中 御門巫祭神"],
+    sources: ["古事記 上巻", "古語拾遺"],
+    description: "門・戸口を守る神。天孫降臨に随行し、宮殿の門を守護した。宮中では御門巫（みかどのみかんなぎ）がこの神を祀り、内裏の四方の門ごとに祭りが行われた。神社の随身門・門守の起源にあたる。",
+    trivia: "正月の門松やしめ飾りを門口に立てるのは、この神の領分を明示し、外の穢れを断つ意味を持つ。"
+  },
+  {
+    id: "kuraokami", name: "闇淤加美神", kana: "クラオカミノカミ", romaji: "Kuraokami",
+    group: "国津神", aliases: ["高龗神", "闇龗神", "淤加美神"],
+    epithet: "谷を走る龍、雨を降らせる水神",
+    tags: ["水", "龍", "祈雨"], benefits: ["祈雨", "止雨", "縁結び", "水難除け"],
+    parents: ["kagutsuchi"], spouse: [], children: [],
+    myths: ["迦具土斬殺"],
+    shrines: ["貴船神社（京都）", "丹生川上神社上社（奈良）", "高龗神社（各地）"],
+    sources: ["古事記 上巻", "日本書紀 神代上"],
+    description: "伊邪那岐命が斬った火之迦具土神の血から生まれた水の神。「オカミ」は龍の古語とされ、「クラ」は谷を意味する。谷間に雲を呼び雨を降らせる山の水源の神であり、朝廷の祈雨・止雨の祭祀で最も重んじられた。",
+    trivia: "貴船神社は和泉式部が夫の心変わりを祈って復縁した社としても知られ、水神でありながら縁結びの信仰を集める。"
+  },
+  {
+    id: "amenoohabari", name: "天之尾羽張神", kana: "アメノオハバリノカミ", romaji: "Ame-no-Ohabari",
+    group: "天津神", aliases: ["伊都之尾羽張", "天尾羽張"],
+    epithet: "火の神を斬った剣そのものが神になった",
+    tags: ["剣", "武", "国譲り"], benefits: ["厄除け", "勝運", "刀剣守護"],
+    parents: [], spouse: [], children: ["takemikazuchi"],
+    myths: ["迦具土斬殺", "国譲り"],
+    shrines: ["石上神宮（奈良・関連）", "尾羽張神社（各地）"],
+    sources: ["古事記 上巻"],
+    description: "伊邪那岐命が火之迦具土神を斬った十拳剣が神格化したもの。国譲りの使者を選ぶ場面では、天安河の水を塞き止めて住む神として登場し、「自分より子の建御雷神を遣わすのがよい」と推挙した。",
+    trivia: "刀剣が神として意思を持ち、人事を推薦する。物に神が宿る日本的な感覚が最も端的に現れた場面。"
+  },
+  {
+    id: "ookotooshio", name: "大事忍男神", kana: "オオコトオシヲノカミ", romaji: "Ōkotooshio",
+    group: "国津神", aliases: ["大事忍男命"],
+    epithet: "「大仕事をやり終えた」国生みの区切り",
+    tags: ["創世", "国生み"], benefits: ["大願成就", "事業成就"],
+    parents: ["izanagi", "izanami"], spouse: [], children: [],
+    myths: ["神生み"],
+    shrines: ["伊弉諾神宮 摂社（兵庫）", "大事忍男神社（各地）"],
+    sources: ["古事記 上巻"],
+    description: "大八島国を生み終えた伊邪那岐・伊邪那美が、最初に生んだ神。名は「大きな事を成し終えた」の意で、国生みという大事業の完了そのものを神格化したもの。ここから神生みの段が始まる。",
+    trivia: "行為の完了を神にしてしまう発想は、日本神話が抽象概念をどう扱うかをよく示している。"
+  },
+  {
+    id: "tsukitatsufunado", name: "衝立船戸神", kana: "ツキタツフナドノカミ", romaji: "Tsukitatsu-Funado",
+    group: "国津神", aliases: ["道反大神", "塞坐黄泉戸大神", "岐神", "道祖神"],
+    epithet: "黄泉との境に投げられた杖から生まれた",
+    tags: ["境界", "道", "祓"], benefits: ["厄除け", "疫病除け", "旅行安全", "縁切り"],
+    parents: ["izanagi"], spouse: [], children: [],
+    myths: ["黄泉国訪問", "禊祓"],
+    shrines: ["道祖神（全国の路傍）", "佐太神社（島根）", "久那斗神社（各地）"],
+    sources: ["古事記 上巻", "日本書紀 神代上"],
+    description: "黄泉から逃げ帰った伊邪那岐命が、追手を防ぐために投げ捨てた杖から生まれた神。この世とあの世の境に立ち、災厄が入るのを塞ぐ。村境や辻に立つ道祖神・賽の神は、この神格の系譜にある。",
+    trivia: "「塞ぐ神」であることから、悪縁を断つ縁切りの信仰にもつながった。境界を守る神は、通す相手を選ぶ神でもある。"
+  },
+  {
+    id: "yasomagatsuhi", name: "八十禍津日神・大禍津日神", kana: "ヤソマガツヒノカミ・オオマガツヒノカミ", romaji: "Yasomagatsuhi & Ōmagatsuhi",
+    group: "国津神", aliases: ["八十枉津日神"],
+    epithet: "穢れから生まれた、災厄そのものの神",
+    tags: ["災厄", "祓", "穢れ"], benefits: ["厄除け", "災難除け"],
+    parents: ["izanagi"], spouse: [], children: [],
+    myths: ["禊祓"],
+    shrines: ["神魂神社 摂社（島根）", "厄除けの諸社"],
+    sources: ["古事記 上巻", "日本書紀 神代上"],
+    description: "伊邪那岐命が黄泉の穢れを洗い落としたとき、その穢れから生まれた災厄の神。この世のあらゆる禍いはこの神に由来するとされる。直後に生まれた神直毘神・大直毘神が、その禍いを直す役目を負う。",
+    trivia: "災いを起こす神と直す神を一続きに生む構成が特徴。日本神話には「絶対悪」がおらず、禍いも祓えば済む対象として扱われる。"
+  },
+  {
+    id: "naobi", name: "神直毘神・大直毘神", kana: "カムナオビノカミ・オオナオビノカミ", romaji: "Kamunaobi & Ōnaobi",
+    group: "天津神", aliases: ["伊豆能売（同時に成った神）"],
+    epithet: "曲がったものを、まっすぐに直す神",
+    tags: ["祓", "再生", "浄化"], benefits: ["厄除け", "災難除け", "運気回復"],
+    parents: ["izanagi"], spouse: [], children: [],
+    myths: ["禊祓"],
+    shrines: ["直毘神社（各地）", "多賀大社 摂社（滋賀）", "住吉大社 摂社（大阪）"],
+    sources: ["古事記 上巻", "日本書紀 神代上"],
+    description: "禍津日神が生んだ災いを、元のまっすぐな状態に戻すために成った神。ともに生まれた伊豆能売は、その浄化の働きを担う女神とされる。「直す」ことを専門とする、日本神話に特徴的な神格。",
+    trivia: "厄払いの本質は災いを消すことではなく「直す」ことにある、という古代の考え方がこの神名に残っている。"
+  },
+  {
+    id: "seoritsuhime", name: "瀬織津比売", kana: "セオリツヒメ", romaji: "Seoritsuhime",
+    group: "天津神", aliases: ["瀬織津姫神", "祓戸大神の一柱"],
+    epithet: "罪穢れを、急流にのせて海へ運ぶ",
+    tags: ["祓", "川", "水"], benefits: ["厄除け", "浄化", "水難除け"],
+    parents: [], spouse: [], children: [],
+    myths: ["大祓"],
+    shrines: ["佐久奈度神社（滋賀）", "伊勢神宮 荒祭宮（三重・同一視説）", "六甲比命神社（兵庫）"],
+    sources: ["大祓詞（延喜式）"],
+    description: "祓戸大神四柱の筆頭。急な瀬の流れに乗せて、人の罪や穢れを大海原まで運び去る女神。記紀本文には登場せず、大祓詞にのみ現れる。天照大御神の荒魂と同一視する説もあり、根強い人気を持つ。",
+    trivia: "記紀に名がないため、中世以降さまざまな解釈が積み重なった。学説上は諸説あり、断定できる典拠は大祓詞のみである。"
+  },
+  {
+    id: "hayaakitsuhime_harae", name: "速開都比売", kana: "ハヤアキツヒメ", romaji: "Hayaakitsuhime",
+    group: "天津神", aliases: ["速秋津比売命（同名異神説）", "祓戸大神の一柱"],
+    epithet: "運ばれてきた穢れを、呑み込む",
+    tags: ["祓", "海", "水"], benefits: ["厄除け", "浄化", "海上安全"],
+    parents: [], spouse: [], children: [],
+    myths: ["大祓"],
+    shrines: ["佐久奈度神社（滋賀）", "祓戸神社（各地）"],
+    sources: ["大祓詞（延喜式）"],
+    description: "祓戸大神の二柱目。瀬織津比売が海へ流した罪穢れを、潮の合流する荒潮の底で呑み込む女神。祓いの工程は、流す → 呑む → 吹き放つ → 消し去る、の四段階で構成されている。",
+    trivia: "この分業の細かさは、古代の祓えが単なる祈りではなく、明確な手順を持つ「工程」として設計されていたことを示す。"
+  },
+  {
+    id: "ibukidonushi", name: "気吹戸主", kana: "イブキドヌシ", romaji: "Ibukidonushi",
+    group: "天津神", aliases: ["気吹戸主神", "祓戸大神の一柱"],
+    epithet: "呑まれた穢れを、根の国へ吹き放つ",
+    tags: ["祓", "風", "根の国"], benefits: ["厄除け", "浄化", "病気平癒"],
+    parents: [], spouse: [], children: [],
+    myths: ["大祓"],
+    shrines: ["佐久奈度神社（滋賀）", "気吹戸主神社（各地）"],
+    sources: ["大祓詞（延喜式）"],
+    description: "祓戸大神の三柱目。速開都比売が呑み込んだ罪穢れを、息とともに根の国・底の国へ吹き放つ神。「気吹（いぶき）」は息を吹く動作を指し、風の力によって穢れを地上から追い出す役を負う。",
+    trivia: "神職が祓詞を奏上するとき息を長く伸ばすのは、この神の働きになぞらえた作法とされる。"
+  },
+  {
+    id: "hayasasurahime", name: "速佐須良比売", kana: "ハヤサスラヒメ", romaji: "Hayasasurahime",
+    group: "天津神", aliases: ["速佐須良比売神", "祓戸大神の一柱"],
+    epithet: "根の国で、穢れをさすらわせ消し去る",
+    tags: ["祓", "根の国", "消滅"], benefits: ["厄除け", "浄化", "再生"],
+    parents: [], spouse: [], children: [],
+    myths: ["大祓"],
+    shrines: ["佐久奈度神社（滋賀）", "祓戸神社（各地）"],
+    sources: ["大祓詞（延喜式）"],
+    description: "祓戸大神の四柱目、最後の担い手。根の国に吹き放たれた罪穢れを受け取り、さすらわせて跡形もなく消し去る女神。この神をもって、大祓の工程は完了する。",
+    trivia: "四柱の役割分担は「川 → 海 → 風 → 地下」と自然界の循環に沿っている。穢れを消すのではなく、循環系に戻すという発想である。"
+  },
+  {
+    id: "kukurihime", name: "菊理媛神", kana: "ククリヒメノカミ", romaji: "Kukurihime",
+    group: "国津神", aliases: ["白山比咩大神", "白山権現"],
+    epithet: "黄泉の境で、争う夫婦を取りなした",
+    tags: ["仲裁", "縁結び", "山"], benefits: ["縁結び", "夫婦和合", "和解", "厄除け"],
+    parents: [], spouse: [], children: [],
+    myths: ["黄泉国訪問"],
+    shrines: ["白山比咩神社（石川）", "全国三千余社の白山神社", "白山神社（新潟）"],
+    sources: ["日本書紀 神代上（第十の一書）"],
+    description: "黄泉平坂で伊邪那岐・伊邪那美が激しく言い争ったとき、ただ一度だけ現れて何事かを申し述べ、伊邪那岐命はそれを褒めて立ち去った。何を言ったのかは記されていない。この一場面のみの登場ながら、仲を「くくる」神として縁結びの信仰を集める。",
+    trivia: "『古事記』には登場せず、『日本書紀』の一書に一度きり現れる。台詞の内容が伏せられているために、かえって解釈が広がった神。"
+  },
+  {
+    id: "yomotsushikome", name: "予母都志許売", kana: "ヨモツシコメ", romaji: "Yomotsu-shikome",
+    group: "国津神", aliases: ["黄泉醜女"],
+    epithet: "黄泉から追ってきた、死の使い",
+    tags: ["黄泉", "死", "追跡"], benefits: ["—"],
+    parents: [], spouse: [], children: [],
+    myths: ["黄泉国訪問"],
+    shrines: ["揖夜神社 周辺（島根・黄泉比良坂伝承地）"],
+    sources: ["古事記 上巻", "日本書紀 神代上"],
+    description: "腐乱した姿を見られた伊邪那美命が、逃げる夫を捕らえるため差し向けた黄泉の女たち。伊邪那岐命は髪飾りを投げて山葡萄に、櫛を投げて筍に変え、それを食べる隙に逃げ延びた。最後は黄泉比良坂を千引の岩で塞いで難を逃れる。",
+    trivia: "投げた物が食物に変わって追手を足止めするこの型は、世界各地の逃走譚に共通する「呪的逃走」と呼ばれるモチーフ。"
+  },
+  {
+    id: "amatsuhikone", name: "天津日子根命", kana: "アマツヒコネノミコト", romaji: "Amatsuhikone",
+    group: "天津神", aliases: ["天津彦根命"],
+    epithet: "多くの地方豪族が祖と仰いだ、誓約の三男",
+    tags: ["誓約", "祖神", "雷"], benefits: ["厄除け", "産業繁栄", "雷除け"],
+    parents: ["amaterasu"], spouse: [], children: [],
+    myths: ["誓約"],
+    shrines: ["多度大社（三重）", "田村神社（香川）", "山代国造ゆかりの諸社"],
+    sources: ["古事記 上巻", "日本書紀 神代上"],
+    description: "天照大御神と須佐之男命の誓約で生まれた三男。神話中の活躍は語られないが、凡川内国造・額田部湯坐連・茨木国造・倭田中直など、きわめて多くの氏族がこの神を祖と称した。地方豪族と皇室を系譜でつなぐ役割を果たしている。",
+    trivia: "伊勢の多度大社では、この神を祀り「お伊勢参らばお多度もかけよ」と謳われた。伊勢参宮とセットの参詣先だった。"
+  },
+  {
+    id: "ikutsuhikone", name: "活津日子根命", kana: "イクツヒコネノミコト", romaji: "Ikutsuhikone",
+    group: "天津神", aliases: ["活津彦根命"],
+    epithet: "名だけを残した、誓約の四男",
+    tags: ["誓約", "生命力"], benefits: ["生命力向上", "厄除け"],
+    parents: ["amaterasu"], spouse: [], children: [],
+    myths: ["誓約"],
+    shrines: ["生井神社（各地）", "近江の日子根系諸社"],
+    sources: ["古事記 上巻", "日本書紀 神代上"],
+    description: "誓約で生まれた五柱の男神の四番目。「イク」は生命力が満ちる意とされる。神話中に事績はなく、系譜を伝える氏族も少ない。記紀が伝えたかったのは五柱という数そのもので、個々の物語ではなかったことがうかがえる。",
+    trivia: "誓約で生まれた五男三女のうち、物語を持つのは長男・次男と三女神だけ。残りは名のみで伝わる。"
+  },
+  {
+    id: "kumanokusubi", name: "熊野久須毘命", kana: "クマノクスビノミコト", romaji: "Kumano-Kusubi",
+    group: "天津神", aliases: ["熊野忍蹈命", "熊野櫲樟日命"],
+    epithet: "出雲の熊野に名を残す、誓約の五男",
+    tags: ["誓約", "祭祀"], benefits: ["厄除け", "縁結び", "産業繁栄"],
+    parents: ["amaterasu"], spouse: [], children: [],
+    myths: ["誓約"],
+    shrines: ["熊野大社（島根）", "出雲の熊野系諸社"],
+    sources: ["古事記 上巻", "日本書紀 神代上"],
+    description: "誓約で生まれた五男神の末子。「クス」は霊妙な力を指す。出雲国一宮の熊野大社との関連が指摘され、出雲の古い祭祀圏に属する神格を、天照大御神の子として系譜に取り込んだ痕跡と見る説がある。",
+    trivia: "出雲の熊野大社は「日本火出初社」とも呼ばれ、火起こしの神事を伝える。出雲大社の宮司はここで鑽り出した火を受け継ぐ。"
+  },
+  {
+    id: "takirihime", name: "多紀理毘売命", kana: "タキリビメノミコト", romaji: "Takiribime",
+    group: "天津神", aliases: ["田心姫命", "奥津島比売命"],
+    epithet: "沖ノ島に坐す、宗像の長女",
+    tags: ["海", "航海", "誓約"], benefits: ["海上安全", "交通安全", "縁結び"],
+    parents: ["amaterasu", "susanoo"], spouse: ["okuninushi"], children: ["ajisukitakahikone", "shitateruhime"],
+    myths: ["誓約"],
+    shrines: ["宗像大社 沖津宮（福岡）", "厳島神社（広島）", "出雲大社 摂社（島根）"],
+    sources: ["古事記 上巻", "日本書紀 神代上"],
+    description: "宗像三女神の長女。玄界灘に浮かぶ沖ノ島の沖津宮に祀られる。大国主神の妻となり、阿遅鉏高日子根神と下照比売を生んだ。天津神でありながら出雲の王に嫁ぐという、両系統をつなぐ位置にある。",
+    trivia: "沖津宮のある沖ノ島は今も女人禁制で、上陸には禊が要る。島で見聞きしたことを口外しない「不言様（おいわずさま）」の掟が続く。"
+  },
+  {
+    id: "ichikishimahime", name: "市寸島比売命", kana: "イチキシマヒメノミコト", romaji: "Ichikishimahime",
+    group: "天津神", aliases: ["市杵島姫命", "狭依毘売命", "弁財天（習合）"],
+    epithet: "厳島に坐し、弁天と重ねられた次女",
+    tags: ["海", "航海", "芸能", "誓約"], benefits: ["海上安全", "芸道上達", "財運", "美容"],
+    parents: ["amaterasu", "susanoo"], spouse: [], children: [],
+    myths: ["誓約"],
+    shrines: ["宗像大社 中津宮（福岡）", "厳島神社（広島）", "江島神社（神奈川）", "竹生島神社（滋賀）"],
+    sources: ["古事記 上巻", "日本書紀 神代上"],
+    description: "宗像三女神の次女。名は「斎き島（神に仕える島）」に由来する。中世に仏教の弁財天と習合し、水辺の女神・音楽と財の神として全国に広まった。宗像三女神の中で最も広く知られる。",
+    trivia: "「弁天様」として祀られる社の多くは、実際にはこの神である。芸能と金運の両方に効くという信仰は、この習合から生まれた。"
+  },
+  {
+    id: "tagitsuhime", name: "多岐都比売命", kana: "タギツヒメノミコト", romaji: "Tagitsuhime",
+    group: "天津神", aliases: ["湍津姫命"],
+    epithet: "たぎつ潮 ― 荒れる海流の女神",
+    tags: ["海", "航海", "誓約"], benefits: ["海上安全", "大漁祈願", "交通安全"],
+    parents: ["amaterasu", "susanoo"], spouse: [], children: [],
+    myths: ["誓約"],
+    shrines: ["宗像大社 辺津宮（福岡）", "厳島神社（広島）", "多岐神社（各地）"],
+    sources: ["古事記 上巻", "日本書紀 神代上"],
+    description: "宗像三女神の三女。「タギツ」は水が激しく流れる意で、玄界灘の激しい潮流そのものを表す。九州本土の辺津宮に祀られ、大陸への航路の起点を守護する。",
+    trivia: "三姉妹はそれぞれ沖・中・本土に配され、三点で航路全体を押さえる配置になっている。信仰と航海術が一体だった証。"
+  },
+  {
+    id: "amenomahitotsu", name: "天目一箇神", kana: "アメノマヒトツノカミ", romaji: "Ame-no-Mahitotsu",
+    group: "天津神", aliases: ["天御影命", "一つ目の鍛冶神"],
+    epithet: "片目で炉の火色を読む、鍛冶の祖",
+    tags: ["鍛冶", "金属", "工芸"], benefits: ["鍛冶守護", "金属加工守護", "技術向上", "眼病平癒"],
+    parents: [], spouse: [], children: [],
+    myths: ["天岩戸", "天孫降臨"],
+    shrines: ["御上神社（滋賀）", "多度大社 別宮一目連神社（三重）", "天目一神社（兵庫）"],
+    sources: ["古語拾遺", "日本書紀 神代上", "播磨国風土記"],
+    description: "天岩戸の神事で刀・斧・鉄鐸を作った鍛冶の神。名の通り一つ目で表されるのは、鍛冶職人が炉の火を片目で見て温度を測ったためとされる。作金者（かなだくみ）の祖神。",
+    trivia: "全国に伝わる一つ目の妖怪・一つ目小僧は、零落したこの鍛冶神の姿とする民俗学の説がある。"
+  },
+  {
+    id: "amenohiwashi", name: "天日鷲命", kana: "アメノヒワシノミコト", romaji: "Ame-no-Hiwashi",
+    group: "天津神", aliases: ["天日鷲翔矢命", "麻植の神"],
+    epithet: "麻と木綿を植え、幣を織った神",
+    tags: ["織物", "麻", "天岩戸"], benefits: ["産業繁栄", "開運招福", "商売繁盛"],
+    parents: [], spouse: [], children: [],
+    myths: ["天岩戸"],
+    shrines: ["忌部神社（徳島）", "鷲神社（東京・浅草）", "大麻比古神社（徳島）"],
+    sources: ["古語拾遺", "日本書紀 神代上"],
+    description: "天岩戸の神事で、木綿（ゆう）と麻で神に捧げる幣を作った神。阿波忌部氏の祖神で、阿波（徳島）に麻と楮を植えて栽培を広めたと伝わる。弦を鳴らしたとき鷲がとまったことから、この名がついたという。",
+    trivia: "浅草の酉の市で知られる鷲神社の祭神。熊手で福をかき集める風習は、この神の「開運」の神格から生まれた。"
+  },
+  {
+    id: "taokihooi", name: "手置帆負命・彦狭知命", kana: "タオキホオイノミコト・ヒコサシリノミコト", romaji: "Taokihooi & Hikosashiri",
+    group: "天津神", aliases: ["工匠の二神"],
+    epithet: "神殿を建てた、大工と木工の祖",
+    tags: ["建築", "工芸", "天岩戸"], benefits: ["建築守護", "工事安全", "技術向上"],
+    parents: [], spouse: [], children: [],
+    myths: ["天岩戸", "天孫降臨"],
+    shrines: ["安房神社（千葉）", "忌部神社（徳島）", "櫻井神社（大阪）"],
+    sources: ["古語拾遺", "日本書紀 神代上"],
+    description: "天岩戸の神事で瑞殿（みずのみあらか）を建て、笠と矛を作った工匠の二神。天孫降臨にも随行し、地上で最初の宮殿を造営した。讃岐忌部・紀伊忌部の祖神で、大工・建具職の守護神とされる。",
+    trivia: "上棟式で棟木に幣串を立て、工匠の神を祀る作法は、この二神への奉告として今も続いている。"
+  },
+  {
+    id: "amenotanabatahime", name: "天棚機姫神", kana: "アメノタナバタヒメノカミ", romaji: "Ame-no-Tanabatahime",
+    group: "天津神", aliases: ["棚機姫神", "織女"],
+    epithet: "神の衣を織る、機織りの女神",
+    tags: ["織物", "工芸", "星"], benefits: ["織物守護", "技芸上達", "縁結び"],
+    parents: [], spouse: [], children: [],
+    myths: ["天岩戸"],
+    shrines: ["機神社（各地）", "星宮神社（栃木）", "服部天神宮（大阪）"],
+    sources: ["古語拾遺"],
+    description: "天岩戸の神事で、神に捧げる神衣（かんみそ）を織った女神。高天原の機屋で働く織女の代表格であり、天照大御神自身も機を織っていたと記される。日本の織物の起源に位置づけられる。",
+    trivia: "七夕の「たなばた」は、この棚機（たなばた）に由来するという説が有力。中国の織女伝説と日本の機織り神が合わさった行事とされる。"
+  },
+  {
+    id: "wakahirume", name: "稚日女尊", kana: "ワカヒルメノミコト", romaji: "Wakahirume",
+    group: "天津神", aliases: ["若日女尊", "稚日霊女尊"],
+    epithet: "機屋で命を落とした、若き日の女神",
+    tags: ["織物", "太陽", "悲劇"], benefits: ["厄除け", "技芸上達", "縁結び"],
+    parents: [], spouse: [], children: [],
+    myths: ["須佐之男命の乱行"],
+    shrines: ["生田神社（兵庫）", "玉津島神社（和歌山）", "伊勢神宮 内宮 摂社（三重）"],
+    sources: ["日本書紀 神代上"],
+    description: "高天原の斎服殿で神衣を織っていたところ、須佐之男命が皮を剥いだ馬を投げ込み、驚いて梭（ひ）で身を傷つけ死んだ女神。この事件が天照大御神の岩戸隠れの直接の引き金となった。天照大御神の幼名、あるいは妹とする説がある。",
+    trivia: "神戸の生田神社の祭神。「神戸」という地名自体、この神に仕える神戸（かんべ）の民に由来する。"
+  },
+  {
+    id: "amenohoakari", name: "天火明命", kana: "アメノホアカリノミコト", romaji: "Ame-no-Hoakari",
+    group: "天津神", aliases: ["天照国照彦火明命", "彦火明命"],
+    epithet: "尾張・海部の祖、もう一人の天孫",
+    tags: ["太陽", "祖神", "天降り"], benefits: ["産業繁栄", "五穀豊穣", "厄除け"],
+    parents: ["ameno-oshihomimi"], spouse: [], children: [],
+    myths: ["天孫降臨"],
+    shrines: ["真清田神社（愛知）", "元伊勢籠神社（京都）", "天照御魂神社（各地）"],
+    sources: ["古事記 上巻", "日本書紀 神代下", "先代旧事本紀"],
+    description: "邇邇芸命の兄（あるいは子）とされる天孫。尾張氏・海部氏・津守氏の祖神で、太陽の輝きを名に持つ。『先代旧事本紀』では邇芸速日命と同一神とされ、物部氏の系譜とも結びつく。",
+    trivia: "丹後の籠神社に伝わる海部氏系図は、現存最古の系図として国宝に指定されている。この神を初代とする。"
+  },
+  {
+    id: "amenooshihi", name: "天忍日命・天津久米命", kana: "アメノオシヒノミコト・アマツクメノミコト", romaji: "Ame-no-Oshihi & Amatsu-Kume",
+    group: "天津神", aliases: ["大伴氏の祖", "久米氏の祖"],
+    epithet: "武装して天孫の前を進んだ、近衛の祖",
+    tags: ["武", "護衛", "天孫降臨"], benefits: ["勝運", "武道上達", "厄除け"],
+    parents: [], spouse: [], children: [],
+    myths: ["天孫降臨"],
+    shrines: ["伴林氏神社（大阪）", "久米御縣神社（奈良）", "靫負神社（各地）"],
+    sources: ["古事記 上巻", "日本書紀 神代下"],
+    description: "天孫降臨の際、背に靫を負い、頭椎の太刀を佩き、天の波士弓と真鹿児矢を持って邇邇芸命の先頭に立った二神。大伴氏と久米氏の祖神であり、両氏族は代々朝廷の軍事・警護を担った。",
+    trivia: "宮中の警護を担う「靫負（ゆげい）」の職名は、この神々が靫を背負って進んだ姿に由来する。"
+  },
+  {
+    id: "takehazuchi", name: "建葉槌命", kana: "タケハヅチノミコト", romaji: "Takehazuchi",
+    group: "天津神", aliases: ["天羽槌雄神", "倭文神（しとりがみ）"],
+    epithet: "武神が敵わなかった星の神を、織物で服させた",
+    tags: ["織物", "星", "国譲り"], benefits: ["織物守護", "厄除け", "安産"],
+    parents: [], spouse: [], children: [],
+    myths: ["国譲り", "天香香背男の平定"],
+    shrines: ["静神社（茨城）", "倭文神社（鳥取）", "大甕神社（茨城）"],
+    sources: ["日本書紀 神代下", "常陸国風土記"],
+    description: "国譲りの後もただ一柱従わなかった星の神・天香香背男を、建御雷神と経津主神が抑えられずにいたところ、この神が遣わされて服従させた。倭文（しづおり）という古代の織物の神である。",
+    trivia: "最強の武神二柱が失敗した相手を、織物の神が制圧する。武力ではなく「織る＝結び束ねる」力で従えたと読む解釈がある。"
+  },
+  {
+    id: "amenokagaseo", name: "天香香背男", kana: "アマノカガセオ", romaji: "Ama-no-Kagaseo",
+    group: "国津神", aliases: ["天津甕星", "星神香香背男"],
+    epithet: "最後まで従わなかった、ただ一柱の星の神",
+    tags: ["星", "抵抗", "国譲り"], benefits: ["厄除け", "星除け"],
+    parents: [], spouse: [], children: [],
+    myths: ["国譲り"],
+    shrines: ["大甕神社（茨城・封じられた地）", "星宮神社（栃木・各地）"],
+    sources: ["日本書紀 神代下"],
+    description: "国譲りにあたり、葦原中国で最後まで天津神に従わなかった星の神。名は「輝く男」の意で、金星を指すとされる。建葉槌命によってようやく服従させられ、その霊は常陸の大甕の岩に封じられたと伝わる。",
+    trivia: "記紀神話で星が神として明確に登場する数少ない例。日本神話は太陽と月を語る一方、星をほとんど扱わない。"
+  },
+  {
+    id: "ajisukitakahikone", name: "阿遅鉏高日子根神", kana: "アヂスキタカヒコネノカミ", romaji: "Ajisuki-Takahikone",
+    group: "国津神", aliases: ["味耜高彦根命", "迦毛大御神", "鴨大神"],
+    epithet: "喪屋を蹴り飛ばした、雷と農具の神",
+    tags: ["農耕", "雷", "国譲り"], benefits: ["五穀豊穣", "農業守護", "厄除け", "商売繁盛"],
+    parents: ["okuninushi", "takirihime"], spouse: [], children: [],
+    myths: ["国譲り", "天若日子の葬儀"],
+    shrines: ["高鴨神社（奈良）", "都都古別神社（福島）", "土佐神社（高知）"],
+    sources: ["古事記 上巻", "日本書紀 神代下", "出雲国風土記"],
+    description: "大国主神と多紀理毘売命の子。名の「アヂスキ」は鋤（すき）を指し、農具と雷を司る。友人・天若日子の葬儀に参列した際、姿がそっくりだったため遺族に死者と間違われて激怒し、剣で喪屋を斬り倒して蹴り飛ばした。",
+    trivia: "『古事記』で「大御神」と呼ばれるのは天照大御神と伊邪那岐大神、そしてこの神だけ。賀茂氏の祖神として大きな地位を占めた。"
+  },
+  {
+    id: "nunakawahime", name: "沼河比売", kana: "ヌナカワヒメ", romaji: "Nunakawahime",
+    group: "国津神", aliases: ["奴奈川姫", "沼河姫"],
+    epithet: "歌で口説かれ、歌で応じた越の姫",
+    tags: ["縁結び", "和歌", "翡翠"], benefits: ["縁結び", "安産", "諸芸上達"],
+    parents: [], spouse: ["okuninushi"], children: ["takeminakata"],
+    myths: ["大国主の妻問い"],
+    shrines: ["奴奈川神社（新潟）", "天津神社（新潟）", "居多神社（新潟）"],
+    sources: ["古事記 上巻", "万葉集", "越後国風土記逸文"],
+    description: "越国（高志国）の姫。大国主神が八千矛神の名で妻問いに訪れ、戸の外から一晩かけて歌を贈った。姫は「今宵は開けぬが、明日の夜には」と歌で返し、翌夜に契りを結んだ。この贈答は記紀歌謡の白眉とされる。",
+    trivia: "姫の地元・糸魚川は世界最古級の翡翠産地。出雲の遺跡から出る翡翠の勾玉はここ産で、神話が交易路の記憶を伝えていると考えられている。"
+  },
+  {
+    id: "kinomata", name: "木俣神", kana: "キノマタノカミ", romaji: "Kinomata",
+    group: "国津神", aliases: ["御井神", "木俣之神"],
+    epithet: "木の股に挟んで置き去られた子、井戸の神",
+    tags: ["井戸", "水", "子"], benefits: ["安産", "子育て", "水の恵み"],
+    parents: ["okuninushi", "yagamihime"], spouse: [], children: [],
+    myths: ["因幡の白兎", "大国主の系譜"],
+    shrines: ["御井神社（島根）", "御井神社（鳥取）", "手見神社（各地）"],
+    sources: ["古事記 上巻"],
+    description: "大国主神と八上比売の子。母は正妻・須勢理毘売を恐れ、生んだ子を木の股に挟んで因幡へ帰ってしまった。そのため木俣神と呼ばれる。別名の御井神は、産湯を使った三つの井戸に由来するとされる。",
+    trivia: "神話でもっとも痛ましい別れの一つ。母が子を置いて去る場面を、記紀は理由も添えて淡々と記している。"
+  },
+  {
+    id: "yasogami", name: "八十神", kana: "ヤソガミ", romaji: "Yasogami",
+    group: "国津神", aliases: ["八十神たち"],
+    epithet: "弟を二度殺した、大国主の兄たち",
+    tags: ["因幡の白兎", "試練", "兄弟"], benefits: ["—"],
+    parents: [], spouse: [], children: [],
+    myths: ["因幡の白兎", "大国主の受難"],
+    shrines: ["赤猪岩神社（鳥取・大国主が殺された地）"],
+    sources: ["古事記 上巻"],
+    description: "大国主神の多数の兄たちの総称。「八十」は数の多さを表す。八上比売への求婚に敗れたことを恨み、焼いた大岩を猪と偽って弟に抱かせて殺し、蘇ると今度は木に挟んで再び殺した。最後は大国主神に追い払われる。",
+    trivia: "神話の悪役でありながら、追放されるだけで滅ぼされはしない。日本神話の敵役は、たいてい退場するだけである。"
+  },
+  {
+    id: "usagigami", name: "兎神", kana: "ウサギガミ", romaji: "Usagigami",
+    group: "国津神", aliases: ["白兎神", "因幡の白兎"],
+    epithet: "縁を予言した、日本最古の恋の仲人",
+    tags: ["因幡の白兎", "縁結び", "医薬"], benefits: ["縁結び", "皮膚病平癒", "傷病平癒"],
+    parents: [], spouse: [], children: [],
+    myths: ["因幡の白兎"],
+    shrines: ["白兎神社（鳥取）", "白兎神社（各地）"],
+    sources: ["古事記 上巻"],
+    description: "隠岐の島から因幡へ渡るため和邇（鮫）を欺き、皮を剥がれた兎。八十神に嘘の治療法を教えられて悪化したところを、大国主神に真水で洗い蒲の花粉に寝ころぶよう教えられて治った。礼に「八上比売はあなたを選ぶ」と予言した。",
+    trivia: "蒲の花粉（蒲黄）は現在も止血・傷薬に用いられる生薬。神話の処方は、薬学的に理にかなっている。"
+  },
+  {
+    id: "yashimajinumi", name: "八島士奴美神", kana: "ヤシマジヌミノカミ", romaji: "Yashimajinumi",
+    group: "国津神", aliases: ["八島士奴美命"],
+    epithet: "須佐之男と櫛名田比売の、最初の子",
+    tags: ["出雲", "系譜"], benefits: ["家内安全", "子孫繁栄"],
+    parents: ["susanoo", "kushinadahime"], spouse: [], children: [],
+    myths: ["八岐大蛇退治", "出雲の系譜"],
+    shrines: ["須我神社（島根）", "八重垣神社（島根）"],
+    sources: ["古事記 上巻"],
+    description: "八岐大蛇退治のあと、須賀の宮で須佐之男命と櫛名田比売のあいだに生まれた子。ここから六代を経て大国主神に至る。出雲の王統の起点にあたる神で、名の「八島」は大八島国＝日本全土を指す。",
+    trivia: "須賀の宮は「日本初之宮」と称される。須佐之男命が「すがすがしい」と言ったことが、須賀の地名の由来と記される。"
+  },
+  {
+    id: "kamuoichihime", name: "神大市比売", kana: "カムオオイチヒメ", romaji: "Kamu-Ōichihime",
+    group: "国津神", aliases: ["神大市姫命"],
+    epithet: "稲荷と歳神を生んだ、市場の女神",
+    tags: ["市場", "商業", "穀物"], benefits: ["商売繁盛", "五穀豊穣", "市場守護"],
+    parents: ["oyamatsumi"], spouse: ["susanoo"], children: ["otoshi", "ukanomitama"],
+    myths: ["須佐之男命の系譜"],
+    shrines: ["大市神社（各地）", "伏見稲荷大社 摂社（京都）"],
+    sources: ["古事記 上巻"],
+    description: "大山津見神の娘で、須佐之男命の妻。大年神と宇迦之御魂神という、日本の農耕と商業を代表する二柱の母である。名の「大市」は大きな市場を意味し、物が集まり交換される場そのものを司る。",
+    trivia: "稲荷神の母にあたる。稲荷信仰が農業神から商業神へ広がった背景に、この「市の女神」の系譜があるとみる説がある。"
+  },
+  {
+    id: "otoshi_children", name: "大年神の御子神",
+    kana: "オオトシノカミノミコガミ", romaji: "Children of Ōtoshi",
+    group: "国津神", aliases: ["大国御魂神", "韓神", "曽富理神", "白日神", "聖神", "羽山戸神"],
+    epithet: "屋敷・土地・渡来の神々を含む一族",
+    tags: ["稲作", "土地", "屋敷神"], benefits: ["五穀豊穣", "家内安全", "土地守護"],
+    parents: ["otoshi"], spouse: [], children: [],
+    myths: ["須佐之男命の系譜"],
+    shrines: ["園韓神社（京都・宮中）", "葛木御歳神社（奈良）", "各地の歳神社"],
+    sources: ["古事記 上巻"],
+    description: "大年神が三人の妻とのあいだに儲けた十六柱の神々の総称。国土の霊である大国御魂神、渡来系の韓神・曽富理神、山の裾を司る羽山戸神などを含む。宮中では園神・韓神として祀られ、平安期の重要な祭祀対象だった。",
+    trivia: "渡来の神が皇室の宮中祭祀に組み込まれている点が注目される。古代の日本が外来の神をどう扱ったかを示す例。"
+  },
+  {
+    id: "asuha", name: "阿須波神・波比岐神", kana: "アスハノカミ・ハヒキノカミ", romaji: "Asuha & Hahiki",
+    group: "国津神", aliases: ["庭の神", "屋敷神"],
+    epithet: "足下の土地と、庭を守る神",
+    tags: ["屋敷神", "土地", "守護"], benefits: ["家内安全", "土地守護", "旅行安全"],
+    parents: ["otoshi"], spouse: [], children: [],
+    myths: ["須佐之男命の系譜"],
+    shrines: ["阿須波神社（各地）", "生國魂神社 摂社（大阪）", "宮中 座摩巫祭神"],
+    sources: ["古事記 上巻", "延喜式", "万葉集"],
+    description: "大年神の子で、住まいの敷地と庭を守る神。宮中の座摩巫（いかすりのみかんなぎ）が祀る五柱に数えられ、天皇の御座所の地面そのものを守護した。防人の歌にも、旅立つ息子の無事を庭の阿須波神に祈る歌が残る。",
+    trivia: "「庭中の阿須波の神に木柴刺し 吾は斎はむ帰り来までに」— 万葉集に残る、家を守る神への最も素朴な祈り。"
+  },
+  {
+    id: "mihotsuhime", name: "美穂津姫命", kana: "ミホツヒメノミコト", romaji: "Mihotsuhime",
+    group: "天津神", aliases: ["三穂津姫命"],
+    epithet: "国譲りを縁組で結んだ、高天原の姫",
+    tags: ["国譲り", "縁結び", "稲穂"], benefits: ["縁結び", "夫婦和合", "五穀豊穣"],
+    parents: ["takamimusuhi"], spouse: ["omononushi"], children: [],
+    myths: ["国譲り"],
+    shrines: ["美保神社（島根）", "大神神社 摂社（奈良）", "松尾大社 摂社（京都）"],
+    sources: ["日本書紀 神代下"],
+    description: "高御産巣日神の娘。国譲りの後、高天原は大物主神にこの姫を娶らせ、天と国の二つの系統を婚姻で結んだ。武力による決着の後に縁組で関係を固定するという、きわめて政治的な役割を担う神である。",
+    trivia: "美保神社は事代主神とこの姫を並べ祀る。国譲りで対立した両陣営が、同じ社殿に横並びで祀られている。"
+  },
+  {
+    id: "yasakatome", name: "八坂刀売神", kana: "ヤサカトメノカミ", romaji: "Yasakatome",
+    group: "国津神", aliases: ["八坂刀売命", "諏訪明神の妃"],
+    epithet: "諏訪湖の御神渡りを生んだ、建御名方の妃",
+    tags: ["諏訪", "水", "縁結び"], benefits: ["縁結び", "安産", "厄除け", "水の恵み"],
+    parents: [], spouse: ["takeminakata"], children: [],
+    myths: ["諏訪信仰"],
+    shrines: ["諏訪大社 下社（長野）", "全国の諏訪神社"],
+    sources: ["諏訪大社社伝", "延喜式神名帳"],
+    description: "諏訪大社下社の祭神で、建御名方神の妃。記紀には登場せず、諏訪の社伝に伝わる。冬の諏訪湖が凍り、氷が盛り上がって道となる「御神渡り」は、上社の夫が下社の妃のもとへ渡った跡とされる。",
+    trivia: "御神渡りは八百年以上にわたり神事として記録され続けており、現在は貴重な気候変動の史料になっている。"
+  },
+  {
+    id: "moriya", name: "洩矢神", kana: "モリヤノカミ", romaji: "Moriya",
+    group: "国津神", aliases: ["守矢神", "洩矢大神"],
+    epithet: "鉄輪で戦い、諏訪の祭祀を継いだ土着神",
+    tags: ["諏訪", "土着", "武"], benefits: ["厄除け", "五穀豊穣", "狩猟守護"],
+    parents: [], spouse: [], children: [],
+    myths: ["諏訪信仰"],
+    shrines: ["洩矢神社（長野）", "藤島神社（長野）", "神長官守矢史料館（長野）"],
+    sources: ["諏訪信重解状", "諏訪大明神絵詞"],
+    description: "諏訪に元からいた土着の神。天竜川の河口で鉄輪を手に、藤の枝を持つ建御名方神と戦って敗れ、以後その祭祀を支える立場に転じた。子孫の守矢氏は、大祝を補佐する神長官として明治まで七十八代続いた。",
+    trivia: "敗れた側の一族が祭祀の実権を保ち続けた稀有な例。中央神話に完全には塗り替えられなかった信仰の層を今に伝える。"
+  },
+  {
+    id: "yatsukamizuomitsuno", name: "八束水臣津野命", kana: "ヤツカミヅオミヅノノミコト", romaji: "Yatsukamizu-Omitsuno",
+    group: "国津神", aliases: ["八束水臣津野神"],
+    epithet: "土地を綱で引き寄せ、出雲を広げた巨神",
+    tags: ["出雲", "国引き", "国土"], benefits: ["国土安泰", "土地守護", "事業成就"],
+    parents: [], spouse: [], children: [],
+    myths: ["国引き神話"],
+    shrines: ["長浜神社（島根）", "出雲大社 摂社（島根）"],
+    sources: ["出雲国風土記"],
+    description: "「出雲の国は狭い」と言い、新羅・北門・高志の余った土地に綱をかけて引き寄せ、国を拡張したと『出雲国風土記』が伝える巨大な神。引いた綱が薗の長浜と夜見島（弓ヶ浜）に、杭が三瓶山と大山になったという。",
+    trivia: "記紀には一切登場しない、風土記だけの神。中央の神話に採られなかった地方神話がどれほど豊かだったかを示す。"
+  },
+  {
+    id: "sadanoookami", name: "佐太大神", kana: "サダノオオカミ", romaji: "Sada-no-Ōkami",
+    group: "国津神", aliases: ["佐太御子大神", "猿田毘古神と同一視"],
+    epithet: "金の弓矢で射通された岩窟に生まれた",
+    tags: ["出雲", "道", "誕生"], benefits: ["交通安全", "みちひらき", "安産", "厄除け"],
+    parents: [], spouse: [], children: [],
+    myths: ["佐太大神の誕生"],
+    shrines: ["佐太神社（島根）", "加賀神社（島根）"],
+    sources: ["出雲国風土記"],
+    description: "出雲四大神の一柱。母の枳佐加比売命が、暗い岩窟で「まことに私の子なら岩屋を射通せ」と金の弓矢を放つと、光が差し込んで生まれたと伝わる。出雲では神在月に八百万の神を迎える社としても知られる。",
+    trivia: "旧暦十月、出雲大社の神在祭が終わると、神々は佐太神社へ移って神等去出祭を迎える。出雲の神在月は二段構えになっている。"
+  },
+  {
+    id: "oomiyanome", name: "大宮能売神", kana: "オオミヤノメノカミ", romaji: "Ōmiyanome",
+    group: "天津神", aliases: ["大宮売神", "天鈿女命と同一視"],
+    epithet: "場を和ませる、宮廷の取りなしの女神",
+    tags: ["宮廷", "調和", "接客"], benefits: ["商売繁盛", "人間関係円満", "接客業守護"],
+    parents: [], spouse: [], children: [],
+    myths: ["稲荷五社"],
+    shrines: ["伏見稲荷大社（京都）", "大宮売神社（京都）", "宮中 御巫祭神"],
+    sources: ["古語拾遺", "延喜式", "延喜式祝詞"],
+    description: "宮殿に仕え、君臣のあいだを和らげる女神。祝詞には「言葉を和らげ、君臣の間を取りなす神」と記される。稲荷大神を構成する五柱の一つに数えられ、接客・人間関係の神として信仰される。",
+    trivia: "天宇受売命と同一視されることが多い。岩戸の前で場を和ませた働きが、そのまま宮廷での役割になったと考えられている。"
+  },
+  {
+    id: "hosuseri", name: "火須勢理命", kana: "ホスセリノミコト", romaji: "Hosuseri",
+    group: "天津神", aliases: ["火進命", "火闌降命"],
+    epithet: "炎の盛りに生まれた、天孫の次男",
+    tags: ["火", "誕生"], benefits: ["火難除け", "厄除け"],
+    parents: ["ninigi", "konohanasakuya"], spouse: [], children: [],
+    myths: ["火中出産"],
+    shrines: ["霧島神宮 摂社（鹿児島）", "潮嶽神社（宮崎）"],
+    sources: ["古事記 上巻", "日本書紀 神代下"],
+    description: "木花之佐久夜毘売が燃え盛る産屋で生んだ三兄弟の次男。名は炎が最も勢いよく燃え盛る時を指す。長男・火照命と三男・火遠理命が海幸山幸の物語を担うのに対し、この神は名のみが伝わる。",
+    trivia: "三兄弟の名は火が燃え始め・盛り・衰える三段階を表す。出産の進行を炎の時間経過になぞらえた命名になっている。"
+  },
+  {
+    id: "shiotsuchi", name: "塩椎神", kana: "シオツチノカミ", romaji: "Shiotsuchi",
+    group: "国津神", aliases: ["塩土老翁", "事勝国勝長狭神"],
+    epithet: "行き詰まった英雄に、道を教える老人",
+    tags: ["海", "塩", "導き"], benefits: ["海上安全", "製塩守護", "安産", "延命長寿"],
+    parents: [], spouse: [], children: [],
+    myths: ["海幸山幸", "神武東征"],
+    shrines: ["鹽竈神社（宮城）", "塩釜神社（各地）", "鹽竈六所神社（各地）"],
+    sources: ["古事記 上巻", "日本書紀 神代下"],
+    description: "潮流と製塩を司る老翁の神。釣り針を失って泣く火遠理命に籠の舟を作って海神の宮への道を教え、神武天皇には「東に良い土地がある」と告げて東征のきっかけを作った。物語が行き詰まったとき現れて次の一手を示す。",
+    trivia: "陸奥の鹽竈神社は、この神が土地の人に製塩を教えた地と伝わる。境内では今も古代の製法による藻塩焼の神事が行われる。"
+  },
+  {
+    id: "yatagarasu", name: "賀茂建角身命", kana: "カモタケツヌミノミコト", romaji: "Kamo-Taketsunumi",
+    group: "天津神", aliases: ["八咫烏", "賀茂建角身神"],
+    epithet: "三本足の烏となり、神武を導いた",
+    tags: ["導き", "東征", "烏"], benefits: ["導き", "交通安全", "勝運", "厄除け"],
+    parents: [], spouse: [], children: [],
+    myths: ["神武東征"],
+    shrines: ["賀茂御祖神社／下鴨神社（京都）", "熊野本宮大社（和歌山）", "八咫烏神社（奈良）"],
+    sources: ["古事記 中巻", "日本書紀 神武紀", "山城国風土記逸文"],
+    description: "熊野の険しい山中で進路を失った神武天皇の軍を、大きな烏の姿となって大和まで導いた神。『山城国風土記』では賀茂県主の祖として、大和から山城の賀茂へ移り住んだと記される。下鴨神社の祭神。",
+    trivia: "三本足で描かれるのは中国の太陽に棲む烏の伝承が混じったため。日本サッカー協会の紋章も、この神に由来する。"
+  },
+  {
+    id: "takakuraji", name: "高倉下", kana: "タカクラジ", romaji: "Takakuraji",
+    group: "国津神", aliases: ["高倉下命"],
+    epithet: "夢のお告げで、一振りの剣を届けた",
+    tags: ["剣", "東征", "夢"], benefits: ["勝運", "厄除け", "五穀豊穣"],
+    parents: [], spouse: [], children: [],
+    myths: ["神武東征"],
+    shrines: ["石上神宮（奈良・関連）", "彌彦神社（新潟）", "高倉神社（各地）"],
+    sources: ["古事記 中巻", "日本書紀 神武紀"],
+    description: "熊野の住人。神武天皇の軍が土地の神の毒気に当たって全員倒れたとき、夢に建御雷神が現れ「倉に剣を落としておく」と告げた。目覚めて倉を開けると本当に剣が突き立っており、それを献じると軍勢は一斉に目を覚ました。",
+    trivia: "このとき届けられた剣が布都御魂剣。現在も石上神宮の御神体として伝わり、明治の発掘で実際に社殿下から出土した。"
+  },
+  {
+    id: "isuzuhime", name: "媛蹈鞴五十鈴媛命", kana: "ヒメタタライスズヒメノミコト", romaji: "Hime-Tatara-Isuzuhime",
+    group: "国津神", aliases: ["富登多多良伊須須岐比売命", "比売多多良伊須気余理比売"],
+    epithet: "丹塗矢に化した神の子、初代皇后",
+    tags: ["三輪", "皇統", "縁結び"], benefits: ["縁結び", "夫婦和合", "子孫繁栄"],
+    parents: ["omononushi"], spouse: ["jimmu"], children: [],
+    myths: ["丹塗矢伝説", "神武東征"],
+    shrines: ["狭井神社（奈良）", "率川神社（奈良）", "橿原神宮（奈良・配祀）"],
+    sources: ["古事記 中巻", "日本書紀 神武紀"],
+    description: "大物主神の娘。母が用を足していたところ、大物主神が丹塗りの矢に化けて流れつき、身籠って生まれたと伝わる。神武天皇の皇后となり、第二代綏靖天皇らを生んだ。天孫の血に、三輪の神の血が合流する結節点にあたる。",
+    trivia: "奈良の率川神社では、この姫に笹百合を供える三枝祭が今も続く。疫病除けの祭として奈良時代から記録がある。"
+  },
+  {
+    id: "ooyamakui", name: "大山咋神", kana: "オオヤマクイノカミ", romaji: "Ōyamakui",
+    group: "国津神", aliases: ["山末之大主神", "松尾大神", "日吉大神", "山王権現"],
+    epithet: "比叡と松尾に杭を打った、山と酒の神",
+    tags: ["山", "酒", "土地"], benefits: ["酒造守護", "土地守護", "厄除け", "商売繁盛"],
+    parents: ["otoshi"], spouse: [], children: [],
+    myths: ["須佐之男命の系譜", "丹塗矢伝説"],
+    shrines: ["日吉大社 東本宮（滋賀）", "松尾大社（京都）", "日枝神社（東京）"],
+    sources: ["古事記 上巻", "山城国風土記逸文"],
+    description: "大年神の子。「クイ」は杭のことで、山に杭を打ち領有を示す神格を表す。比叡山と松尾山に鎮まると『古事記』が明記する。最澄が延暦寺を開くとその守護神・山王権現とされ、天台宗とともに全国へ広まった。",
+    trivia: "松尾大社は酒造の総本社。醸造家が今も「亀の井」の水を仕込みに加える。京都の醸造技術は渡来系秦氏とこの神の信仰に始まる。"
+  },
+  {
+    id: "kamowakeikazuchi", name: "賀茂別雷命", kana: "カモワケイカヅチノミコト", romaji: "Kamo-Wakeikazuchi",
+    group: "天津神", aliases: ["別雷神", "上賀茂大神"],
+    epithet: "父を問われ、天へ昇った雷の神",
+    tags: ["雷", "厄除け", "賀茂"], benefits: ["厄除け", "災難除け", "電気産業守護", "開運"],
+    parents: [], spouse: [], children: [],
+    myths: ["丹塗矢伝説"],
+    shrines: ["賀茂別雷神社／上賀茂神社（京都）", "各地の賀茂神社"],
+    sources: ["山城国風土記逸文"],
+    description: "賀茂建角身命の娘・玉依日売が、川上から流れてきた丹塗りの矢を持ち帰って身籠り生んだ神。祖父が「父と思う者に酒を注げ」と言うと、屋根を突き破って天へ昇った。それにより父が雷神であると知れた。",
+    trivia: "京都最古の社の一つ上賀茂神社の祭神。葵祭はこの神を迎える祭で、平安京遷都以前から続く。"
+  },
+  {
+    id: "yamatoookunitama", name: "倭大国魂神", kana: "ヤマトノオオクニタマノカミ", romaji: "Yamato-no-Ōkunitama",
+    group: "国津神", aliases: ["大和大国魂大神", "日本大国魂神"],
+    epithet: "大和の土地そのものの霊",
+    tags: ["土地", "国魂", "祟り"], benefits: ["国土安泰", "土地守護", "疫病除け"],
+    parents: [], spouse: [], children: [],
+    myths: ["崇神天皇の疫病"],
+    shrines: ["大和神社（奈良）", "国魂神社（各地）"],
+    sources: ["日本書紀 崇神紀"],
+    description: "大和国の国魂（くにたま）＝土地の霊そのものを神格化した神。崇神天皇は当初この神と天照大御神を宮中に並べ祀ったが、神威に耐えられず両神を宮の外へ移した。これが伊勢神宮成立の発端となる。",
+    trivia: "戦艦大和はこの神を艦内神社に祀っていた。艦名の由来である大和国の国魂を、そのまま守護神とした。"
+  },
+  {
+    id: "hiruko", name: "蛭子神", kana: "ヒルコノカミ", romaji: "Hiruko",
+    group: "天津神", aliases: ["水蛭子", "夷神", "恵比寿（習合）"],
+    epithet: "葦舟で流された最初の子、のちの福の神",
+    tags: ["海", "漂着", "商売"], benefits: ["商売繁盛", "大漁祈願", "五穀豊穣", "開運招福"],
+    parents: ["izanagi", "izanami"], spouse: [], children: [],
+    myths: ["国生み"],
+    shrines: ["西宮神社（兵庫）", "蛭子神社（各地）", "和田神社（兵庫）"],
+    sources: ["古事記 上巻", "日本書紀 神代上"],
+    description: "伊邪那岐・伊邪那美の最初の子。女神から先に声をかけたことが誤りとされ、三年経っても足が立たなかったため葦の舟に乗せて流された。中世以降、海の彼方から流れ着いた福の神・恵比寿と結びつき、商売繁盛の神になった。",
+    trivia: "西宮神社の十日えびすの「福男選び」は全国的に知られる。捨てられた神が最も親しまれる福神になるという、大きな反転を持つ。"
+  },
+  {
+    id: "awashima", name: "淡島神", kana: "アワシマノカミ", romaji: "Awashima",
+    group: "天津神", aliases: ["淡嶋大明神", "少彦名神と同一視"],
+    epithet: "女性の守り神、人形供養の社の神",
+    tags: ["医薬", "女性", "祈願"], benefits: ["婦人病平癒", "安産", "子授け", "縁結び"],
+    parents: [], spouse: [], children: [],
+    myths: ["国生み"],
+    shrines: ["淡嶋神社（和歌山）", "淡島神社（各地）"],
+    sources: ["古事記 上巻", "淡嶋神社社伝"],
+    description: "『古事記』では蛭子とともに「子の数に入れない」とされた淡島。のちに少彦名神と同一視され、和歌山の淡嶋神社を中心に女性の病を癒す神として信仰された。婦人科の祈願先として全国に分社を持つ。",
+    trivia: "淡嶋神社は雛流しと人形供養で知られ、境内には全国から納められた人形が並ぶ。三月三日の雛流し神事は春の風物詩。"
+  },
+  {
+    id: "amenohiboko", name: "天之日矛", kana: "アメノヒボコ", romaji: "Ame-no-Hiboko",
+    group: "国津神", aliases: ["天日槍", "都怒我阿羅斯等（同型説）"],
+    epithet: "妻を追って渡ってきた、新羅の王子",
+    tags: ["渡来", "玉", "製鉄"], benefits: ["産業繁栄", "縁結び", "開運"],
+    parents: [], spouse: [], children: [],
+    myths: ["天日槍の渡来"],
+    shrines: ["出石神社（兵庫）", "鏡神社（滋賀）", "気比神宮（福井・関連）"],
+    sources: ["古事記 中巻", "日本書紀 垂仁紀", "播磨国風土記"],
+    description: "新羅の王子で、日本へ渡来した神。妻の阿加流比売神が夫の非道に耐えかねて難波へ逃げたのを追ってきたが入国を拒まれ、但馬に留まって定住した。八種の神宝をもたらし、その子孫から神功皇后が出たとされる。",
+    trivia: "但馬・播磨に濃く残る渡来伝承の主。製鉄と土木の技術を伝えた渡来集団の記憶が神話化したものとみられている。"
+  },
+  {
+    id: "ooyatsuhime", name: "大屋津姫命・枛津姫命", kana: "オオヤツヒメノミコト・ツマツヒメノミコト", romaji: "Ōyatsuhime & Tsumatsuhime",
+    group: "国津神", aliases: ["大屋都姫命", "抓津姫命"],
+    epithet: "兄と全国に木を植えた、姉妹の神",
+    tags: ["樹木", "林業", "植林"], benefits: ["林業守護", "建築守護", "産業繁栄"],
+    parents: ["susanoo"], spouse: [], children: [],
+    myths: ["植林神話"],
+    shrines: ["大屋都姫神社（和歌山）", "都麻都比売神社（和歌山）", "伊太祁曽神社（和歌山）"],
+    sources: ["日本書紀 神代上（第五の一書）"],
+    description: "須佐之男命の娘で、五十猛神の妹たち。兄とともに筑紫から始めて日本全土に樹木の種を播き、緑の国土を作ったと伝わる。三神はそろって紀伊国に鎮まり、木の国＝紀伊の名の由来になったとされる。",
+    trivia: "和歌山の伊太祁曽神社・大屋都姫神社・都麻都比売神社は「木の国三社」と呼ばれ、三兄妹をそれぞれ祀る。"
+  },
+  {
+    id: "kuninomikumari", name: "国之水分神・天之水分神", kana: "クニノミクマリノカミ・アメノミクマリノカミ", romaji: "Kuni-no-Mikumari & Ame-no-Mikumari",
+    group: "国津神", aliases: ["水分神", "みくまりの神"],
+    epithet: "水を分け、田へ配る分水嶺の神",
+    tags: ["水", "農耕", "分水"], benefits: ["五穀豊穣", "祈雨", "安産", "子授け"],
+    parents: ["hayaakitsuhiko"], spouse: [], children: [],
+    myths: ["神生み"],
+    shrines: ["建水分神社（大阪）", "吉野水分神社（奈良）", "都祁水分神社（奈良）"],
+    sources: ["古事記 上巻", "延喜式神名帳"],
+    description: "速秋津日子・比売の子で、水を分配する神。「ミクマリ」は水配りの意で、山の分水嶺に鎮座して川筋を分け、下流の田に水を届ける。灌漑が生死を分けた稲作社会において、きわめて重い神格だった。",
+    trivia: "「みくまり」が転じて「みこもり（御子守）」と読まれ、子授け・安産の神としても信仰された。吉野水分神社は子守明神と呼ばれる。"
+  },
+  {
+    id: "ukemochi", name: "保食神", kana: "ウケモチノカミ", romaji: "Ukemochi",
+    group: "国津神", aliases: ["宇気母知神", "御饌津神"],
+    epithet: "月読命に斬られ、五穀と家畜を生んだ",
+    tags: ["食物", "穀物", "死体化生"], benefits: ["五穀豊穣", "牧畜守護", "商売繁盛"],
+    parents: [], spouse: [], children: [],
+    myths: ["穀物の起源"],
+    shrines: ["伊勢神宮 外宮 関連社（三重）", "保食神社（各地）", "各地の稲荷社"],
+    sources: ["日本書紀 神代上（第十一の一書）"],
+    description: "『日本書紀』の食物神。訪ねてきた月読命をもてなすため、陸を向いて口から飯を、海を向いて魚を、山を向いて獣を出した。これを汚いと怒った月読命に斬られ、その死体から牛馬・蚕・稲・粟・麦・豆が生じた。",
+    trivia: "『古事記』の大宜都比売とほぼ同じ話が、殺す神を須佐之男命から月読命に替えて語られる。記紀の対応関係を示す代表例。"
+  },
+  {
+    id: "umashimaji", name: "宇摩志麻遅命", kana: "ウマシマヂノミコト", romaji: "Umashimaji",
+    group: "天津神", aliases: ["可美真手命", "宇麻志麻治命"],
+    epithet: "父の遺志を継ぎ、神武に帰順した物部の祖",
+    tags: ["物部", "武", "祖神"], benefits: ["武運長久", "厄除け", "産業繁栄"],
+    parents: ["nigihayahi"], spouse: [], children: [],
+    myths: ["神武東征"],
+    shrines: ["石上神宮（奈良）", "彌彦神社（新潟・関連）", "物部神社（島根）"],
+    sources: ["古事記 中巻", "日本書紀 神武紀", "先代旧事本紀"],
+    description: "邇芸速日命の子。父の死後、大和で抵抗を続ける叔父の長髄彦を討ち、神武天皇に帰順した。天璽瑞宝十種を献じ、宮中の鎮魂祭を司る家柄の祖となった。物部氏の直接の祖神である。",
+    trivia: "物部氏が伝えた鎮魂の秘儀「十種神宝の呪法」は、石上神宮に今も鎮魂祭として受け継がれている。"
+  }
+];
+
+/**
+ * 通称・俗称の別引き表
+ * 「いなり」「えびす」「だいこく」のように、正式な神名ではないが
+ * 世間で最もよく使われる呼び方を検索に通すための対応表。
+ * ここに書いた語は、検索と神名サジェストの両方の対象になる。
+ */
+var KEYWORDS = {
+  amaterasu: ["おてんとさま", "お伊勢さま", "伊勢の神様", "天照"],
+  susanoo: ["ごずてんのう", "牛頭天王", "祇園さん", "てんのうさん"],
+  ukanomitama: ["いなり", "おいなりさん", "稲荷", "稲荷大神"],
+  okuninushi: ["だいこく", "だいこくさま", "大黒様", "だいこくてん"],
+  kotoshironushi: ["えびす", "えべっさん", "恵比寿", "恵比須", "戎"],
+  hiruko: ["えびす", "えべっさん", "恵比寿", "西宮のえびす"],
+  ichikishimahime: ["べんざいてん", "べんてん", "弁天", "弁天様", "弁財天"],
+  omononushi: ["こんぴら", "金毘羅", "金比羅", "こんぴらさん", "みわ", "三輪明神"],
+  takemikazuchi: ["かしまさま", "鹿島様", "かすが", "春日"],
+  futsunushi: ["かとりさま", "香取様"],
+  takeminakata: ["すわさま", "諏訪様", "おすわさま"],
+  konohanasakuya: ["せんげん", "浅間様", "あさま", "富士山の神様"],
+  ooyamakui: ["さんのう", "山王さん", "ひえ", "日吉", "まつのお", "松尾"],
+  kagutsuchi: ["あきは", "秋葉様", "あたご", "愛宕", "火の神"],
+  toyouke: ["げくう", "外宮", "とようけ"],
+  sukunabikona: ["くすりのかみ", "薬の神", "すくなひこな"],
+  kukurihime: ["はくさん", "白山さん", "しらやま"],
+  yatagarasu: ["やたがらす", "八咫烏", "しもがも", "下鴨"],
+  kamowakeikazuchi: ["かみがも", "上賀茂", "あおいまつり", "葵祭"],
+  sarutahiko: ["みちひらき", "どうそじん", "道祖神"],
+  tsukitatsufunado: ["どうそじん", "道祖神", "さいのかみ", "塞の神"],
+  amenouzume: ["おかめ", "げいのうのかみ", "芸能の神", "さるめ", "猿女"],
+  amenohiwashi: ["おとりさま", "酉の市", "鷲神社"],
+  otoshi: ["としがみ", "年神様", "としがみさま", "お正月の神様"],
+  kuraokami: ["きふね", "貴船", "りゅうじん", "龍神"],
+  mizuhanome: ["すいじん", "水神", "みずのかみ"],
+  oyamatsumi: ["やまのかみ", "山の神", "みしま", "三島"],
+  watatsumi: ["うみのかみ", "海の神", "りゅうぐう", "龍宮"],
+  seoritsuhime: ["はらえど", "祓戸", "はらえどのおおかみ"],
+  amenokoyane: ["かすが", "春日", "かすがさま"],
+  ninigi: ["てんそん", "天孫", "ににぎ"],
+  jimmu: ["じんむてんのう", "神武天皇", "初代天皇"],
+  sumiyoshi: ["すみよしさん", "住吉さん"],
+  munakata: ["いつくしま", "厳島", "むなかた"],
+  isotakeru: ["きのかみ", "木の神", "いたきそ"],
+  ashinazuchi: ["やまたのおろち", "八岐大蛇"],
+  usagigami: ["しろうさぎ", "白うさぎ", "うさぎ"]
+};
+DEITIES.forEach(function (d) { if (KEYWORDS[d.id]) d.keywords = KEYWORDS[d.id]; });
+
+if (typeof module !== "undefined" && module.exports) { module.exports = DEITIES; }
+
+</script>
+  <script>
+/**
+ * 天津神・国津神 図鑑 — アプリケーション
+ * 依存なし・ビルド不要。index.html を直接開いても動作する。
+ */
+(function () {
+  "use strict";
+
+  var GROUP_ORDER = ["別天津神", "神世七代", "天津神", "国津神"];
+  var GROUP_VAR = {
+    "別天津神": "var(--g-koto)",
+    "神世七代": "var(--g-nanayo)",
+    "天津神": "var(--g-ama)",
+    "国津神": "var(--g-kuni)"
+  };
+  var SUGGEST_MAX = 8;
+
+  var state = {
+    q: "",
+    terms: [],
+    groups: new Set(),
+    benefits: new Set(),
+    myths: new Set(),
+    sort: "canonical",
+    view: "card",
+    visible: [],       // 現在表示中のID順（前後ナビ用）
+    suggestions: [],
+    suggestIndex: -1
+  };
+
+  var byId = {};
+  DEITIES.forEach(function (d, i) { d._order = i; byId[d.id] = d; });
+
+  /* 系譜の相互参照を補完する。
+     データ側では片方向にだけ書けばよく、逆向きはここで自動的に張られる。 */
+  (function linkRelations() {
+    function add(id, key, value) {
+      var t = byId[id];
+      if (t && t[key].indexOf(value) === -1) t[key].push(value);
+    }
+    DEITIES.forEach(function (d) {
+      d.parents.forEach(function (p) { add(p, "children", d.id); });
+      d.children.forEach(function (c) { add(c, "parents", d.id); });
+      d.spouse.forEach(function (s) { add(s, "spouse", d.id); });
+    });
+  })();
+
+  var el = {};
+  ["grid", "tableWrap", "tableBody", "empty", "count", "search", "clearSearch", "suggest",
+   "groupFilters", "benefitFilters", "mythFilters", "sort", "resetBtn", "randomBtn", "themeBtn",
+   "viewCard", "viewTable", "overlay", "sheetBody", "sheetClose", "prevBtn", "nextBtn"
+  ].forEach(function (k) { el[k] = document.getElementById(k); });
+
+  /* ── 小物 ───────────────────────────── */
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  // カタカナ → ひらがな（かな検索を両対応にする）
+  function toHira(s) {
+    return String(s).replace(/[ァ-ヶ]/g, function (c) {
+      return String.fromCharCode(c.charCodeAt(0) - 0x60);
+    });
+  }
+  function norm(s) { return toHira(String(s).toLowerCase()); }
+
+  // 神名として検索する対象（候補表示に使う）
+  function nameFields(d) {
+    if (!d._names) d._names = [d.name, d.kana, d.romaji]
+      .concat(d.aliases, d.keywords || []).map(norm);
+    return d._names;
+  }
+  // 全文検索の対象
+  function haystack(d) {
+    if (!d._hay) {
+      d._hay = norm([d.name, d.kana, d.romaji, d.group, d.epithet, d.description, d.trivia]
+        .concat(d.aliases, d.keywords || [], d.tags, d.benefits, d.myths, d.shrines, d.sources)
+        .join(" "));
+    }
+    return d._hay;
+  }
+
+  function uniqueValues(key) {
+    var counts = {};
+    DEITIES.forEach(function (d) {
+      (d[key] || []).forEach(function (v) {
+        if (v === "—") return;
+        counts[v] = (counts[v] || 0) + 1;
+      });
+    });
+    return Object.keys(counts)
+      .sort(function (a, b) { return counts[b] - counts[a] || a.localeCompare(b, "ja"); })
+      .map(function (v) { return { value: v, n: counts[v] }; });
+  }
+
+  function listOrDash(arr) {
+    if (!arr || !arr.length || (arr.length === 1 && arr[0] === "—")) return null;
+    return arr;
+  }
+
+  /* ── 絞り込み ───────────────────────── */
+  function matches(d) {
+    if (state.groups.size && !state.groups.has(d.group)) return false;
+    if (state.benefits.size && !d.benefits.some(function (b) { return state.benefits.has(b); })) return false;
+    if (state.myths.size && !d.myths.some(function (m) { return state.myths.has(m); })) return false;
+    if (state.terms.length) {
+      var hay = haystack(d);
+      for (var i = 0; i < state.terms.length; i++) {
+        if (hay.indexOf(state.terms[i]) === -1) return false;   // 空白区切りは AND
+      }
+    }
+    return true;
+  }
+
+  // 名前以外で一致したときに、どの項目で当たったかを返す
+  function matchReason(d) {
+    if (!state.terms.length) return null;
+    var t = state.terms[0];
+    if (norm(d.name).indexOf(t) !== -1 || norm(d.kana).indexOf(t) !== -1) return null;
+    var buckets = [["別名", d.aliases], ["通称", d.keywords || []], ["ご利益", d.benefits], ["神社", d.shrines],
+                   ["神話", d.myths], ["属性", d.tags], ["典拠", d.sources]];
+    for (var i = 0; i < buckets.length; i++) {
+      var hit = (buckets[i][1] || []).filter(function (v) { return norm(v).indexOf(t) !== -1; })[0];
+      if (hit) return buckets[i][0] + "「" + hit + "」に一致";
+    }
+    if (norm(d.romaji).indexOf(t) !== -1) return "ローマ字表記に一致";
+    return "解説文に一致";
+  }
+
+  function sortList(list) {
+    var s = state.sort;
+    return list.slice().sort(function (a, b) {
+      if (s === "kana") return toHira(a.kana).localeCompare(toHira(b.kana), "ja");
+      if (s === "group") {
+        var g = GROUP_ORDER.indexOf(a.group) - GROUP_ORDER.indexOf(b.group);
+        if (g !== 0) return g;
+      }
+      return a._order - b._order;
+    });
+  }
+
+  /* ── 描画 ───────────────────────────── */
+  function metaRow(label, values, max, cls) {
+    var arr = listOrDash(values);
+    if (!arr) return "";
+    var shown = arr.slice(0, max).map(function (v) {
+      return '<span class="mini ' + (cls || "") + '">' + esc(v) + "</span>";
+    }).join("");
+    var rest = arr.length > max ? '<span class="mini mini--more">+' + (arr.length - max) + "</span>" : "";
+    return '<div class="card__meta"><span class="card__metak">' + label + "</span>" +
+           '<span class="card__metav">' + shown + rest + "</span></div>";
+  }
+
+  function cardHTML(d) {
+    var gc = GROUP_VAR[d.group] || "var(--accent)";
+    var reason = matchReason(d);
+    return (
+      '<button class="card" type="button" data-id="' + esc(d.id) + '" style="--gc:' + gc + '">' +
+        '<span class="card__glyph" aria-hidden="true">' + esc(d.name.charAt(0)) + "</span>" +
+        '<span class="card__group">' + esc(d.group) + "</span>" +
+        '<h3 class="card__name">' + esc(d.name) + "</h3>" +
+        '<span class="card__kana">' + esc(d.kana) + "</span>" +
+        '<p class="card__epithet">' + esc(d.epithet) + "</p>" +
+        '<span class="card__metas">' +
+          metaRow("別名", d.aliases, 2) +
+          metaRow("ご利益", d.benefits, 3, "mini--benefit") +
+          metaRow("主な社", d.shrines, 1) +
+        "</span>" +
+        (reason ? '<span class="card__reason">' + esc(reason) + "</span>" : "") +
+      "</button>"
+    );
+  }
+
+  function cell(values, max, cls) {
+    var arr = listOrDash(values);
+    if (!arr) return '<span class="mini mini--none">—</span>';
+    return arr.slice(0, max).map(function (v) {
+      return '<span class="mini ' + (cls || "") + '">' + esc(v) + "</span>";
+    }).join("") + (arr.length > max ? '<span class="mini mini--more">+' + (arr.length - max) + "</span>" : "");
+  }
+
+  function rowHTML(d) {
+    var gc = GROUP_VAR[d.group] || "var(--accent)";
+    return '<tr data-id="' + esc(d.id) + '" tabindex="0">' +
+      '<th scope="row"><span class="t-name">' + esc(d.name) + "</span>" +
+        '<span class="t-kana">' + esc(d.kana) + "</span></th>" +
+      '<td><span class="t-group" style="--gc:' + gc + '">' + esc(d.group) + "</span></td>" +
+      "<td>" + cell(d.aliases, 3) + "</td>" +
+      "<td>" + cell(d.benefits, 4, "mini--benefit") + "</td>" +
+      "<td>" + cell(d.shrines, 2) + "</td>" +
+      "</tr>";
+  }
+
+  function render() {
+    var list = sortList(DEITIES.filter(matches));
+    state.visible = list.map(function (d) { return d.id; });
+
+    if (state.view === "table") {
+      el.tableBody.innerHTML = list.map(rowHTML).join("");
+      el.grid.innerHTML = "";
+    } else {
+      el.grid.innerHTML = list.map(cardHTML).join("");
+      el.tableBody.innerHTML = "";
+    }
+    el.grid.hidden = state.view !== "card";
+    el.tableWrap.hidden = state.view !== "table" || list.length === 0;
+    el.empty.hidden = list.length !== 0;
+
+    var total = DEITIES.length;
+    el.count.innerHTML = list.length === total
+      ? "全 <b>" + total + "</b> 柱"
+      : "<b>" + list.length + "</b> 柱 / 全 " + total + " 柱";
+
+    el.clearSearch.hidden = !state.q;
+    updateChipCounts();
+  }
+
+  /* ── 神名の候補（サジェスト） ───────────── */
+  function buildSuggestions() {
+    if (!state.terms.length) return [];
+    var t = state.terms[0];
+    var starts = [], contains = [];
+    DEITIES.forEach(function (d) {
+      var fields = nameFields(d), best = -1;
+      for (var i = 0; i < fields.length; i++) {
+        var pos = fields[i].indexOf(t);
+        if (pos === 0) { best = 0; break; }
+        if (pos > 0 && best !== 0) best = 1;
+      }
+      if (best === 0) starts.push(d);
+      else if (best === 1) contains.push(d);
+    });
+    return starts.concat(contains).slice(0, SUGGEST_MAX);
+  }
+
+  function renderSuggestions() {
+    var list = state.suggestions;
+    if (!list.length) {
+      el.suggest.hidden = true;
+      el.search.setAttribute("aria-expanded", "false");
+      return;
+    }
+    var t = state.terms[0];
+    el.suggest.innerHTML = list.map(function (d, i) {
+      // 入力語がどの表記に当たったかを添える（別名で引けたことが分かるように）
+      var via = "";
+      if (norm(d.name).indexOf(t) === -1 && norm(d.kana).indexOf(t) === -1) {
+        var alias = d.aliases.filter(function (a) { return norm(a).indexOf(t) !== -1; })[0];
+        var kw = (d.keywords || []).filter(function (a) { return norm(a).indexOf(t) !== -1; })[0];
+        if (alias) via = '<span class="suggest__via">別名: ' + esc(alias) + "</span>";
+        else if (kw) via = '<span class="suggest__via">通称: ' + esc(kw) + "</span>";
+      }
+      return '<li id="sg-' + i + '" class="suggest__item" role="option" data-id="' + esc(d.id) + '"' +
+        (i === state.suggestIndex ? ' aria-selected="true"' : ' aria-selected="false"') + ">" +
+        '<span class="suggest__name">' + esc(d.name) + "</span>" +
+        '<span class="suggest__kana">' + esc(d.kana) + "</span>" + via +
+        '<span class="suggest__group">' + esc(d.group) + "</span></li>";
+    }).join("");
+    el.suggest.hidden = false;
+    el.search.setAttribute("aria-expanded", "true");
+  }
+
+  function closeSuggest() {
+    state.suggestions = []; state.suggestIndex = -1;
+    el.suggest.hidden = true;
+    el.search.setAttribute("aria-expanded", "false");
+  }
+
+  /* ── チップ ─────────────────────────── */
+  function buildChips(container, items, set, withCount) {
+    container.innerHTML = items.map(function (it) {
+      var v = it.value !== undefined ? it.value : it;
+      return '<button class="chip" type="button" aria-pressed="' + (set.has(v) ? "true" : "false") +
+        '" data-value="' + esc(v) + '">' + esc(v) +
+        (withCount && it.n ? '<span class="chip__n">' + it.n + "</span>" : "") + "</button>";
+    }).join("");
+
+    container.addEventListener("click", function (e) {
+      var chip = e.target.closest(".chip");
+      if (!chip) return;
+      var v = chip.getAttribute("data-value");
+      if (set.has(v)) { set.delete(v); chip.setAttribute("aria-pressed", "false"); }
+      else { set.add(v); chip.setAttribute("aria-pressed", "true"); }
+      render();
+    });
+  }
+
+  // 現在の絞り込み下で 0 件になるチップを控えめに見せる
+  function updateChipCounts() {
+    [["group", el.groupFilters], ["benefits", el.benefitFilters], ["myths", el.mythFilters]]
+      .forEach(function (pair) {
+        var key = pair[0], container = pair[1];
+        Array.prototype.forEach.call(container.querySelectorAll(".chip"), function (chip) {
+          var v = chip.getAttribute("data-value");
+          if (chip.getAttribute("aria-pressed") === "true") { chip.style.opacity = ""; return; }
+          var hit = DEITIES.some(function (d) {
+            if (!matchesExcept(d, key)) return false;
+            return key === "group" ? d.group === v : (d[key] || []).indexOf(v) !== -1;
+          });
+          chip.style.opacity = hit ? "" : ".35";
+        });
+      });
+  }
+
+  // 指定した軸だけ無視して判定する（チップの有効/無効表示用）
+  function matchesExcept(d, skip) {
+    var saved = { groups: state.groups, benefits: state.benefits, myths: state.myths };
+    if (skip === "group") state.groups = new Set();
+    if (skip === "benefits") state.benefits = new Set();
+    if (skip === "myths") state.myths = new Set();
+    var ok = matches(d);
+    state.groups = saved.groups; state.benefits = saved.benefits; state.myths = saved.myths;
+    return ok;
+  }
+
+  /* ── 詳細シート ─────────────────────── */
+  function relPills(ids) {
+    if (!ids || !ids.length) return '<span class="pill pill--none">記載なし</span>';
+    return ids.map(function (id) {
+      var t = byId[id];
+      return t ? '<button class="pill pill--link" type="button" data-goto="' + esc(id) + '">' +
+        esc(t.name) + "</button>" : "";
+    }).join("");
+  }
+
+  function plainPills(arr, cls) {
+    var a = listOrDash(arr);
+    if (!a) return '<span class="pill pill--none">記載なし</span>';
+    return a.map(function (v) { return '<span class="pill ' + (cls || "") + '">' + esc(v) + "</span>"; }).join("");
+  }
+
+  function row(k, vHTML) {
+    return '<div class="d-row"><div class="d-row__k">' + k + '</div><div class="d-row__v">' + vHTML + "</div></div>";
+  }
+
+  var lastFocus = null;
+
+  function openDeity(id, pushHash) {
+    var d = byId[id];
+    if (!d) return;
+    if (el.overlay.hidden) lastFocus = document.activeElement;
+    var gc = GROUP_VAR[d.group] || "var(--accent)";
+
+    el.sheetBody.innerHTML =
+      '<div style="--gc:' + gc + '">' +
+        '<div class="d-head">' +
+          '<span class="d-group">' + esc(d.group) + "</span>" +
+          '<h2 class="d-name" id="sheetName">' + esc(d.name) + "</h2>" +
+          '<div class="d-kana">' + esc(d.kana) + "</div>" +
+          '<div class="d-romaji">' + esc(d.romaji) + "</div>" +
+          '<p class="d-epithet">' + esc(d.epithet) + "</p>" +
+        "</div>" +
+        '<p class="d-desc">' + esc(d.description) + "</p>" +
+        (d.trivia ? '<div class="d-trivia"><h4>こぼれ話</h4><p>' + esc(d.trivia) + "</p></div>" : "") +
+        '<div class="d-rows">' +
+          row("別名", plainPills(d.aliases)) +
+          row("ご利益", plainPills(d.benefits, "pill--benefit")) +
+          row("主な社", plainPills(d.shrines)) +
+          row("親神", relPills(d.parents)) +
+          row("配偶", relPills(d.spouse)) +
+          row("子神", relPills(d.children)) +
+          row("神話", plainPills(d.myths)) +
+          row("典拠", plainPills(d.sources)) +
+          row("属性", plainPills(d.tags)) +
+        "</div>" +
+      "</div>";
+
+    el.overlay.hidden = false;
+    document.body.style.overflow = "hidden";
+    el.sheetBody.scrollTop = 0;
+    el.sheetClose.focus();
+
+    // 前後ナビは「今表示している一覧」の並びに従う。一覧外なら全件順で辿る。
+    var seq = state.visible.indexOf(id) !== -1 ? state.visible : DEITIES.map(function (x) { return x.id; });
+    var i = seq.indexOf(id);
+    el.prevBtn.disabled = i <= 0;
+    el.nextBtn.disabled = i === -1 || i >= seq.length - 1;
+    el.prevBtn.dataset.target = i > 0 ? seq[i - 1] : "";
+    el.nextBtn.dataset.target = (i !== -1 && i < seq.length - 1) ? seq[i + 1] : "";
+
+    if (pushHash !== false) history.replaceState(null, "", "#" + id);
+  }
+
+  function closeSheet() {
+    el.overlay.hidden = true;
+    document.body.style.overflow = "";
+    if (lastFocus && document.contains(lastFocus)) lastFocus.focus();
+    lastFocus = null;
+    if (location.hash) history.replaceState(null, "", location.pathname + location.search);
+  }
+
+  /* ── テーマ・表示形式 ───────────────── */
+  function store(k, v) { try { localStorage.setItem(k, v); } catch (e) { /* 保存不可でも継続 */ } }
+  function load(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+
+  function currentTheme() { return document.documentElement.getAttribute("data-theme"); }
+  function applyTheme(t) { document.documentElement.setAttribute("data-theme", t); store("kamigami-theme", t); }
+
+  function setView(v) {
+    state.view = v;
+    el.viewCard.setAttribute("aria-pressed", String(v === "card"));
+    el.viewTable.setAttribute("aria-pressed", String(v === "table"));
+    store("kamigami-view", v);
+    render();
+  }
+
+  /* ── イベント ───────────────────────── */
+  function debounce(fn, ms) {
+    var t; return function () {
+      var a = arguments, self = this;
+      clearTimeout(t); t = setTimeout(function () { fn.apply(self, a); }, ms);
+    };
+  }
+
+  function applyQuery() {
+    state.q = el.search.value.trim();
+    state.terms = norm(state.q).split(/[\s　]+/).filter(Boolean);
+    state.suggestions = buildSuggestions();
+    state.suggestIndex = -1;
+    renderSuggestions();
+    render();
+  }
+
+  el.search.addEventListener("input", debounce(applyQuery, 110));
+  el.search.addEventListener("focus", function () { if (state.q) renderSuggestions(); });
+  el.search.addEventListener("blur", function () { setTimeout(closeSuggest, 150); });
+
+  el.search.addEventListener("keydown", function (e) {
+    if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+      if (!state.suggestions.length) return;
+      e.preventDefault();
+      var n = state.suggestions.length;
+      state.suggestIndex = e.key === "ArrowDown"
+        ? (state.suggestIndex + 1 >= n ? -1 : state.suggestIndex + 1)
+        : (state.suggestIndex - 1 < -1 ? n - 1 : state.suggestIndex - 1);
+      renderSuggestions();
+      return;
+    }
+    if (e.key === "Enter") {
+      var pick = state.suggestIndex >= 0 ? state.suggestions[state.suggestIndex]
+                                         : (state.suggestions.length === 1 ? state.suggestions[0] : null);
+      if (pick) { e.preventDefault(); closeSuggest(); openDeity(pick.id); }
+      return;
+    }
+    if (e.key === "Escape") { closeSuggest(); }
+  });
+
+  el.suggest.addEventListener("mousedown", function (e) {
+    var item = e.target.closest(".suggest__item");
+    if (!item) return;
+    e.preventDefault();               // blur より先に処理する
+    closeSuggest();
+    openDeity(item.getAttribute("data-id"));
+  });
+
+  el.clearSearch.addEventListener("click", function () {
+    el.search.value = ""; closeSuggest(); applyQuery(); el.search.focus();
+  });
+
+  el.sort.addEventListener("change", function () { state.sort = el.sort.value; render(); });
+
+  el.resetBtn.addEventListener("click", function () {
+    state.groups.clear(); state.benefits.clear(); state.myths.clear();
+    state.sort = "canonical";
+    el.search.value = ""; el.sort.value = "canonical";
+    Array.prototype.forEach.call(document.querySelectorAll(".chip"), function (c) {
+      c.setAttribute("aria-pressed", "false");
+    });
+    closeSuggest();
+    applyQuery();
+  });
+
+  el.viewCard.addEventListener("click", function () { setView("card"); });
+  el.viewTable.addEventListener("click", function () { setView("table"); });
+
+  el.grid.addEventListener("click", function (e) {
+    var card = e.target.closest(".card");
+    if (card) openDeity(card.getAttribute("data-id"));
+  });
+
+  el.tableBody.addEventListener("click", function (e) {
+    var tr = e.target.closest("tr");
+    if (tr) openDeity(tr.getAttribute("data-id"));
+  });
+  el.tableBody.addEventListener("keydown", function (e) {
+    if (e.key !== "Enter" && e.key !== " ") return;
+    var tr = e.target.closest("tr");
+    if (tr) { e.preventDefault(); openDeity(tr.getAttribute("data-id")); }
+  });
+
+  el.sheetBody.addEventListener("click", function (e) {
+    var link = e.target.closest("[data-goto]");
+    if (link) openDeity(link.getAttribute("data-goto"));
+  });
+
+  el.prevBtn.addEventListener("click", function () { if (this.dataset.target) openDeity(this.dataset.target); });
+  el.nextBtn.addEventListener("click", function () { if (this.dataset.target) openDeity(this.dataset.target); });
+
+  el.sheetClose.addEventListener("click", closeSheet);
+  el.overlay.addEventListener("click", function (e) { if (e.target === el.overlay) closeSheet(); });
+
+  el.randomBtn.addEventListener("click", function () {
+    var pool = state.visible.length ? state.visible : DEITIES.map(function (d) { return d.id; });
+    openDeity(pool[Math.floor(Math.random() * pool.length)]);
+  });
+
+  el.themeBtn.addEventListener("click", function () {
+    var isDark = currentTheme() === "dark" ||
+      (!currentTheme() && window.matchMedia("(prefers-color-scheme: dark)").matches);
+    applyTheme(isDark ? "light" : "dark");
+  });
+
+  document.addEventListener("keydown", function (e) {
+    if (!el.overlay.hidden) {
+      if (e.key === "Escape") { closeSheet(); return; }
+      if (e.key === "ArrowLeft" && !el.prevBtn.disabled) { el.prevBtn.click(); return; }
+      if (e.key === "ArrowRight" && !el.nextBtn.disabled) { el.nextBtn.click(); return; }
+      return;
+    }
+    var typing = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName);
+    if (e.key === "/" && !typing) { e.preventDefault(); el.search.focus(); el.search.select(); }
+    if (e.key === "Escape" && typing) { document.activeElement.blur(); }
+  });
+
+  window.addEventListener("hashchange", function () {
+    var id = location.hash.replace(/^#/, "");
+    if (id && byId[id]) openDeity(id, false);
+  });
+
+  /* ── 起動 ───────────────────────────── */
+  (function initTheme() {
+    var saved = load("kamigami-theme");
+    if (saved === "dark" || saved === "light") document.documentElement.setAttribute("data-theme", saved);
+    else document.documentElement.removeAttribute("data-theme");
+  })();
+
+  buildChips(el.groupFilters, GROUP_ORDER.map(function (g) {
+    return { value: g, n: DEITIES.filter(function (d) { return d.group === g; }).length };
+  }), state.groups, true);
+  buildChips(el.benefitFilters, uniqueValues("benefits").slice(0, 28), state.benefits, true);
+  buildChips(el.mythFilters, uniqueValues("myths").slice(0, 22), state.myths, true);
+
+  setView(load("kamigami-view") === "table" ? "table" : "card");
+
+  var initial = location.hash.replace(/^#/, "");
+  if (initial && byId[initial]) openDeity(initial, false);
+})();
+
+</script>
