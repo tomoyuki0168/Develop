@@ -23,13 +23,20 @@
       <div class="brand">
         <span class="brand__mark" aria-hidden="true">⛩</span>
         <div class="brand__text">
-          <h1>天津神・国津神 図鑑</h1>
-          <p>記紀の神々を、名前・別名・ご利益・神社から引く</p>
+          <h1 data-i18n="title">天津神・国津神 図鑑</h1>
+          <p data-i18n="tagline">記紀の神々を、名前・別名・ご利益・神社から引く</p>
         </div>
       </div>
       <div class="masthead__actions">
+        <label class="langpick">
+          <span class="langpick__label" data-i18n="langLabel">言語</span>
+          <select id="lang" aria-label="言語 / Language">
+            <option value="ja">日本語</option>
+            <option value="en">English</option>
+          </select>
+        </label>
         <button id="randomBtn" class="btn btn--ghost" type="button">
-          <span aria-hidden="true">🎴</span> 今日の一柱
+          <span aria-hidden="true">🎴</span> <span data-i18n="random">今日の一柱</span>
         </button>
         <button id="themeBtn" class="btn btn--icon" type="button" aria-label="配色を切り替える" title="配色を切り替える">
           <span class="theme-icon" aria-hidden="true"></span>
@@ -46,28 +53,28 @@
             <span class="searchbox__icon" aria-hidden="true">🔍</span>
             <input id="search" type="search" autocomplete="off" spellcheck="false"
                    placeholder="神様の名前を入力（例: おおくにぬし / 大黒天 / 出雲大社 / 縁結び）"
-                   aria-label="神名で検索" role="combobox" aria-expanded="false"
+                   data-i18n-attr="placeholder:searchPlaceholder|aria-label:searchLabel" aria-label="神名で検索" role="combobox" aria-expanded="false"
                    aria-autocomplete="list" aria-controls="suggest">
-            <button id="clearSearch" class="searchbox__clear" type="button" aria-label="検索語を消す" hidden>✕</button>
+            <button id="clearSearch" class="searchbox__clear" type="button" data-i18n-attr="aria-label:clearSearch" aria-label="検索語を消す" hidden>✕</button>
           </div>
           <ul id="suggest" class="suggest" role="listbox" aria-label="神名の候補" hidden></ul>
         </div>
-        <p class="searchhint">
+        <p class="searchhint" data-i18n="searchHint">
           神名・かな・ローマ字・<b>別名</b>・<b>ご利益</b>・<b>主な神社</b>・神話・解説文をまとめて検索します。
           <kbd>/</kbd> で入力欄へ、<kbd>↑</kbd><kbd>↓</kbd> で候補選択、<kbd>Enter</kbd> でその神を開きます。
         </p>
 
         <div class="filters">
           <div class="filter-row" role="group" aria-label="神格の区分">
-            <span class="filter-row__label">区分</span>
+            <span class="filter-row__label" data-i18n="filterGroup">区分</span>
             <div id="groupFilters" class="chips"></div>
           </div>
           <div class="filter-row" role="group" aria-label="ご利益">
-            <span class="filter-row__label">ご利益</span>
+            <span class="filter-row__label" data-i18n="filterBenefit">ご利益</span>
             <div id="benefitFilters" class="chips chips--scroll"></div>
           </div>
           <div class="filter-row" role="group" aria-label="神話">
-            <span class="filter-row__label">神話</span>
+            <span class="filter-row__label" data-i18n="filterMyth">神話</span>
             <div id="mythFilters" class="chips chips--scroll"></div>
           </div>
         </div>
@@ -76,16 +83,16 @@
           <p id="count" class="count" role="status" aria-live="polite"></p>
           <div class="statusbar__right">
             <div class="viewtoggle" role="group" aria-label="表示形式">
-              <button id="viewCard" class="viewtoggle__btn" type="button" aria-pressed="true">カード</button>
-              <button id="viewTable" class="viewtoggle__btn" type="button" aria-pressed="false">一覧表</button>
+              <button id="viewCard" class="viewtoggle__btn" type="button" aria-pressed="true" data-i18n="viewCard">カード</button>
+              <button id="viewTable" class="viewtoggle__btn" type="button" aria-pressed="false" data-i18n="viewTable">一覧表</button>
             </div>
-            <label class="sortlabel" for="sort">並び順</label>
+            <label class="sortlabel" for="sort" data-i18n="sortLabel">並び順</label>
             <select id="sort">
-              <option value="canonical">記紀の順</option>
-              <option value="kana">五十音順</option>
-              <option value="group">区分順</option>
+              <option value="canonical" data-i18n="sortCanonical">記紀の順</option>
+              <option value="kana" data-i18n="sortKana">五十音順</option>
+              <option value="group" data-i18n="sortGroup">区分順</option>
             </select>
-            <button id="resetBtn" class="btn btn--text" type="button">条件をリセット</button>
+            <button id="resetBtn" class="btn btn--text" type="button" data-i18n="reset">条件をリセット</button>
           </div>
         </div>
       </div>
@@ -97,35 +104,35 @@
         <table class="table">
           <thead>
             <tr>
-              <th scope="col">神名</th><th scope="col">区分</th><th scope="col">別名</th>
-              <th scope="col">ご利益</th><th scope="col">主な神社</th>
+              <th scope="col" data-i18n="colName">神名</th><th scope="col" data-i18n="colGroup">区分</th><th scope="col" data-i18n="colAliases">別名</th>
+              <th scope="col" data-i18n="colBenefits">ご利益</th><th scope="col" data-i18n="colShrines">主な神社</th>
             </tr>
           </thead>
           <tbody id="tableBody"></tbody>
         </table>
       </div>
       <p id="empty" class="empty" hidden>
-        該当する神はいません。<br><span>検索語を短くするか、条件をリセットしてください。</span>
+        <span data-i18n="empty">該当する神はいません。</span><br><span data-i18n="emptyHint">検索語を短くするか、条件をリセットしてください。</span>
       </p>
     </section>
 
     <section class="about">
-      <h2>この図鑑について</h2>
+      <h2 data-i18n="aboutTitle">この図鑑について</h2>
       <div class="about__grid">
         <div>
-          <h3>天津神（あまつかみ）</h3>
-          <p>高天原に生まれ、あるいは高天原から地上へ降った神々。天照大御神を中心とする、いわば「天の系譜」です。天孫降臨によって地上を治める側に立ちました。</p>
+          <h3 data-i18n="aboutAmatsuTitle">天津神（あまつかみ）</h3>
+          <p data-i18n="aboutAmatsu">高天原に生まれ、あるいは高天原から地上へ降った神々。天照大御神を中心とする、いわば「天の系譜」です。天孫降臨によって地上を治める側に立ちました。</p>
         </div>
         <div>
-          <h3>国津神（くにつかみ）</h3>
-          <p>葦原中国（＝地上）に土着する神々。大国主神を筆頭に、山・海・草木・穀物といった土地そのものに根ざします。国譲りによって天津神に地上を明け渡しました。</p>
+          <h3 data-i18n="aboutKuniTitle">国津神（くにつかみ）</h3>
+          <p data-i18n="aboutKuni">葦原中国（＝地上）に土着する神々。大国主神を筆頭に、山・海・草木・穀物といった土地そのものに根ざします。国譲りによって天津神に地上を明け渡しました。</p>
         </div>
         <div>
-          <h3>別天津神・神世七代</h3>
-          <p>天地開闢の直後に成った、天津神よりさらに古い層の神々。姿を持たず物語にも現れませんが、後の神道理論では宇宙の根源に位置づけられます。</p>
+          <h3 data-i18n="aboutKotoTitle">別天津神・神世七代</h3>
+          <p data-i18n="aboutKoto">天地開闢の直後に成った、天津神よりさらに古い層の神々。姿を持たず物語にも現れませんが、後の神道理論では宇宙の根源に位置づけられます。</p>
         </div>
       </div>
-      <p class="about__note">
+      <p class="about__note" data-i18n="aboutScope">
         <b>収録範囲</b>は『古事記』『日本書紀』の神代から神武東征まで、および『出雲国風土記』『古語拾遺』
         『大祓詞』に見える神々です。菅原道真・応神天皇など、人が神として祀られた「人神」は収めていません。<br>
         典拠は『古事記』『日本書紀』および各社の社伝。神名の表記は原則『古事記』に従い、異表記は各項の「別名」に併記しています。
@@ -135,22 +142,24 @@
   </main>
 
   <footer class="footer">
-    <p>天津神・国津神 図鑑 — 静的サイト（ビルド不要）。<code>index.html</code> をブラウザで開くだけで動きます。</p>
+    <p class="credit">Developed by Tomoyuki<span class="credit__mark" aria-hidden="true">☯️</span></p>
+    <p data-i18n="footer">天津神・国津神 図鑑 — 静的サイト（ビルド不要）。<code>index.html</code> をブラウザで開くだけで動きます。</p>
   </footer>
 
   <!-- 詳細ダイアログ -->
   <div id="overlay" class="overlay" hidden>
     <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetName">
-      <button id="sheetClose" class="sheet__close" type="button" aria-label="閉じる">✕</button>
+      <button id="sheetClose" class="sheet__close" type="button" data-i18n-attr="aria-label:close" aria-label="閉じる">✕</button>
       <div id="sheetBody" class="sheet__body"></div>
       <nav class="sheet__nav">
-        <button id="prevBtn" class="btn btn--ghost" type="button">← 前の神</button>
-        <button id="nextBtn" class="btn btn--ghost" type="button">次の神 →</button>
+        <button id="prevBtn" class="btn btn--ghost" type="button" data-i18n="prev">← 前の神</button>
+        <button id="nextBtn" class="btn btn--ghost" type="button" data-i18n="next">次の神 →</button>
       </nav>
     </div>
   </div>
 
   <script src="data/deities.js"></script>
+  <script src="data/i18n/en.js"></script>
   <script src="assets/app.js"></script>
 </body>
 </html>

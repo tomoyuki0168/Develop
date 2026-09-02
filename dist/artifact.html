@@ -546,6 +546,32 @@ h1, h2, h3, .serif { font-family: var(--serif); font-weight: 600; }
   .viewtoggle__btn { padding: 5px 9px; }
 }
 
+/* ── 言語切替 ───────────────────────────── */
+.langpick { display: inline-flex; align-items: center; gap: 6px; }
+.langpick__label {
+  font-size: 10px; letter-spacing: .12em; color: var(--text-3);
+  font-family: var(--serif);
+}
+.langpick select {
+  font: inherit; font-size: 12px;
+  background: var(--surface); color: var(--text);
+  border: 1px solid var(--line); border-radius: 999px;
+  padding: 5px 10px; cursor: pointer;
+}
+.langpick select:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ── 開発者クレジット ───────────────────── */
+.credit {
+  margin: 0 0 6px; font-family: var(--serif);
+  font-size: 12.5px; letter-spacing: .06em; color: var(--text-2);
+  display: flex; align-items: center; gap: 6px;
+}
+.credit__mark { font-size: 14px; line-height: 1; }
+
+@media (max-width: 640px) {
+  .langpick__label { display: none; }
+}
+
 </style>
 <a class="skip-link" href="#results">本文へスキップ</a>
 
@@ -554,13 +580,20 @@ h1, h2, h3, .serif { font-family: var(--serif); font-weight: 600; }
       <div class="brand">
         <span class="brand__mark" aria-hidden="true">⛩</span>
         <div class="brand__text">
-          <h1>天津神・国津神 図鑑</h1>
-          <p>記紀の神々を、名前・別名・ご利益・神社から引く</p>
+          <h1 data-i18n="title">天津神・国津神 図鑑</h1>
+          <p data-i18n="tagline">記紀の神々を、名前・別名・ご利益・神社から引く</p>
         </div>
       </div>
       <div class="masthead__actions">
+        <label class="langpick">
+          <span class="langpick__label" data-i18n="langLabel">言語</span>
+          <select id="lang" aria-label="言語 / Language">
+            <option value="ja">日本語</option>
+            <option value="en">English</option>
+          </select>
+        </label>
         <button id="randomBtn" class="btn btn--ghost" type="button">
-          <span aria-hidden="true">🎴</span> 今日の一柱
+          <span aria-hidden="true">🎴</span> <span data-i18n="random">今日の一柱</span>
         </button>
         <button id="themeBtn" class="btn btn--icon" type="button" aria-label="配色を切り替える" title="配色を切り替える">
           <span class="theme-icon" aria-hidden="true"></span>
@@ -577,28 +610,28 @@ h1, h2, h3, .serif { font-family: var(--serif); font-weight: 600; }
             <span class="searchbox__icon" aria-hidden="true">🔍</span>
             <input id="search" type="search" autocomplete="off" spellcheck="false"
                    placeholder="神様の名前を入力（例: おおくにぬし / 大黒天 / 出雲大社 / 縁結び）"
-                   aria-label="神名で検索" role="combobox" aria-expanded="false"
+                   data-i18n-attr="placeholder:searchPlaceholder|aria-label:searchLabel" aria-label="神名で検索" role="combobox" aria-expanded="false"
                    aria-autocomplete="list" aria-controls="suggest">
-            <button id="clearSearch" class="searchbox__clear" type="button" aria-label="検索語を消す" hidden>✕</button>
+            <button id="clearSearch" class="searchbox__clear" type="button" data-i18n-attr="aria-label:clearSearch" aria-label="検索語を消す" hidden>✕</button>
           </div>
           <ul id="suggest" class="suggest" role="listbox" aria-label="神名の候補" hidden></ul>
         </div>
-        <p class="searchhint">
+        <p class="searchhint" data-i18n="searchHint">
           神名・かな・ローマ字・<b>別名</b>・<b>ご利益</b>・<b>主な神社</b>・神話・解説文をまとめて検索します。
           <kbd>/</kbd> で入力欄へ、<kbd>↑</kbd><kbd>↓</kbd> で候補選択、<kbd>Enter</kbd> でその神を開きます。
         </p>
 
         <div class="filters">
           <div class="filter-row" role="group" aria-label="神格の区分">
-            <span class="filter-row__label">区分</span>
+            <span class="filter-row__label" data-i18n="filterGroup">区分</span>
             <div id="groupFilters" class="chips"></div>
           </div>
           <div class="filter-row" role="group" aria-label="ご利益">
-            <span class="filter-row__label">ご利益</span>
+            <span class="filter-row__label" data-i18n="filterBenefit">ご利益</span>
             <div id="benefitFilters" class="chips chips--scroll"></div>
           </div>
           <div class="filter-row" role="group" aria-label="神話">
-            <span class="filter-row__label">神話</span>
+            <span class="filter-row__label" data-i18n="filterMyth">神話</span>
             <div id="mythFilters" class="chips chips--scroll"></div>
           </div>
         </div>
@@ -607,16 +640,16 @@ h1, h2, h3, .serif { font-family: var(--serif); font-weight: 600; }
           <p id="count" class="count" role="status" aria-live="polite"></p>
           <div class="statusbar__right">
             <div class="viewtoggle" role="group" aria-label="表示形式">
-              <button id="viewCard" class="viewtoggle__btn" type="button" aria-pressed="true">カード</button>
-              <button id="viewTable" class="viewtoggle__btn" type="button" aria-pressed="false">一覧表</button>
+              <button id="viewCard" class="viewtoggle__btn" type="button" aria-pressed="true" data-i18n="viewCard">カード</button>
+              <button id="viewTable" class="viewtoggle__btn" type="button" aria-pressed="false" data-i18n="viewTable">一覧表</button>
             </div>
-            <label class="sortlabel" for="sort">並び順</label>
+            <label class="sortlabel" for="sort" data-i18n="sortLabel">並び順</label>
             <select id="sort">
-              <option value="canonical">記紀の順</option>
-              <option value="kana">五十音順</option>
-              <option value="group">区分順</option>
+              <option value="canonical" data-i18n="sortCanonical">記紀の順</option>
+              <option value="kana" data-i18n="sortKana">五十音順</option>
+              <option value="group" data-i18n="sortGroup">区分順</option>
             </select>
-            <button id="resetBtn" class="btn btn--text" type="button">条件をリセット</button>
+            <button id="resetBtn" class="btn btn--text" type="button" data-i18n="reset">条件をリセット</button>
           </div>
         </div>
       </div>
@@ -628,35 +661,35 @@ h1, h2, h3, .serif { font-family: var(--serif); font-weight: 600; }
         <table class="table">
           <thead>
             <tr>
-              <th scope="col">神名</th><th scope="col">区分</th><th scope="col">別名</th>
-              <th scope="col">ご利益</th><th scope="col">主な神社</th>
+              <th scope="col" data-i18n="colName">神名</th><th scope="col" data-i18n="colGroup">区分</th><th scope="col" data-i18n="colAliases">別名</th>
+              <th scope="col" data-i18n="colBenefits">ご利益</th><th scope="col" data-i18n="colShrines">主な神社</th>
             </tr>
           </thead>
           <tbody id="tableBody"></tbody>
         </table>
       </div>
       <p id="empty" class="empty" hidden>
-        該当する神はいません。<br><span>検索語を短くするか、条件をリセットしてください。</span>
+        <span data-i18n="empty">該当する神はいません。</span><br><span data-i18n="emptyHint">検索語を短くするか、条件をリセットしてください。</span>
       </p>
     </section>
 
     <section class="about">
-      <h2>この図鑑について</h2>
+      <h2 data-i18n="aboutTitle">この図鑑について</h2>
       <div class="about__grid">
         <div>
-          <h3>天津神（あまつかみ）</h3>
-          <p>高天原に生まれ、あるいは高天原から地上へ降った神々。天照大御神を中心とする、いわば「天の系譜」です。天孫降臨によって地上を治める側に立ちました。</p>
+          <h3 data-i18n="aboutAmatsuTitle">天津神（あまつかみ）</h3>
+          <p data-i18n="aboutAmatsu">高天原に生まれ、あるいは高天原から地上へ降った神々。天照大御神を中心とする、いわば「天の系譜」です。天孫降臨によって地上を治める側に立ちました。</p>
         </div>
         <div>
-          <h3>国津神（くにつかみ）</h3>
-          <p>葦原中国（＝地上）に土着する神々。大国主神を筆頭に、山・海・草木・穀物といった土地そのものに根ざします。国譲りによって天津神に地上を明け渡しました。</p>
+          <h3 data-i18n="aboutKuniTitle">国津神（くにつかみ）</h3>
+          <p data-i18n="aboutKuni">葦原中国（＝地上）に土着する神々。大国主神を筆頭に、山・海・草木・穀物といった土地そのものに根ざします。国譲りによって天津神に地上を明け渡しました。</p>
         </div>
         <div>
-          <h3>別天津神・神世七代</h3>
-          <p>天地開闢の直後に成った、天津神よりさらに古い層の神々。姿を持たず物語にも現れませんが、後の神道理論では宇宙の根源に位置づけられます。</p>
+          <h3 data-i18n="aboutKotoTitle">別天津神・神世七代</h3>
+          <p data-i18n="aboutKoto">天地開闢の直後に成った、天津神よりさらに古い層の神々。姿を持たず物語にも現れませんが、後の神道理論では宇宙の根源に位置づけられます。</p>
         </div>
       </div>
-      <p class="about__note">
+      <p class="about__note" data-i18n="aboutScope">
         <b>収録範囲</b>は『古事記』『日本書紀』の神代から神武東征まで、および『出雲国風土記』『古語拾遺』
         『大祓詞』に見える神々です。菅原道真・応神天皇など、人が神として祀られた「人神」は収めていません。<br>
         典拠は『古事記』『日本書紀』および各社の社伝。神名の表記は原則『古事記』に従い、異表記は各項の「別名」に併記しています。
@@ -666,17 +699,18 @@ h1, h2, h3, .serif { font-family: var(--serif); font-weight: 600; }
   </main>
 
   <footer class="footer">
-    <p>天津神・国津神 図鑑 — 静的サイト（ビルド不要）。<code>index.html</code> をブラウザで開くだけで動きます。</p>
+    <p class="credit">Developed by Tomoyuki<span class="credit__mark" aria-hidden="true">☯️</span></p>
+    <p data-i18n="footer">天津神・国津神 図鑑 — 静的サイト（ビルド不要）。<code>index.html</code> をブラウザで開くだけで動きます。</p>
   </footer>
 
   <!-- 詳細ダイアログ -->
   <div id="overlay" class="overlay" hidden>
     <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetName">
-      <button id="sheetClose" class="sheet__close" type="button" aria-label="閉じる">✕</button>
+      <button id="sheetClose" class="sheet__close" type="button" data-i18n-attr="aria-label:close" aria-label="閉じる">✕</button>
       <div id="sheetBody" class="sheet__body"></div>
       <nav class="sheet__nav">
-        <button id="prevBtn" class="btn btn--ghost" type="button">← 前の神</button>
-        <button id="nextBtn" class="btn btn--ghost" type="button">次の神 →</button>
+        <button id="prevBtn" class="btn btn--ghost" type="button" data-i18n="prev">← 前の神</button>
+        <button id="nextBtn" class="btn btn--ghost" type="button" data-i18n="next">次の神 →</button>
       </nav>
     </div>
   </div>
@@ -2646,6 +2680,896 @@ if (typeof module !== "undefined" && module.exports) { module.exports = DEITIES;
 </script>
   <script>
 /**
+ * English translation
+ * 神名は「ローマ字表記」を見出しに、漢字表記を併記する。
+ * 神社名は原語（漢字）を残したうえでローマ字を添える。地図や現地の表示と
+ * 突き合わせる必要があるため、訳語だけにしてはいけない。
+ */
+window.I18N = window.I18N || {};
+window.I18N.en = {
+  label: "English",
+  htmlLang: "en",
+
+  ui: {
+    title: "Kami of Heaven and Earth",
+    tagline: "Look up Japan's gods by name, epithet, blessing, or shrine",
+    searchLabel: "Search by name",
+    searchPlaceholder: "Type a god's name (e.g. Okuninushi / Inari / Izumo Taisha / matchmaking)",
+    searchHint: "Searches names, readings, romaji, <b>other names</b>, <b>blessings</b>, <b>shrines</b>, myths and descriptions. <kbd>/</kbd> jumps to the box, <kbd>↑</kbd><kbd>↓</kbd> picks a suggestion, <kbd>Enter</kbd> opens it.",
+    clearSearch: "Clear search",
+    filterGroup: "Class",
+    filterBenefit: "Blessing",
+    filterMyth: "Myth",
+    sortLabel: "Order",
+    sortCanonical: "As in the chronicles",
+    sortKana: "Japanese alphabetical",
+    sortGroup: "By class",
+    reset: "Reset filters",
+    viewCard: "Cards",
+    viewTable: "Table",
+    random: "God of the day",
+    theme: "Switch colour scheme",
+    countAll: "All <b>{total}</b> gods",
+    countSome: "<b>{n}</b> of {total} gods",
+    empty: "No god matches.",
+    emptyHint: "Try a shorter search term, or reset the filters.",
+    close: "Close",
+    prev: "← Previous",
+    next: "Next →",
+    langLabel: "Language",
+
+    colName: "Name", colGroup: "Class", colAliases: "Other names",
+    colBenefits: "Blessings", colShrines: "Main shrines",
+
+    metaAliases: "Also", metaBenefits: "Blessings", metaShrines: "Shrine",
+    fAliases: "other names", fKeywords: "common name", fBenefits: "blessings",
+    fShrines: "shrines", fMyths: "myths", fTags: "attributes", fSources: "sources",
+
+    rowAliases: "Other names", rowBenefits: "Blessings", rowShrines: "Main shrines",
+    rowParents: "Parents", rowSpouse: "Consorts", rowChildren: "Children",
+    rowMyths: "Myths", rowSources: "Sources", rowTags: "Attributes",
+    trivia: "Worth knowing",
+    none: "not recorded",
+    viaAlias: "also known as",
+    viaKeyword: "commonly called",
+    matchedIn: "matched in {field}: “{value}”",
+    matchedRomaji: "matched the romanised name",
+    matchedText: "matched the description",
+
+    aboutTitle: "About this guide",
+    aboutAmatsuTitle: "Amatsukami — gods of heaven",
+    aboutAmatsu: "Gods born in Takamagahara, the high plain of heaven, or sent down from it. Amaterasu, the sun goddess, stands at their centre. Her grandson descended to rule the land below, and the imperial line is traced from him.",
+    aboutKuniTitle: "Kunitsukami — gods of the land",
+    aboutKuni: "Gods rooted in the land itself — mountains, seas, trees, grain. Ōkuninushi, who built the land and then handed it over to the heavenly gods, is their chief. Many are older local deities absorbed into the national mythology.",
+    aboutKotoTitle: "Kotoamatsukami and the Seven Generations",
+    aboutKoto: "The oldest layer, formed just after heaven and earth divided. They have no form and almost no stories, but later Shinto theology placed them at the root of the cosmos.",
+    aboutScope: "<b>Scope.</b> Gods of the Kojiki (712) and Nihon Shoki (720), from the age of the gods to the eastern campaign of Emperor Jimmu, plus deities from the Izumo Fudoki, Kogo Shūi and the Great Purification Prayer. Deified humans such as Sugawara no Michizane (Tenjin) and Emperor Ōjin (Hachiman) are not included.<br>Names follow the Kojiki; variants from the Nihon Shoki and from Buddhist syncretism are listed under “Other names”. The four classes are the conventional reading of the chronicles — some gods, Susanoo above all, belong to more than one.",
+    footer: "A static site. No build step, no network calls — open <code>index.html</code> and it works."
+  },
+
+  groups: {
+    "別天津神": "Kotoamatsukami",
+    "神世七代": "Seven Generations",
+    "天津神": "Amatsukami",
+    "国津神": "Kunitsukami"
+  },
+
+  /* ご利益・神話・属性・典拠をまとめた語彙表。表記が同じものは同じ訳語を使う */
+  terms: {
+    "厄除け": "warding off misfortune", "開運": "good fortune", "海上安全": "safety at sea",
+    "縁結び": "matchmaking", "生成発展": "growth and creation", "国土安泰": "peace of the realm",
+    "病気平癒": "recovery from illness", "再生": "renewal", "五穀豊穣": "abundant harvest",
+    "生命力向上": "vitality", "成長": "growth", "農耕": "farming", "家内安全": "safety of the household",
+    "雨乞い": "prayers for rain", "夫婦円満": "marital harmony", "土地鎮め": "pacifying the land",
+    "基礎固め": "firm foundations", "住居守護": "protection of the home", "容姿端麗": "beauty",
+    "延命長寿": "long life", "安産": "safe childbirth", "夫婦和合": "harmony between spouses",
+    "国家安泰": "peace of the nation", "開運招福": "inviting good fortune", "勝運": "victory",
+    "産業繁栄": "prosperity in business", "航海安全": "safe voyages", "疫病除け": "warding off epidemics",
+    "農業守護": "protection of agriculture", "殖産興業": "developing industry",
+    "学業成就": "success in study", "合格祈願": "passing examinations", "知恵授け": "wisdom",
+    "芸能上達": "skill in the performing arts", "スポーツ上達": "athletic skill", "力量向上": "strength",
+    "出世開運": "advancement in career", "諸願成就": "fulfilment of wishes", "産業振興": "promoting industry",
+    "技術向上": "craft and skill", "鋳造守護": "protection of casting", "商売繁盛": "thriving trade",
+    "眼病平癒": "healing of the eyes", "武道上達": "skill in martial arts", "地震除け": "protection from earthquakes",
+    "災難除け": "protection from calamity", "旅行安全": "safe travel", "交通安全": "road safety",
+    "運搬業守護": "protection of hauliers", "大漁祈願": "a good catch", "子育て": "raising children",
+    "財運": "wealth", "芸道上達": "mastery of an art", "和歌上達": "skill in poetry",
+    "健康長寿": "health and long life", "酒造守護": "protection of sake brewing",
+    "温泉守護": "protection of hot springs", "武運長久": "lasting fortune in war", "美容": "beauty",
+    "子孫繁栄": "flourishing descendants", "山林守護": "protection of forests",
+    "鉱山守護": "protection of mines", "火難除け": "protection from fire", "健康": "health",
+    "航海守護": "protection of seafarers", "子授け": "conceiving a child", "方位除け": "warding off unlucky directions",
+    "みちひらき": "opening the way", "産業興隆": "rise of industry", "諸芸上達": "skill in the arts",
+    "林業守護": "protection of forestry", "建築守護": "protection of building",
+    "鍛冶守護": "protection of smiths", "鉱業守護": "protection of mining",
+    "金属加工守護": "protection of metalworking", "金運": "money luck", "牧畜守護": "protection of livestock",
+    "食物守護": "protection of food", "風害除け": "protection from storms", "祈雨": "praying for rain",
+    "止雨": "praying for rain to stop", "水難除け": "protection from drowning",
+    "陶業守護": "protection of potters", "養蚕守護": "protection of silkworms",
+    "衣食住の守護": "protection of daily life", "港湾守護": "protection of harbours",
+    "厄祓い": "purification of misfortune", "盗難除け": "protection from theft",
+    "刀剣守護": "protection of swords", "大願成就": "great undertakings fulfilled",
+    "事業成就": "success of an enterprise", "縁切り": "severing a bad tie", "運気回復": "recovery of fortune",
+    "浄化": "purification", "和解": "reconciliation", "雷除け": "protection from lightning",
+    "工事安全": "safety on site", "織物守護": "protection of weaving", "技芸上達": "skill in a craft",
+    "星除け": "warding off ill stars", "水の恵み": "the gift of water", "皮膚病平癒": "healing of the skin",
+    "傷病平癒": "healing of wounds", "市場守護": "protection of markets", "土地守護": "protection of land",
+    "狩猟守護": "protection of hunters", "人間関係円満": "harmony among people",
+    "接客業守護": "protection of hospitality trades", "製塩守護": "protection of salt making",
+    "導き": "guidance", "電気産業守護": "protection of the electrical trades",
+    "婦人病平癒": "healing of women's ailments",
+
+    "天地開闢": "The separation of heaven and earth", "国譲り": "The ceding of the land",
+    "天孫降臨": "The descent of the heavenly grandchild", "大国主の復活": "The revival of Ōkuninushi",
+    "国造り": "The making of the land", "国生み": "The birth of the islands",
+    "神生み": "The birth of the gods", "黄泉国訪問": "The journey to Yomi",
+    "禊祓": "The purification at Ahagihara", "黄泉国": "The land of Yomi",
+    "天岩戸": "The heavenly rock cave", "誓約": "The oath-taking of Amaterasu and Susanoo",
+    "三貴子の誕生": "The birth of the three noble children",
+    "保食神殺害（日本書紀）": "The slaying of Ukemochi (Nihon Shoki)",
+    "八岐大蛇退治": "The slaying of Yamata-no-Orochi", "根の国": "The land of Ne",
+    "返し矢": "The arrow returned", "神武東征": "The eastern campaign of Jimmu",
+    "木花之佐久夜毘売との結婚": "The marriage to Konohanasakuya-hime",
+    "海幸山幸": "The luck of the sea and the luck of the mountains",
+    "海神宮訪問": "The visit to the sea god's palace", "神武の誕生": "The birth of Jimmu",
+    "八咫烏の道案内": "The guidance of Yatagarasu",
+    "神功皇后の三韓征伐": "Empress Jingū's campaign", "因幡の白兎": "The white hare of Inaba",
+    "根の国訪問": "The visit to the land of Ne", "力比べ": "The trial of strength",
+    "火中出産": "The birth in the burning hut", "須佐之男命の系譜": "The line of Susanoo",
+    "崇神天皇の疫病": "The plague under Emperor Sujin", "三輪山伝説": "The legend of Mount Miwa",
+    "植林神話": "The planting of the forests", "大国主の逃亡": "Ōkuninushi's flight",
+    "迦具土斬殺": "The slaying of Kagutsuchi", "穀物の起源": "The origin of the grains",
+    "御歳神の祟り": "The curse of Mitoshi", "伊勢外宮の鎮座": "The enshrinement at Ise's Outer Shrine",
+    "大祓": "The Great Purification", "須佐之男命の乱行": "Susanoo's outrages",
+    "天香香背男の平定": "The subduing of Amatsu-Mikaboshi",
+    "天若日子の葬儀": "The funeral of Ame-no-Wakahiko", "大国主の妻問い": "Ōkuninushi's courtship",
+    "大国主の系譜": "The line of Ōkuninushi", "大国主の受難": "The trials of Ōkuninushi",
+    "出雲の系譜": "The line of Izumo", "諏訪信仰": "The Suwa cult",
+    "国引き神話": "The pulling of the land", "佐太大神の誕生": "The birth of Sada-no-Ōkami",
+    "稲荷五社": "The five Inari deities", "丹塗矢伝説": "The legend of the vermilion arrow",
+    "天日槍の渡来": "The coming of Ame-no-Hiboko",
+
+    "古事記 上巻": "Kojiki, Book I", "古事記 中巻": "Kojiki, Book II",
+    "古事記 上巻・中巻": "Kojiki, Books I–II",
+    "日本書紀 神代": "Nihon Shoki, Age of the Gods",
+    "日本書紀 神代上": "Nihon Shoki, Age of the Gods I",
+    "日本書紀 神代下": "Nihon Shoki, Age of the Gods II",
+    "日本書紀 神代上（本文冒頭）": "Nihon Shoki, Age of the Gods I (opening)",
+    "日本書紀 神代上（第二の一書）": "Nihon Shoki, Age of the Gods I (2nd variant)",
+    "日本書紀 神代上（第四の一書）": "Nihon Shoki, Age of the Gods I (4th variant)",
+    "日本書紀 神代上（第五の一書）": "Nihon Shoki, Age of the Gods I (5th variant)",
+    "日本書紀 神代上（第四・五の一書）": "Nihon Shoki, Age of the Gods I (4th–5th variants)",
+    "日本書紀 神代上（第十の一書）": "Nihon Shoki, Age of the Gods I (10th variant)",
+    "日本書紀 神代上（第十一の一書）": "Nihon Shoki, Age of the Gods I (11th variant)",
+    "日本書紀 神代上（保食神として）": "Nihon Shoki, Age of the Gods I (as Ukemochi)",
+    "日本書紀 神代上・崇神紀": "Nihon Shoki, Age of the Gods I and the reign of Sujin",
+    "日本書紀 神武紀": "Nihon Shoki, reign of Jimmu",
+    "日本書紀 崇神紀": "Nihon Shoki, reign of Sujin",
+    "日本書紀 垂仁紀": "Nihon Shoki, reign of Suinin",
+    "出雲国風土記": "Izumo no Kuni Fudoki", "伊予国風土記": "Iyo no Kuni Fudoki",
+    "播磨国風土記": "Harima no Kuni Fudoki", "常陸国風土記": "Hitachi no Kuni Fudoki",
+    "丹後国風土記逸文": "Tango no Kuni Fudoki (fragment)",
+    "越後国風土記逸文": "Echigo no Kuni Fudoki (fragment)",
+    "山城国風土記逸文": "Yamashiro no Kuni Fudoki (fragment)",
+    "古語拾遺": "Kogo Shūi", "先代旧事本紀": "Sendai Kuji Hongi", "万葉集": "Man'yōshū",
+    "延喜式": "Engishiki", "延喜式神名帳": "Engishiki, register of shrines",
+    "延喜式祝詞": "Engishiki, liturgies", "大祓詞（延喜式）": "Great Purification Prayer (Engishiki)",
+    "止由気宮儀式帳": "Toyuke-gū Gishikichō", "諏訪大社社伝": "Suwa Taisha temple records",
+    "諏訪信重解状": "Suwa Nobushige Gejō", "諏訪大明神絵詞": "Suwa Daimyōjin Ekotoba",
+    "淡嶋神社社伝": "Awashima Shrine records",
+
+    "創世": "creation", "根源": "primordial", "星辰": "stars", "生成": "generation", "司令": "command",
+    "生命力": "life force", "植物": "plants", "天空": "sky", "大地": "earth", "気象": "weather",
+    "対偶神": "paired deities", "住居": "dwelling", "美": "beauty", "祓": "purification",
+    "黄泉": "Yomi", "死": "death", "太陽": "sun", "統治": "rule", "皇祖": "imperial ancestor",
+    "月": "moon", "夜": "night", "暦": "calendar", "嵐": "storm", "海原": "open sea",
+    "八岐大蛇": "Yamata-no-Orochi", "英雄": "hero", "稲穂": "rice ears", "天孫": "heavenly grandchild",
+    "使者": "envoy", "祭祀": "ritual", "悲劇": "tragedy", "知恵": "wisdom", "参謀": "strategist",
+    "芸能": "performing arts", "舞": "dance", "怪力": "great strength", "武": "war",
+    "祝詞": "liturgy", "工": "craft", "工芸": "handicraft", "金属": "metal", "玉": "jewels",
+    "雷": "thunder", "剣": "sword", "交通": "travel", "船": "ships", "海": "sea",
+    "漁業": "fishing", "海幸山幸": "sea luck and mountain luck", "山": "mountains", "狩猟": "hunting",
+    "誕生": "birth", "東征": "eastern campaign", "建国": "founding of the state", "航海": "seafaring",
+    "水": "water", "和歌": "poetry", "医薬": "medicine", "酒": "sake", "温泉": "hot springs",
+    "天降り": "descent from heaven", "物部": "Mononobe clan", "託宣": "oracle", "商売": "commerce",
+    "風": "wind", "稲作": "rice growing", "鉱山": "mines", "火": "fire", "桜": "cherry blossom",
+    "岩": "rock", "長寿": "longevity", "龍宮": "the dragon palace", "潮": "tides", "養育": "nurture",
+    "道": "roads", "先導": "leading the way", "食物": "food", "正月": "the New Year", "蛇": "serpent",
+    "祟り": "divine wrath", "光": "light", "樹木": "trees", "林業": "forestry", "鍛冶": "smithing",
+    "草": "grasses", "野": "fields", "穀物": "grain", "死体化生": "creation from a corpse",
+    "井戸": "wells", "土": "clay", "陶芸": "pottery", "養蚕": "sericulture", "河口": "river mouths",
+    "門": "gates", "守護": "protection", "龍": "dragon", "境界": "boundaries", "災厄": "calamity",
+    "穢れ": "defilement", "川": "rivers", "消滅": "dissolution", "仲裁": "mediation", "追跡": "pursuit",
+    "祖神": "ancestral god", "織物": "weaving", "麻": "hemp", "建築": "building", "星": "stars",
+    "護衛": "escort", "抵抗": "resistance", "翡翠": "jade", "子": "child", "試練": "ordeal",
+    "兄弟": "brothers", "出雲": "Izumo", "系譜": "genealogy", "市場": "markets", "商業": "trade",
+    "土地": "land", "屋敷神": "household god", "諏訪": "Suwa", "土着": "indigenous",
+    "国引き": "pulling the land", "国土": "the realm", "宮廷": "the court", "調和": "harmony",
+    "接客": "hospitality", "塩": "salt", "烏": "crow", "夢": "dream", "三輪": "Miwa",
+    "皇統": "imperial line", "賀茂": "Kamo", "国魂": "spirit of the land", "漂着": "washed ashore",
+    "女性": "women", "祈願": "petition", "渡来": "from overseas", "製鉄": "ironworking",
+    "植林": "afforestation", "分水": "dividing the waters"
+  },
+
+  places: {
+    "東京大神宮（東京）": "Tokyo Daijingu (Tokyo)",
+    "秩父神社（埼玉）": "Chichibu Jinja (Saitama)",
+    "水天宮（福岡・東京）": "Suitengu (Fukuoka and Tokyo)",
+    "高皇産霊神社（各地）": "Takamimusubi Jinja (various locations)",
+    "安達太良神社（福島）": "Adatara Jinja (Fukushima)",
+    "出雲大社 摂社（島根）": "Izumo Taisha, auxiliary shrine (Shimane)",
+    "神魂神社（島根）": "Kamosu Jinja (Shimane)",
+    "浮嶋神社（愛媛）": "Ukishima Jinja (Ehime)",
+    "六甲山神社（兵庫）": "Rokkosan Jinja (Hyogo)",
+    "駒形神社（岩手）": "Komagata Jinja (Iwate)",
+    "御岩神社（茨城）": "Oiwa Jinja (Ibaraki)",
+    "熊野速玉大社（和歌山）": "Kumano Hayatama Taisha (Wakayama)",
+    "日枝神社（東京）": "Hie Jinja (Tokyo)",
+    "玉置神社（奈良）": "Tamaki Jinja (Nara)",
+    "御嶽神社（各地）": "Ontake Jinja (various locations)",
+    "英彦山神宮 摂社（福岡）": "Hikosan Jingu, auxiliary shrine (Fukuoka)",
+    "石都々古和気神社（福島）": "Ishitsutsukowake Jinja (Fukushima)",
+    "熊野速玉大社 摂社（和歌山）": "Kumano Hayatama Taisha, auxiliary shrine (Wakayama)",
+    "大鳥大社 摂社（大阪）": "Otori Taisha, auxiliary shrine (Osaka)",
+    "第六天神社（関東各地）": "Dairokuten Jinja (across the Kanto region)",
+    "伊弉諾神宮（兵庫・淡路）": "Izanagi Jingu (Awaji, Hyogo)",
+    "多賀大社（滋賀）": "Taga Taisha (Shiga)",
+    "江田神社（宮崎）": "Eda Jinja (Miyazaki)",
+    "花窟神社（三重）": "Hananoiwaya Jinja (Mie)",
+    "揖夜神社（島根）": "Iya Jinja (Shimane)",
+    "比婆山久米神社（島根）": "Hibayama Kume Jinja (Shimane)",
+    "伊勢神宮 内宮（三重）": "Ise Jingu, Inner Shrine (Mie)",
+    "日室神社ほか全国の神明社": "Shinmei shrines nationwide",
+    "月読宮（三重）": "Tsukuyomi-no-Miya (Mie)",
+    "月山神社（山形）": "Gassan Jinja (Yamagata)",
+    "月読神社（京都・松尾）": "Tsukiyomi Jinja, Matsuo (Kyoto)",
+    "八坂神社（京都）": "Yasaka Jinja (Kyoto)",
+    "須佐神社（島根）": "Susa Jinja (Shimane)",
+    "氷川神社（埼玉）": "Hikawa Jinja (Saitama)",
+    "熊野大社（島根）": "Kumano Taisha (Shimane)",
+    "英彦山神宮（福岡）": "Hikosan Jingu (Fukuoka)",
+    "西寒多神社（大分）": "Sasamuta Jinja (Oita)",
+    "出雲大社（島根・国造家の祖神）": "Izumo Taisha (Shimane), ancestral god of the Izumo Kokuso family",
+    "鷲宮神社（埼玉）": "Washinomiya Jinja (Saitama)",
+    "能義神社（島根）": "Nogi Jinja (Shimane)",
+    "天若日子神社（各地）": "Ame-no-Wakahiko Jinja (various locations)",
+    "阿麻氐留神社（長崎）": "Amateru Jinja (Nagasaki)",
+    "戸隠神社 中社（長野）": "Togakushi Jinja, Chusha (Nagano)",
+    "気象神社（東京）": "Kisho Jinja (Tokyo)",
+    "椿大神社 別宮椿岸神社（三重）": "Tsubaki Okami Yashiro, Tsubakigishi Jinja (Mie)",
+    "荒立神社（宮崎）": "Aratate Jinja (Miyazaki)",
+    "佐瑠女神社（三重）": "Sarume Jinja (Mie)",
+    "戸隠神社 奥社（長野）": "Togakushi Jinja, Okusha (Nagano)",
+    "佐那神社（三重）": "Sana Jinja (Mie)",
+    "雄山神社（富山）": "Oyama Jinja (Toyama)",
+    "春日大社（奈良）": "Kasuga Taisha (Nara)",
+    "枚岡神社（大阪）": "Hiraoka Jinja (Osaka)",
+    "吉田神社（京都）": "Yoshida Jinja (Kyoto)",
+    "安房神社（千葉）": "Awa Jinja (Chiba)",
+    "大原神社（東京）": "Ohara Jinja (Tokyo)",
+    "天太玉命神社（奈良）": "Ame-no-Futodama-no-Mikoto Jinja (Nara)",
+    "鏡作坐天照御魂神社（奈良）": "Kagamitsukuri-ni-Imasu-Amateru-Mitama Jinja (Nara)",
+    "日前神宮（和歌山）": "Hinokuma Jingu (Wakayama)",
+    "玉祖神社（山口）": "Tamanooya Jinja (Yamaguchi)",
+    "玉作湯神社（島根）": "Tamatsukuriyu Jinja (Shimane)",
+    "鹿島神宮（茨城）": "Kashima Jingu (Ibaraki)",
+    "塩竈神社（宮城）": "Shiogama Jinja (Miyagi)",
+    "香取神宮（千葉）": "Katori Jingu (Chiba)",
+    "石上神宮（奈良・関連）": "Isonokami Jingu (Nara), associated",
+    "鳥石楠船神社（各地）": "Torinoiwakusufune Jinja (various locations)",
+    "水神社（茨城）": "Sui Jinja (Ibaraki)",
+    "霧島神宮（鹿児島）": "Kirishima Jingu (Kagoshima)",
+    "新田神社（鹿児島）": "Nitta Jinja (Kagoshima)",
+    "箱根神社（神奈川）": "Hakone Jinja (Kanagawa)",
+    "潮嶽神社（宮崎）": "Shiotake Jinja (Miyazaki)",
+    "鹿児島神宮 摂社（鹿児島）": "Kagoshima Jingu, auxiliary shrine (Kagoshima)",
+    "鹿児島神宮（鹿児島）": "Kagoshima Jingu (Kagoshima)",
+    "青島神社（宮崎）": "Aoshima Jinja (Miyazaki)",
+    "高千穂神社（宮崎）": "Takachiho Jinja (Miyazaki)",
+    "鵜戸神宮（宮崎）": "Udo Jingu (Miyazaki)",
+    "宮崎神宮 摂社（宮崎）": "Miyazaki Jingu, auxiliary shrine (Miyazaki)",
+    "橿原神宮（奈良）": "Kashihara Jingu (Nara)",
+    "宮崎神宮（宮崎）": "Miyazaki Jingu (Miyazaki)",
+    "狭野神社（宮崎）": "Sano Jinja (Miyazaki)",
+    "宗像大社（福岡）": "Munakata Taisha (Fukuoka)",
+    "厳島神社（広島）": "Itsukushima Jinja (Hiroshima)",
+    "江島神社（神奈川）": "Enoshima Jinja (Kanagawa)",
+    "住吉大社（大阪）": "Sumiyoshi Taisha (Osaka)",
+    "住吉神社（福岡）": "Sumiyoshi Jinja (Fukuoka)",
+    "住吉神社（山口・下関）": "Sumiyoshi Jinja, Shimonoseki (Yamaguchi)",
+    "少彦名神社（大阪・道修町）": "Sukunahikona Jinja, Doshomachi (Osaka)",
+    "大洗磯前神社（茨城）": "Oarai Isosaki Jinja (Ibaraki)",
+    "五條天神社（東京）": "Gojo Tenjinsha (Tokyo)",
+    "石上神宮（奈良）": "Isonokami Jingu (Nara)",
+    "磐船神社（大阪）": "Iwafune Jinja (Osaka)",
+    "籠神社（京都・関連）": "Kono Jinja (Kyoto), associated",
+    "出雲大社（島根）": "Izumo Taisha (Shimane)",
+    "大神神社（奈良）": "Omiwa Jinja (Nara)",
+    "気多大社（石川）": "Keta Taisha (Ishikawa)",
+    "美保神社（島根）": "Miho Jinja (Shimane)",
+    "今宮戎神社（大阪）": "Imamiya Ebisu Jinja (Osaka)",
+    "三嶋大社（静岡）": "Mishima Taisha (Shizuoka)",
+    "諏訪大社（長野）": "Suwa Taisha (Nagano)",
+    "全国の諏訪神社": "Suwa shrines nationwide",
+    "八重垣神社（島根）": "Yaegaki Jinja (Shimane)",
+    "御井神社（島根）": "Mii Jinja (Shimane)",
+    "賣沼神社（鳥取）": "Menuma Jinja (Tottori)",
+    "八上姫神社（鳥取）": "Yagamihime Jinja (Tottori)",
+    "須我神社（島根）": "Suga Jinja (Shimane)",
+    "手名椎神社（島根）": "Tenazuchi Jinja (Shimane)",
+    "大山祇神社（愛媛）": "Oyamazumi Jinja (Ehime)",
+    "梅宮大社（京都）": "Umenomiya Taisha (Kyoto)",
+    "富士山本宮浅間大社（静岡）": "Fujisan Hongu Sengen Taisha (Shizuoka)",
+    "全国の浅間神社": "Sengen shrines nationwide",
+    "雲見浅間神社（静岡）": "Kumomi Sengen Jinja (Shizuoka)",
+    "伊砂砂神社（滋賀）": "Isasa Jinja (Shiga)",
+    "大室山浅間神社（静岡）": "Omuroyama Sengen Jinja (Shizuoka)",
+    "志賀海神社（福岡）": "Shikaumi Jinja (Fukuoka)",
+    "海神神社（長崎・対馬）": "Kaijin Jinja, Tsushima (Nagasaki)",
+    "穂高神社（長野）": "Hotaka Jinja (Nagano)",
+    "豊玉姫神社（鹿児島）": "Toyotamahime Jinja (Kagoshima)",
+    "和多都美神社（長崎・対馬）": "Watatsumi Jinja, Tsushima (Nagasaki)",
+    "賀茂御祖神社／下鴨神社（京都）": "Kamo Mioya Jinja / Shimogamo Jinja (Kyoto)",
+    "椿大神社（三重）": "Tsubaki Okami Yashiro (Mie)",
+    "猿田彦神社（三重）": "Sarutahiko Jinja (Mie)",
+    "白鬚神社（滋賀）": "Shirahige Jinja (Shiga)",
+    "伏見稲荷大社（京都）": "Fushimi Inari Taisha (Kyoto)",
+    "全国3万社の稲荷神社": "Some 30,000 Inari shrines nationwide",
+    "笠間稲荷神社（茨城）": "Kasama Inari Jinja (Ibaraki)",
+    "大歳神社（各地）": "Otoshi Jinja (various locations)",
+    "葛木御歳神社（奈良）": "Katsuragi Mitoshi Jinja (Nara)",
+    "飛鳥坐神社（奈良）": "Asuka-ni-Imasu Jinja (Nara)",
+    "金刀比羅宮（香川）": "Kotohira-gu (Kagawa)",
+    "三輪神社（各地）": "Miwa Jinja (various locations)",
+    "賣布神社（島根）": "Mefu Jinja (Shimane)",
+    "倭文神社（鳥取）": "Shitori Jinja (Tottori)",
+    "高比売神社（奈良）": "Takahime Jinja (Nara)",
+    "伊太祁曽神社（和歌山）": "Itakiso Jinja (Wakayama)",
+    "射楯兵主神社（兵庫）": "Itate Hyozu Jinja (Hyogo)",
+    "大屋神社（島根）": "Oya Jinja (Shimane)",
+    "秋葉山本宮秋葉神社（静岡）": "Akihasan Hongu Akiha Jinja (Shizuoka)",
+    "愛宕神社（京都）": "Atago Jinja (Kyoto)",
+    "古四王神社（各地）": "Koshio Jinja (various locations)",
+    "南宮大社（岐阜）": "Nangu Taisha (Gifu)",
+    "金山神社（各地）": "Kanayama Jinja (various locations)",
+    "黄金山神社（宮城）": "Koganeyama Jinja (Miyagi)",
+    "萱津神社（愛知）": "Kayatsu Jinja (Aichi)",
+    "茅野神社（各地）": "Kayano Jinja (various locations)",
+    "野椎神社（島根）": "Nozuchi Jinja (Shimane)",
+    "上一宮大粟神社（徳島）": "Kamiichinomiya Oawa Jinja (Tokushima)",
+    "一宮神社（徳島）": "Ichinomiya Jinja (Tokushima)",
+    "多久頭魂神社（長崎）": "Takuzudama Jinja (Nagasaki)",
+    "大歳御祖神社（静岡）": "Otoshimioya Jinja (Shizuoka)",
+    "龍田大社（奈良）": "Tatsuta Taisha (Nara)",
+    "伊勢神宮 風日祈宮（三重）": "Ise Jingu, Kazahinomi-no-Miya (Mie)",
+    "志那神社（滋賀）": "Shina Jinja (Shiga)",
+    "六所神社（各地）": "Rokusho Jinja (various locations)",
+    "馬事公苑近隣の木神社（各地）": "Ki Jinja (various locations)",
+    "杉山神社（神奈川）": "Sugiyama Jinja (Kanagawa)",
+    "丹生川上神社（奈良）": "Niukawakami Jinja (Nara)",
+    "貴船神社（京都）": "Kifune Jinja (Kyoto)",
+    "水神社（各地）": "Sui Jinja (various locations)",
+    "畝火山口神社（奈良）": "Unebiyamaguchi Jinja (Nara)",
+    "波爾布神社（福井）": "Hanifu Jinja (Fukui)",
+    "愛宕神社（京都・配祀）": "Atago Jinja (Kyoto), co-enshrined",
+    "御食津神社（各地）": "Miketsu Jinja (various locations)",
+    "水尾神社（滋賀）": "Mio Jinja (Shiga)",
+    "伊勢神宮 外宮（三重）": "Ise Jingu, Outer Shrine (Mie)",
+    "元伊勢籠神社（京都）": "Moto-Ise Kono Jinja (Kyoto)",
+    "全国の豊受神社": "Toyouke shrines nationwide",
+    "速秋津神社（各地）": "Hayaakitsu Jinja (various locations)",
+    "湊神社（各地）": "Minato Jinja (various locations)",
+    "佐波波地祇神社（茨城）": "Sawawa Chigi Jinja (Ibaraki)",
+    "御門主神社（各地）": "Mikadonushi Jinja (various locations)",
+    "櫛石窓神社（兵庫）": "Kushiiwamado Jinja (Hyogo)",
+    "宮中 御門巫祭神": "Enshrined by the Mikado-no-Mikannagi at the imperial court",
+    "丹生川上神社上社（奈良）": "Niukawakami Jinja, Upper Shrine (Nara)",
+    "高龗神社（各地）": "Takaokami Jinja (various locations)",
+    "尾羽張神社（各地）": "Ohabari Jinja (various locations)",
+    "伊弉諾神宮 摂社（兵庫）": "Izanagi Jingu, auxiliary shrine (Hyogo)",
+    "大事忍男神社（各地）": "Okotooshio Jinja (various locations)",
+    "道祖神（全国の路傍）": "Dosojin, wayside shrines nationwide",
+    "佐太神社（島根）": "Sada Jinja (Shimane)",
+    "久那斗神社（各地）": "Kunado Jinja (various locations)",
+    "神魂神社 摂社（島根）": "Kamosu Jinja, auxiliary shrine (Shimane)",
+    "厄除けの諸社": "Shrines for warding off misfortune",
+    "直毘神社（各地）": "Naobi Jinja (various locations)",
+    "多賀大社 摂社（滋賀）": "Taga Taisha, auxiliary shrine (Shiga)",
+    "住吉大社 摂社（大阪）": "Sumiyoshi Taisha, auxiliary shrine (Osaka)",
+    "佐久奈度神社（滋賀）": "Sakunado Jinja (Shiga)",
+    "伊勢神宮 荒祭宮（三重・同一視説）": "Ise Jingu, Aramatsuri-no-Miya (Mie), by one identification",
+    "六甲比命神社（兵庫）": "Rokko Himemiko Jinja (Hyogo)",
+    "祓戸神社（各地）": "Haraedo Jinja (various locations)",
+    "気吹戸主神社（各地）": "Ibukidonushi Jinja (various locations)",
+    "白山比咩神社（石川）": "Shirayamahime Jinja (Ishikawa)",
+    "全国三千余社の白山神社": "Over 3,000 Hakusan shrines nationwide",
+    "白山神社（新潟）": "Hakusan Jinja (Niigata)",
+    "揖夜神社 周辺（島根・黄泉比良坂伝承地）": "Around Iya Jinja (Shimane), the traditional site of Yomotsu Hirasaka",
+    "多度大社（三重）": "Tado Taisha (Mie)",
+    "田村神社（香川）": "Tamura Jinja (Kagawa)",
+    "山代国造ゆかりの諸社": "Shrines connected with the Yamashiro Kokuso",
+    "生井神社（各地）": "Ikui Jinja (various locations)",
+    "近江の日子根系諸社": "Hikone-line shrines in Omi",
+    "出雲の熊野系諸社": "Kumano-line shrines in Izumo",
+    "宗像大社 沖津宮（福岡）": "Munakata Taisha, Okitsu-miya (Fukuoka)",
+    "宗像大社 中津宮（福岡）": "Munakata Taisha, Nakatsu-miya (Fukuoka)",
+    "竹生島神社（滋賀）": "Chikubushima Jinja (Shiga)",
+    "宗像大社 辺津宮（福岡）": "Munakata Taisha, Hetsu-miya (Fukuoka)",
+    "多岐神社（各地）": "Taki Jinja (various locations)",
+    "御上神社（滋賀）": "Mikami Jinja (Shiga)",
+    "多度大社 別宮一目連神社（三重）": "Tado Taisha, Ichimokuren Jinja (Mie)",
+    "天目一神社（兵庫）": "Amenomahitotsu Jinja (Hyogo)",
+    "忌部神社（徳島）": "Imbe Jinja (Tokushima)",
+    "鷲神社（東京・浅草）": "Otori Jinja, Asakusa (Tokyo)",
+    "大麻比古神社（徳島）": "Oasahiko Jinja (Tokushima)",
+    "櫻井神社（大阪）": "Sakurai Jinja (Osaka)",
+    "機神社（各地）": "Hata Jinja (various locations)",
+    "星宮神社（栃木）": "Hoshinomiya Jinja (Tochigi)",
+    "服部天神宮（大阪）": "Hattori Tenjingu (Osaka)",
+    "生田神社（兵庫）": "Ikuta Jinja (Hyogo)",
+    "玉津島神社（和歌山）": "Tamatsushima Jinja (Wakayama)",
+    "伊勢神宮 内宮 摂社（三重）": "Ise Jingu, Inner Shrine auxiliary (Mie)",
+    "真清田神社（愛知）": "Masumida Jinja (Aichi)",
+    "天照御魂神社（各地）": "Amateru Mitama Jinja (various locations)",
+    "伴林氏神社（大阪）": "Tomobayashi Ujigami Jinja (Osaka)",
+    "久米御縣神社（奈良）": "Kume Mikata Jinja (Nara)",
+    "靫負神社（各地）": "Yugei Jinja (various locations)",
+    "静神社（茨城）": "Shizu Jinja (Ibaraki)",
+    "大甕神社（茨城）": "Omika Jinja (Ibaraki)",
+    "大甕神社（茨城・封じられた地）": "Omika Jinja (Ibaraki), where the god was sealed",
+    "星宮神社（栃木・各地）": "Hoshinomiya Jinja (Tochigi and elsewhere)",
+    "高鴨神社（奈良）": "Takakamo Jinja (Nara)",
+    "都都古別神社（福島）": "Tsutsukowake Jinja (Fukushima)",
+    "土佐神社（高知）": "Tosa Jinja (Kochi)",
+    "奴奈川神社（新潟）": "Nunakawa Jinja (Niigata)",
+    "天津神社（新潟）": "Amatsu Jinja (Niigata)",
+    "居多神社（新潟）": "Kota Jinja (Niigata)",
+    "御井神社（鳥取）": "Mii Jinja (Tottori)",
+    "手見神社（各地）": "Temi Jinja (various locations)",
+    "赤猪岩神社（鳥取・大国主が殺された地）": "Akaiiwa Jinja (Tottori), where Okuninushi was killed",
+    "白兎神社（鳥取）": "Hakuto Jinja (Tottori)",
+    "白兎神社（各地）": "Hakuto Jinja (various locations)",
+    "大市神社（各地）": "Oichi Jinja (various locations)",
+    "伏見稲荷大社 摂社（京都）": "Fushimi Inari Taisha, auxiliary shrine (Kyoto)",
+    "園韓神社（京都・宮中）": "Sono-Kara Jinja, imperial court (Kyoto)",
+    "各地の歳神社": "Toshi shrines in various locations",
+    "阿須波神社（各地）": "Asuha Jinja (various locations)",
+    "生國魂神社 摂社（大阪）": "Ikukunitama Jinja, auxiliary shrine (Osaka)",
+    "宮中 座摩巫祭神": "Enshrined by the Ikasuri-no-Mikannagi at the imperial court",
+    "大神神社 摂社（奈良）": "Omiwa Jinja, auxiliary shrine (Nara)",
+    "松尾大社 摂社（京都）": "Matsunoo Taisha, auxiliary shrine (Kyoto)",
+    "諏訪大社 下社（長野）": "Suwa Taisha, Lower Shrine (Nagano)",
+    "洩矢神社（長野）": "Moriya Jinja (Nagano)",
+    "藤島神社（長野）": "Fujishima Jinja (Nagano)",
+    "神長官守矢史料館（長野）": "Jinchokan Moriya Historical Museum (Nagano)",
+    "長浜神社（島根）": "Nagahama Jinja (Shimane)",
+    "加賀神社（島根）": "Kaka Jinja (Shimane)",
+    "大宮売神社（京都）": "Omiyame Jinja (Kyoto)",
+    "宮中 御巫祭神": "Enshrined by the Mikannagi at the imperial court",
+    "霧島神宮 摂社（鹿児島）": "Kirishima Jingu, auxiliary shrine (Kagoshima)",
+    "鹽竈神社（宮城）": "Shiogama Jinja (Miyagi)",
+    "塩釜神社（各地）": "Shiogama Jinja (various locations)",
+    "鹽竈六所神社（各地）": "Shiogama Rokusho Jinja (various locations)",
+    "熊野本宮大社（和歌山）": "Kumano Hongu Taisha (Wakayama)",
+    "八咫烏神社（奈良）": "Yatagarasu Jinja (Nara)",
+    "彌彦神社（新潟）": "Yahiko Jinja (Niigata)",
+    "高倉神社（各地）": "Takakura Jinja (various locations)",
+    "狭井神社（奈良）": "Sai Jinja (Nara)",
+    "率川神社（奈良）": "Isagawa Jinja (Nara)",
+    "橿原神宮（奈良・配祀）": "Kashihara Jingu (Nara), co-enshrined",
+    "日吉大社 東本宮（滋賀）": "Hiyoshi Taisha, East Main Shrine (Shiga)",
+    "松尾大社（京都）": "Matsunoo Taisha (Kyoto)",
+    "賀茂別雷神社／上賀茂神社（京都）": "Kamo Wakeikazuchi Jinja / Kamigamo Jinja (Kyoto)",
+    "各地の賀茂神社": "Kamo shrines in various locations",
+    "大和神社（奈良）": "Oyamato Jinja (Nara)",
+    "国魂神社（各地）": "Kunitama Jinja (various locations)",
+    "西宮神社（兵庫）": "Nishinomiya Jinja (Hyogo)",
+    "蛭子神社（各地）": "Hiruko Jinja (various locations)",
+    "和田神社（兵庫）": "Wada Jinja (Hyogo)",
+    "淡嶋神社（和歌山）": "Awashima Jinja (Wakayama)",
+    "淡島神社（各地）": "Awashima Jinja (various locations)",
+    "出石神社（兵庫）": "Izushi Jinja (Hyogo)",
+    "鏡神社（滋賀）": "Kagami Jinja (Shiga)",
+    "気比神宮（福井・関連）": "Kehi Jingu (Fukui), associated",
+    "大屋都姫神社（和歌山）": "Oyatsuhime Jinja (Wakayama)",
+    "都麻都比売神社（和歌山）": "Tsumatsuhime Jinja (Wakayama)",
+    "建水分神社（大阪）": "Takemikumari Jinja (Osaka)",
+    "吉野水分神社（奈良）": "Yoshino Mikumari Jinja (Nara)",
+    "都祁水分神社（奈良）": "Tsuge Mikumari Jinja (Nara)",
+    "伊勢神宮 外宮 関連社（三重）": "Shrines associated with Ise Jingu's Outer Shrine (Mie)",
+    "保食神社（各地）": "Ukemochi Jinja (various locations)",
+    "各地の稲荷社": "Inari shrines in various locations",
+    "彌彦神社（新潟・関連）": "Yahiko Jinja (Niigata), associated",
+    "物部神社（島根）": "Mononobe Jinja (Shimane)"
+  },
+  deities: {
+  amenominakanushi: { name: "Ame-no-Minakanushi", epithet: "The first god to come into being; the centre of the universe",
+    description: "When heaven and earth first parted, this god appeared in Takamagahara before all others. It had no sex, showed no form, and at once concealed itself — a \"solitary god\". It barely appears in the myths, yet later Shinto theology placed it at the very top as the origin of the cosmos, and it came to be widely worshipped through its identification with the pole star.",
+    trivia: "A god raised to the highest rank while having almost no story of its own. From medieval times its identification with the pole star spread its cult widely." },
+  takamimusuhi: { name: "Takamimusuhi", epithet: "The generative force that decides what heaven will do",
+    description: "\"Musuhi\" means the spirit-power that brings things into being. The second solitary god to appear, but unlike Ame-no-Minakanushi it is deeply involved in the working of the myths. In the ceding of the land and the descent of the heavenly grandchild it issues orders alongside Amaterasu under the name Takagi, functioning in effect as the operational commander of heaven.",
+    trivia: "In the later myths it commands almost as an equal of Amaterasu. Many scholars hold that it was an older imperial ancestral god, predating her." },
+  kamimusuhi: { name: "Kamimusuhi", epithet: "The mothering force that revives the dead and aids the gods below",
+    description: "The third solitary god. Where Takamimusuhi stands on the side of heaven, this god helps the earthly side — Izumo. It restored Ōkuninushi to life after his brothers had killed him twice, and it sent out Sukunabikona, who had slipped between its fingers, to be his partner in making the land.",
+    trivia: "The supreme deity of the Izumo mythic cycle, drawn as the counterpart of Takamimusuhi on the heavenly side." },
+  umashiashikabihikoji: { name: "Umashi-Ashikabi-Hikoji", epithet: "The reed shoot pushing up out of the mud",
+    description: "While the land still drifted like oil floating on water, a reed shoot thrust up vigorously from the mud — and that vital force became a god. \"Umashi\" means fine or splendid. It stands for the first energy of life rising out of chaos.",
+    trivia: "Not an abstraction but the deification of an actual scene — reeds shooting up in spring. Very characteristic of how Japanese myth handles creation." },
+  amenotokotachi: { name: "Ame-no-Tokotachi", epithet: "That which makes heaven stand forever; the foundation of the sky",
+    description: "The fifth and last of the Kotoamatsukami, and a solitary god. \"Tokotachi\" means to stand fast forever, expressing that heaven itself had become permanently fixed. It pairs with Kuni-no-Tokotachi, who follows, marking that the foundations of both heaven and earth were now laid.",
+    trivia: "These five gods are called the Kotoamatsukami, and the chronicles set them clearly apart from every god that follows." },
+  kuninotokotachi: { name: "Kuni-no-Tokotachi", epithet: "That which makes the earth stand forever; the root god of the land",
+    description: "The first of the Seven Generations. It expresses the permanent, stable existence of the land. In the main text of the Nihon Shoki this god — not Ame-no-Minakanushi — is the first to appear, so the order differs from the Kojiki. From medieval times both Ise and Yoshida Shinto treated it as the root deity.",
+    trivia: "In modern new religions such as Ōmoto it returns as a great god who was sealed away. A deity that went on living outside the myths." },
+  toyokumono: { name: "Toyokumono", epithet: "Clouds rising; the beginning of the abundant plain",
+    description: "The second of the Seven Generations and the last solitary god. It marks the stage at which clouds formed over the land and the fields spread out richly. Every god after this comes into being as a male-female pair, so this is the last to arise alone.",
+    trivia: "With this god the myth turns from the age of solitary deities to the age of couples — the pivot toward creating the land by generation." },
+  uhijini: { name: "Uhijini and Suhijini", epithet: "Mud and sand — the first male and female pair",
+    description: "The third of the Seven Generations: a male and female pair standing for mud (uhiji) and sand (suhiji), said to be the first gods to have sex. They mark the stage at which the land, still unset, was separating into mud and sand.",
+    trivia: "Every one of the four generations that follows is a couple. The myth's structure shifts here from coming-into-being to procreation." },
+  tsunuguhi: { name: "Tsunuguhi and Ikuguhi", epithet: "The first stakes driven into the earth",
+    description: "The fourth of the Seven Generations. \"Kui\" is a stake driven into the ground; the pair express the first shoots and pillars standing up on land that had begun to firm. A symbol of life taking root on the earth.",
+    trivia: "One reading holds that driving a stake at a Japanese ground-breaking ceremony re-enacts this stage of the myth." },
+  ootonoji: { name: "Ootonoji and Ootonobe", epithet: "The doorway of a dwelling — a place made complete",
+    description: "The fifth of the Seven Generations. The name means \"great gate, great door\", marking the stage at which the land was finished as a place where people could live. It had become, from mere mud, a space in which a dwelling could stand.",
+    trivia: "Some read \"tono\" as a palace, and take the pair as foreshadowing the later myths of building the imperial halls." },
+  omodaru: { name: "Omodaru and Ayakashikone", epithet: "\"The face is complete\" — form perfected",
+    description: "The sixth of the Seven Generations. \"Omo taru\" means that the face is fully formed, expressing that land and gods had at last reached their finished shape. The male god pairs with a goddess who exclaims \"aya, kashiko\" — ah, how awesome — at that perfected form.",
+    trivia: "In medieval times the pair merged with the Buddhist Dairokuten Maō and were widely enshrined across the Kanto region as Dairokuten Jinja." },
+  izanagi: { name: "Izanagi", epithet: "The father who bore the land and the gods",
+    description: "The last of the Seven Generations. With Izanami he stirred the sea with the heavenly jewelled spear and made the island of Onogoro. The couple bore the eight great islands and many gods, but bearing the fire god cost him his wife. He followed her as far as Yomi, fled home in horror at what she had become, and purified himself at Ahagihara in Hyūga. From his left eye came Amaterasu, from his right Tsukuyomi, from his nose Susanoo.",
+    trivia: "Fleeing Yomi, he drove off his pursuers by throwing peaches. Those peaches were given a divine name of their own — Ōkamuzumi-no-Mikoto." },
+  izanami: { name: "Izanami", epithet: "The mother who bore the land, and then ruled the land of the dead",
+    description: "Izanagi's wife. She bore the islands of Japan and a host of gods, but bearing the fire god Kagutsuchi burned her and she died, becoming ruler of Yomi. When her husband broke her prohibition — do not look — and shamed her, she pursued him in fury. At the last she declared she would kill a thousand of his people each day; he answered that he would then build fifteen hundred birthing huts.",
+    trivia: "This final exchange between husband and wife is told as the origin of the fixed numbers of human deaths and births. It is also Japan's oldest parting quarrel." },
+  amaterasu: { name: "Amaterasu Ōmikami", epithet: "The sun goddess who rules heaven; ancestor of the imperial house",
+    description: "The supreme deity, born when Izanagi washed his left eye during his purification, and charged with ruling Takamagahara. Unable to endure her brother Susanoo's outrages, she hid in the heavenly rock cave and the world went dark. Drawn out again by the gods' stratagem, she pressed for the ceding of the land below and sent her grandson Ninigi down to rule it.",
+    trivia: "At Ise Jingu her sacred body is the mirror Yata-no-Kagami, one of the three imperial regalia. It was her own reflection in that mirror that drew her out of the cave." },
+  tsukuyomi: { name: "Tsukuyomi", epithet: "The moon god who rules the night; the silent one of the three noble children",
+    description: "Born from Izanagi's right eye and charged with ruling the realm of night — one of the three noble children. Yet in the Kojiki he never appears again. In one Nihon Shoki variant he found the food goddess Ukemochi disgusting for producing food from her mouth and killed her; Amaterasu was angered, and from then on they lived apart. This is given as the reason day and night are separate.",
+    trivia: "A mysterious god of whom the myths say almost nothing — even the sex is disputed. \"Tsukuyomi\" is taken to mean counting the moons, that is, the calendar." },
+  susanoo: { name: "Susanoo", epithet: "The raging god who was banished — and became a hero",
+    description: "Born from Izanagi's nose, one of the three noble children. Charged with ruling the seas, he wept ceaselessly for his mother in the land of Ne and was banished. In heaven he destroyed the paddies and hurled a flayed horse into the weaving hall, driving his sister into the rock cave, and was banished again. Descending to Izumo he turned about entirely: he slew the eight-headed serpent, married Kushinadahime, and composed the first Japanese poem.",
+    trivia: "\"Eight clouds rise — in Izumo, eightfold fences; to keep my wife within, I build eightfold fences.\" The author of the first waka in the chronicles. Few gods swing so far, from brute to founder of culture." },
+  "ameno-oshihomimi": { name: "Ame-no-Oshihomimi", epithet: "The father of the heavenly grandchild, who declined to go down himself",
+    description: "The eldest son born of the oath between Amaterasu and Susanoo. He was to have descended as ruler of the land below, but looked down from the floating bridge of heaven, said it was far too noisy, and turned back. Even after the land had been ceded he did not descend, putting forward instead his son Ninigi, born in the meantime.",
+    trivia: "\"Oshiho\" in his name means many ears of rice. A god who guarantees the harvest — and who never once set foot on the earth." },
+  amenohohi: { name: "Ame-no-Hohi", epithet: "The envoy who changed sides; ancestor of the Izumo priestly house",
+    description: "Amaterasu's second son, born of the oath. Sent as the first envoy to demand the land below, he was so won over by Ōkuninushi that he sent back no report for three years. He was later made ancestor of the Izumo Kokuso, the house that conducts the rites at Izumo Taisha; his descendants serve Ōkuninushi to this day.",
+    trivia: "An envoy who abandoned his mission and thereby became the permanent custodian of the Izumo rites. A rare case of a betrayal turning into an office." },
+  amenowakahiko: { name: "Ame-no-Wakahiko", epithet: "The second traitor, killed by his own arrow",
+    description: "The second envoy after Ame-no-Hohi. He took Ōkuninushi's daughter Shitateruhime as his wife, schemed to become ruler of the land below himself, and for eight years sent no word. He shot dead the pheasant sent to check on him, but the arrow flew on to heaven; hurled back, it pierced his chest and killed him.",
+    trivia: "The origin of the phrase \"the returned arrow\". Equally famous is the funeral scene, where his double, Ajisuki-Takahikone, was mistaken for the corpse and kicked the mourning hut to pieces in rage." },
+  omoikane: { name: "Omoikane", epithet: "The strategist who holds eight people's wisdom in one mind",
+    description: "Child of Takamimusuhi; his name means \"combining the thoughts of many\". To draw Amaterasu out of the rock cave he devised the whole plan — the long-crowing birds of the eternal land, the making of the mirror and the jewels, the dance of Ame-no-Uzume. He also advised on the choice of envoys for the ceding of the land.",
+    trivia: "The first true staff officer in Japanese myth: a rare god who moves events by planning rather than by force." },
+  amenouzume: { name: "Ame-no-Uzume", epithet: "The founder of the performing arts, who broke the darkness with laughter",
+    description: "Before the rock cave she drummed on an overturned tub, fell into trance, danced with her breasts bared, and set the eight million gods roaring with laughter. Amaterasu, puzzled by the sound, opened the cave a crack — and light returned to the world. At the descent from heaven she faced down Sarutahiko, who blocked the road, and demanded to know who he was.",
+    trivia: "She later became Sarutahiko's wife and, taking his name, founded the Sarume, the court lineage that presided over sacred dance. Japanese performing arts trace back to her." },
+  tajikarao: { name: "Ame-no-Tajikarao", epithet: "The god of great strength who hurled the cave door away",
+    description: "Hidden beside the rock cave, he seized Amaterasu's hand the instant she showed her face and pulled her out in a single motion. He then flung the cave door itself away so that it could never be closed again. He also accompanied the descent from heaven.",
+    trivia: "One tradition says the flung door flew to the province of Shinano and landed there, becoming Mount Togakushi — the mountain of the hidden door." },
+  amenokoyane: { name: "Ame-no-Koyane", epithet: "The ancestor of ritual, who chanted the liturgy",
+    description: "The god who recited a magnificent liturgy before the rock cave. He accompanied the descent from heaven as one of the five companions, in charge of ritual. As ancestral god of the Nakatomi — later the Fujiwara — he rose with that family to become the chief deity of Kasuga Taisha.",
+    trivia: "Being the clan god of the Fujiwara made him, from the Heian period on, one of the most politically powerful deities in the country." },
+  futodama: { name: "Futodama", epithet: "The god who held out the offerings and hung the sacred rope",
+    description: "At the rock cave rite he held up the offering branch of sakaki hung with the mirror and the jewels. The moment Amaterasu emerged, he strung a sacred rope behind her and told her she could not go back inside. Ancestral god of the Imbe, he presides over the making and presenting of ritual implements.",
+    trivia: "The sacred ropes at Japanese shrines originate in this scene. The Imbe disputed precedence with the Nakatomi and, in the Heian period, wrote the Kogo Shūi to argue their own claim." },
+  ishikoridome: { name: "Ishikoridome", epithet: "The ancestor of mirror-makers, who cast the sacred mirror",
+    description: "The goddess who mined ore from Mount Kagu and cast the mirror Yata-no-Kagami for the rock cave rite. That mirror became one of the three imperial regalia and is still enshrined as the sacred body of the Inner Shrine at Ise. Ancestral deity of the guild of mirror-makers.",
+    trivia: "The first mirror she cast is said to have come out badly and been made again; that first attempt is held to be enshrined at Hinokuma Jingu in Kii." },
+  tamanooya: { name: "Tamanooya", epithet: "The ancestor of jewel-makers, who strung the sacred beads",
+    description: "The god who made the curved jewel Yasakani-no-Magatama for the rock cave rite. That jewel too became one of the three imperial regalia. One of the five companions of the descent from heaven, and ancestral deity of the guild of jewel-makers.",
+    trivia: "The hot spring town of Tamatsukuri in Izumo is where his guild of jewel-makers settled. It is still known for its magatama." },
+  takemikazuchi: { name: "Takemikazuchi", epithet: "The thunder-and-sword god who settled the ceding of the land by force",
+    description: "Born from the blood on the sword with which Izanagi beheaded the fire god Kagutsuchi. Sent to Izumo as the final envoy, he planted his sword upside down on the crest of a wave, sat cross-legged on its point, and demanded that Ōkuninushi give up the land. Takeminakata resisted and challenged him to the first trial of strength in Japan; Takemikazuchi turned his own hand first to ice, then to a blade, and crushed him.",
+    trivia: "That contest is held to be the origin of sumo. At the crisis of Jimmu's eastern campaign he sent down the sword Futsunomitama from heaven to save the army." },
+  futsunushi: { name: "Futsunushi", epithet: "The sound a blade makes cutting through — the sword god \"futsu\"",
+    description: "In the Nihon Shoki he is sent with Takemikazuchi as the leading figure in the ceding of the land. He does not appear in the Kojiki, where Takemikazuchi acts alone. \"Futsu\" is taken to be the sound of a blade slicing clean through, making him the deification of the sword itself.",
+    trivia: "Kashima (Takemikazuchi) and Katori (Futsunushi) are spoken of as a pair, the two great martial gods guarding eastern Japan. In the Edo period \"setting out from Kashima\" became an expression for beginning a journey." },
+  amenotorifune: { name: "Ame-no-Torifune", epithet: "The heaven-flying boat that carries the gods",
+    description: "A boat god born in the divine generation of Izanagi and Izanami — a vessel built of hard camphor wood, deified, and serving as the gods' conveyance. In the ceding of the land he accompanied Takemikazuchi and was sent as messenger to Kotoshironushi.",
+    trivia: "A rare case of a vehicle appearing as a god. It shows clearly the Japanese habit of treating an object itself as divine." },
+  ninigi: { name: "Ninigi", epithet: "The heavenly grandchild who came down bearing the three regalia",
+    description: "Grandson of Amaterasu. After the land was ceded he descended to the peak of Takachiho in Hyūga with the three imperial regalia and five companion gods. \"Ninigi\" refers to rice ears ripening in abundance. He married Konohanasakuya-hime, daughter of Ōyamatsumi, but sent back her elder sister Iwanaga-hime as ugly — and so, it is said, the lifespan of the heavenly line became as short as a flower's.",
+    trivia: "That single act of sending Iwanaga-hime back is the explanation for why emperors, descended from gods, are nonetheless mortal." },
+  hoderi: { name: "Hoderi", epithet: "The elder brother who lost his fish-hook — luck of the sea",
+    description: "Ninigi's eldest son, who took his catch from the sea. When the brothers exchanged their gear, the younger lost his precious fish-hook in the water, and Hoderi pressed relentlessly for its return. He was later thrown about by the tide-raising and tide-ebbing jewels his brother had obtained from the sea god, submitted, and swore to serve him.",
+    trivia: "The Kojiki makes him ancestor of the Hayato of southern Kyushu. The tale is also political — an account of how that people came under central rule." },
+  hoori: { name: "Hoori", epithet: "The younger brother who visited the sea god's palace — luck of the mountains",
+    description: "Ninigi's third son, who took his catch from the mountains. Having lost his brother's fish-hook, he went on Shiotsuchi's advice to the palace of the sea god. He married the sea god's daughter Toyotama-hime, spent three years there, and returned with the hook and two jewels that command the tides. He subdued his brother, and his son became the father of Emperor Jimmu.",
+    trivia: "Told not to watch his wife give birth, he looked anyway and saw her true form, a great sea-beast. The same prohibition broken in Izanagi's descent to Yomi returns here." },
+  ugayafukiaezu: { name: "Ugayafukiaezu", epithet: "Born before the roof of the birthing hut was finished",
+    description: "Son of Hoori and Toyotama-hime. He was born while the birthing hut on the shore was still being thatched with cormorant feathers, hence the name. His mother, ashamed at having been seen in her true form, returned to the sea; her younger sister Tamayori-hime raised him and later became his wife. Their son was the first emperor, Jimmu.",
+    trivia: "Udo Jingu in Miyazaki stands inside a sea cave, and still shows the \"breast rock\" where the mother is said to have left her breasts for the child." },
+  jimmu: { name: "Kamu-Yamato-Iwarebiko (Emperor Jimmu)", epithet: "The first emperor, who set out from Hyūga and pacified Yamato",
+    description: "Fourth in descent from the heavenly grandchild. Seeking a land fit to govern from, he left Hyūga and pressed east through the Inland Sea. Defeated at Naniwa by Nagasunehiko, he lost his brother and realised the error of fighting while facing the sun, so he swung round to Kumano. With Takemikazuchi's sword and the guidance of the three-legged crow he entered Yamato and took the throne at Kashihara.",
+    trivia: "When his army collapsed in Kumano, a single sword sent down from heaven — Futsunomitama — woke every man. That sword is enshrined at Isonokami Jingu to this day." },
+  munakata: { name: "The Three Munakata Goddesses", epithet: "Three sisters of the sea, guarding the route across the Genkai Sea",
+    description: "Three goddesses born from Susanoo's sword during his oath with Amaterasu. They are enshrined on Okinoshima (Okitsu-miya), Ōshima (Nakatsu-miya) and the Kyushu mainland (Hetsu-miya), guarding the sea route to the continent itself. The eldest, Takiribime, became the wife of Ōkuninushi.",
+    trivia: "Okinoshima, called the Shōsōin of the sea for its ritual finds, was inscribed as a World Heritage site in 2017. Its rules remain strict." },
+  sumiyoshi: { name: "The Three Sumiyoshi Gods", epithet: "Born of purification; guardians of voyages and of poetry",
+    description: "Three gods born from the bottom, middle and surface of the water when Izanagi washed away the defilement of Yomi. They govern the sea and seafaring, and are said to have delivered the oracle that led Empress Jingū to victory on her expedition. From medieval times they were also revered as gods of poetry.",
+    trivia: "The four halls of Sumiyoshi Taisha stand in an unusual formation, said to imitate a fleet of ships advancing across the sea." },
+  sukunabikona: { name: "Sukunabikona", epithet: "The tiny god who fits in a palm; father of medicine and brewing",
+    description: "An extremely small god who slipped through Kamimusuhi's fingers. He arrived from across the sea in a boat made from a vine pod, dressed in moth skin. He swore brotherhood with Ōkuninushi and the two of them made the land together. He taught people medicine, charms, brewing and the use of hot springs, then crossed to the eternal land with the work half done.",
+    trivia: "When he fell ill at Dōgo Onsen, Ōkuninushi is said to have dipped him in the water and he recovered — the oldest record of hot-spring cure in Japan." },
+  nigihayahi: { name: "Nigihayahi", epithet: "The heavenly god who had come down to Yamato before Jimmu",
+    description: "When Jimmu entered Yamato, this heavenly god already ruled there, having descended to Kawachi and Yamato in a rock-boat of heaven. He was lord to Jimmu's enemy Nagasunehiko, but once he confirmed by the heavenly arrows that Jimmu was truly of the heavenly line, he killed Nagasunehiko and submitted. Ancestral god of the Mononobe.",
+    trivia: "The idea of a heavenly god who came down before Jimmu is widely read as a memory of powers in Yamato that preceded the imperial court." },
+  okuninushi: { name: "Ōkuninushi", epithet: "The king of the earthly gods, who built the land and then gave it up",
+    description: "A descendant of Susanoo. Tormented by his brothers and killed twice, he was revived by the power of a mother goddess; in the land of Ne he survived Susanoo's ordeals and eloped with his daughter Suseribime. With Sukunabikona he completed the making of the land, but when Amaterasu's envoy Takemikazuchi came, he ceded it on condition that a magnificent hall be built for him.",
+    trivia: "That hall is the origin of Izumo Taisha. Heian records give its height as 48 metres, and in 2000 the excavation of enormous pillar bases confirmed that it had really stood." },
+  kotoshironushi: { name: "Kotoshironushi", epithet: "The eldest son who spoke the oracle and ceded the land at once",
+    description: "Ōkuninushi's eldest son. Pressed to give up the land, his father said to ask his son, so the envoys sought him out fishing at Cape Miho. He agreed on the spot, tipped his boat over into a green brushwood fence, and hid himself inside it. \"Koto-shiro\" means one who speaks for the divine will.",
+    trivia: "Because he is shown holding a fishing rod he was identified with Ebisu and spread nationwide as a god of thriving trade. The \"Ebessan\" of the Kansai region is this god." },
+  takeminakata: { name: "Takeminakata", epithet: "The war god who resisted to the last and was confined at Suwa",
+    description: "Ōkuninushi's second son. Where his brother had consented, he appeared lifting a boulder that would take a thousand men, and challenged Takemikazuchi to a trial of strength. His opponent's hand became ice, then a blade, and he was thrown instead. He fled as far as Lake Suwa in Shinano and was spared on his oath never to leave that place.",
+    trivia: "Suwa Taisha kept its own distinct rites into medieval times, and its high priest was regarded as a living god. It is famous for a local faith the national mythology never fully absorbed." },
+  suseribime: { name: "Suseribime", epithet: "The chief wife whose wits carried her husband through his ordeals",
+    description: "Susanoo's daughter. She fell in love at first sight with Ōkuninushi when he fled to the land of Ne, and gave him a scarf that carried him through every ordeal her father set — the chamber of snakes, the chamber of centipedes and wasps, the burning field. They eloped to the world above, and she is enshrined beside him at Izumo Taisha as his principal wife.",
+    trivia: "The Kojiki preserves her song of fierce jealousy at his wandering, and his answer to it — together among the oldest love exchanges in Japanese." },
+  yagamihime: { name: "Yagamihime", epithet: "The beauty of Inaba, matched by a white hare",
+    description: "A beauty of the province of Inaba. All the brothers competed to marry her, but she chose Ōnamuchi — Ōkuninushi — who was trailing behind carrying their baggage. It happened exactly as the hare had foretold in return for his kindness in treating it. Later, in fear of Suseribime, she wedged her newborn child in the fork of a tree and went home to Inaba.",
+    trivia: "The white hare of Inaba is both a courtship tale and the oldest record of veterinary treatment in Japan — wash in fresh water, then roll in cattail pollen." },
+  kushinadahime: { name: "Kushinadahime", epithet: "The rice-field princess who was to be given to the serpent",
+    description: "The eighth daughter of Ashinazuchi and Tenazuchi. Her seven sisters had been devoured by the eight-headed serpent and she was about to be next. Susanoo undertook to kill it on condition that he marry her, and turned her into a comb which he wore in his hair for safekeeping. After the killing the two built a hall at Suga and lived there.",
+    trivia: "\"Kushinada\" means the wondrous rice field. The favoured reading takes the serpent as the flooding Hii River and the princess as the paddies — a myth about flood control." },
+  ashinazuchi: { name: "Ashinazuchi and Tenazuchi", epithet: "An aged couple who had lost seven daughters",
+    description: "An old couple said to be children of Ōyamatsumi. Every year they gave a daughter to the eight-headed serpent on the upper Hii River, and by the time they met Susanoo only the last, Kushinadahime, remained. After the serpent was killed they were made heads of the hall at Suga.",
+    trivia: "Their names mean stroking the feet and stroking the hands — taken from the gestures of parents cherishing a child." },
+  oyamatsumi: { name: "Ōyamatsumi", epithet: "Lord of every mountain in the land",
+    description: "The chief of the mountain gods, born of Izanagi and Izanami, and father of Konohanasakuya-hime and Iwanaga-hime. Deeply shamed when Ninigi returned the elder sister, he explained that he had sent Iwanaga-hime so that the heavenly line's life would endure like rock.",
+    trivia: "He brewed sake from the rice of Sanada to celebrate his daughter's childbirth, and so is also a god of brewing. Warriors dedicated arms at Ōyamazumi Jinja for centuries; some eighty per cent of Japan's nationally designated treasure arms are held there." },
+  konohanasakuya: { name: "Konohanasakuya-hime", epithet: "Blossoming like cherry; she bore her children in fire",
+    description: "Daughter of Ōyamatsumi. Ninigi saw her and married her, but when she conceived in a single night he doubted the child was his. To prove herself she shut herself in a birthing hut with no door, set it alight, and bore three sons in the blaze. She stands for beauty like the cherry blossom — and for how briefly it lasts.",
+    trivia: "As the deity of Mount Fuji she is enshrined at over 1,300 Sengen shrines. Her power to quiet eruptions and her birth in fire fit together." },
+  iwanagahime: { name: "Iwanaga-hime", epithet: "The princess whose rejection brought death to humankind",
+    description: "Elder sister of Konohanasakuya-hime. Her father offered both daughters to Ninigi, but she was sent back as ugly. The elder would have brought life enduring as rock, the younger flourishing like blossom; by refusing the elder, the heavenly line and its descendants — humankind — became mortal.",
+    trivia: "The Japanese answer to why people die. It matches the widely distributed \"banana type\" origin myth of Southeast Asia." },
+  watatsumi: { name: "Watatsumi", epithet: "Ruler of the sea floor; lord of the dragon palace",
+    description: "The sea god, born as three deities — of the bottom, middle and upper waters — during Izanagi's purification. In the tale of the sea luck and the mountain luck he is lord of a magnificent palace beneath the waves, who received Hoori after he lost the fish-hook, gave him his daughter, and sent him home with the tide-raising and tide-ebbing jewels.",
+    trivia: "Ancestral god of the seafaring Azumi clan. The Azumi moved inland as far as Shinano, leaving their trace in the place name Azumino and at Hotaka Jinja in Nagano." },
+  toyotamabime: { name: "Toyotama-hime", epithet: "The dragon palace princess who was seen, and went back to the sea",
+    description: "Daughter of the sea god. She married Hoori when he came to the sea palace, and three years later, after he returned to land, she followed him there heavy with child. She asked him never to watch her give birth; he looked. What he saw was an immense sea-beast. In shame she left the child and went back to the sea, and the road between sea and land was closed.",
+    trivia: "The pattern of a prohibition on looking, and its breaking, runs from Izanami through the crane-wife tale — one of the backbones of Japanese storytelling." },
+  tamayoribime: { name: "Tamayori-hime", epithet: "She raised her sister's son, and then married him",
+    description: "Younger sister of Toyotama-hime. After her sister returned to the sea she raised the abandoned nephew Ugayafukiaezu, and when he grew up she became his wife. Their youngest son was Emperor Jimmu. \"Tamayori\" is also a common noun for a shrine maiden possessed by a spirit, and goddesses of the name appear all over Japan.",
+    trivia: "The Tamayori-hime of Shimogamo Jinja in Kyoto is said to have conceived Kamo Wakeikazuchi from a vermilion arrow that floated down the river. This is the origin of the Aoi Festival." },
+  sarutahiko: { name: "Sarutahiko", epithet: "Guardian of the crossroads, who led the heavenly grandchild's way",
+    description: "An earthly god who stood in the way at the eightfold crossroads of heaven during the descent. His nose was seven hand-spans long, his height over seven feet, his eyes shining like red mirrors. Questioned by Ame-no-Uzume, he answered that he had come to act as guide, and led Ninigi to Takachiho.",
+    trivia: "He later drowned while fishing at Azaka in Ise when a shellfish caught his hand. A mighty god dying almost casually — an ending very much in the manner of Japanese myth." },
+  ukanomitama: { name: "Uka-no-Mitama", epithet: "The spirit dwelling in rice; the god with the most shrines in Japan",
+    description: "Child of Susanoo and Kamu-Ōichihime. \"Uka\" means food, and rice above all: this is the deification of the spirit-power within the grain itself. Since the Hata clan enshrined the god at Fushimi in the Nara period, the cult spread from farming to commerce and industry, and it now has more branch shrines than any other deity in Japan.",
+    trivia: "The fox is the god's messenger, not the god. There are roughly 30,000 Inari shrines — about three in ten of all shrines in the country." },
+  otoshi: { name: "Ōtoshi", epithet: "The god of the year, who visits every house at New Year",
+    description: "Child of Susanoo and Kamu-Ōichihime, and elder brother of Uka-no-Mitama. \"Toshi\" originally meant the ripening of rice, and he governs the year's harvest of grain. As the Toshigami who visits each household at New Year, he stands at the centre of the customs of the pine decoration, the round mirror rice cakes and the New Year dishes.",
+    trivia: "Every New Year decoration exists to welcome this god: the pine gate is where he alights, the rice cakes are his sacred body, and the New Year dishes are the meal shared with him." },
+  omononushi: { name: "Ōmononushi", epithet: "A serpent god whose sacred body is Mount Miwa itself",
+    description: "When Sukunabikona departed and Ōkuninushi was at a loss, this god appeared lighting up the sea and said: enshrine me on Mount Miwa in Yamato and the making of the land will be completed. He is taken to be Ōkuninushi's gentle spirit — his other half. In Emperor Sujin's reign he sent a plague, which ceased only when his descendant Ōtataneko was made to conduct his rites.",
+    trivia: "Ōmiwa Jinja has no main hall: Mount Miwa itself is the sacred body, preserving the oldest form of shrine in Japan. He is also the husband of the Miwa-type tale who came only by night and proved to be a snake." },
+  shitateruhime: { name: "Shitateru-hime", epithet: "The shining princess who sang her husband's death",
+    description: "Daughter of Ōkuninushi and Takiribime, and wife of Ame-no-Wakahiko, the envoy sent down from heaven. When her husband was killed by the returned arrow, her weeping carried all the way to heaven. At the funeral, when her brother Ajisuki-Takahikone was mistaken for the corpse and flew into a rage, she sang a song revealing his name.",
+    trivia: "The hinaburi she sang is counted among the oldest songs preserved in the chronicles." },
+  isotakeru: { name: "Isotakeru", epithet: "The father of forestry, who planted trees across Japan",
+    description: "Son of Susanoo. He descended with his father to Silla but said he did not wish to stay there and crossed to Japan, where he sowed the tree seeds he had brought, starting from Tsukushi and going on across the whole country — which is why Japan is covered in green mountains. In the Kojiki, under the name Ōyabiko, he helped Ōkuninushi escape his pursuing brothers to the land of Ne.",
+    trivia: "The tale is told together with the myth in which Susanoo produced cedar, cypress, podocarp and camphor from his beard and body hair and assigned each to boats, halls and coffins — an origin story for the use of timber." },
+  kagutsuchi: { name: "Kagutsuchi", epithet: "The fire god who burned his mother to death and was cut down by his father",
+    description: "The last god borne by Izanagi and Izanami. His birth burned his mother and killed her. His father in fury cut him down with the ten-span sword, but from the scattered blood and the severed body sixteen gods were born, Takemikazuchi among them.",
+    trivia: "The god who produced the most deities by dying. Fire destroys and at the same time yields smithing, metal and the bounty of the mountains; that double nature is what the myth encodes." },
+  kanayamabiko: { name: "Kanayamabiko", epithet: "God of mines and smithing, born of vomit",
+    description: "Born from the vomit of Izanami as she suffered from bearing the fire god. Molten ore running out of a furnace was likened to vomiting. He governs mines, smithing and metalwork, and was strongly revered wherever tatara ironworking flourished.",
+    trivia: "Nangu Taisha in Mino is the head shrine for miners and metalworkers nationwide. Many swords are dedicated there, and it is closely tied to the blade industry of Seki." },
+  kayanohime: { name: "Kayanohime", epithet: "The grassland itself; goddess of the thatching reed",
+    description: "Goddess of the grassy plains, born of Izanagi and Izanami. She pairs with Ōyamatsumi, she taking the fields and he the mountains. Kaya thatched the roofs, fed the animals and fertilised the paddies — a foundation material of ancient life. From this pair eight further gods of hill and field were born.",
+    trivia: "Kayatsu Jinja in Aichi is Japan's only shrine to pickles. Offering vegetables and salt to this goddess is said to be where pickling began." },
+  ogetsuhime: { name: "Ōgetsuhime", epithet: "The food goddess from whose killed body the five grains grew",
+    description: "Asked by Susanoo for food, she drew all manner of dishes from her nose, mouth and backside and served them. Susanoo found this filthy and killed her — and from her corpse came silkworms from the head, rice from the eyes, millet from the ears, red beans from the nose, wheat from the genitals and soybeans from the backside. Kamimusuhi gathered them, and they became the seed of the five grains.",
+    trivia: "The Japanese version of the Hainuwele-type myth, in which crops grow from a murdered deity's body. Its wide distribution across Southeast Asia and Oceania points to southern elements in Japanese culture." },
+  mitoshi: { name: "Mitoshi", epithet: "The rice god who curses the fields — and ripens them",
+    description: "Son of Ōtoshi, governing the ripening of the rice. The Kogo Shūi tells how he loosed locusts on the paddies of people who had neglected their offerings to the field god, withering the crop, and relented only when a white boar, a white horse and a white cock were offered. The god who grants abundance is the same god who brings famine.",
+    trivia: "That record of divine wrath is taken as Japan's oldest account of crop damage and of a ritual response to it. Katsuragi Mitoshi Jinja in Nara is the head shrine of all Mitoshi shrines." },
+  shinatsuhiko: { name: "Shinatsuhiko", epithet: "The wind god who blew away the morning mist over the land",
+    description: "The wind god formed from the breath with which Izanagi and Izanami blew away the morning mist covering the land. The Nihon Shoki also records the name of a goddess, Shinatobe. Because this god governed typhoons and crop failure, the ancient court held an annual wind festival at Tatsuta Taisha.",
+    trivia: "The \"divine wind\" of the Mongol invasions was credited to the court's prayers at Tatsuta Taisha and at Ise's wind shrine, which was promoted in rank as a result." },
+  kukunochi: { name: "Kukunochi", epithet: "The spirit of the rising tree; lord of all trees",
+    description: "The tree god born in the divine generation. \"Kuku\" shares a root with kuki, stem, and is taken to express the form of a tree standing straight up. Where Ōyamatsumi governs the mountains and Kayanohime the fields, this god governs the trees themselves.",
+    trivia: "In an age when timber underpinned building, shipbuilding and fuel alike, this god was the guardian of what we would now call core infrastructure." },
+  mizuhanome: { name: "Mizuhanome", epithet: "Water god of wells and irrigation, born of urine",
+    description: "The water god born from the urine of Izanami as she suffered from bearing the fire god. \"Mizuha\" is taken to describe running water, or an irrigation channel. What marks this god out is that she governs not raging rivers but the water led into the paddies and drawn from wells.",
+    trivia: "Records survive of offering a black horse in drought and a white horse in long rain. That custom is one of the origins of the votive picture tablet." },
+  haniyasu: { name: "Haniyasubiko and Haniyasubime", epithet: "Gods of clay and earthenware, born of excrement",
+    description: "A male and female pair born from the excrement of Izanami as she suffered from bearing the fire god. \"Hani\" is reddish clay, the material of earthenware, haniwa figures and wall daub. They govern earth itself and are among the deities most important at ground-breaking rites.",
+    trivia: "That the gods of water and earth are born alongside the fire god has been read as tracing the actual practice of putting out a fire with water and soil." },
+  wakumusuhi: { name: "Wakumusuhi", epithet: "Silkworms and mulberry from the head, the five grains from the navel",
+    description: "A god of young generative force, born from the dying Izanami. The Nihon Shoki says silkworms and mulberry grew from this god's head and the five grains from the navel. The daughter is Toyouke, enshrined at Ise's Outer Shrine — the starting point of the line of food deities.",
+    trivia: "Food and sericulture coming from a dying mother rests on the same idea as the corpse-creation myth of Ōgetsuhime." },
+  toyouke: { name: "Toyouke", epithet: "Who prepares Amaterasu's meals; chief deity of Ise's Outer Shrine",
+    description: "Child of Wakumusuhi, goddess of food and grain. Amaterasu is said to have appeared in a dream to Emperor Yūryaku saying that she could not eat in peace alone and that Toyouke of Tanba should be brought near — and so the goddess was received at the Outer Shrine of Ise.",
+    trivia: "At Ise, the rite of offering the gods a meal twice daily in the Outer Shrine's sacred kitchen has continued without a break for some fifteen hundred years." },
+  hayaakitsuhiko: { name: "Hayaakitsuhiko and Hayaakitsuhime", epithet: "Guardians of the river mouth, where river meets sea",
+    description: "The male and female gods of the river mouth, born in the divine generation. They govern the boundary where a river pours into the sea, and from there bore eight further water gods. In the Great Purification Prayer they are the first gate through which sin and defilement are flushed from river to sea.",
+    trivia: "The prayer carries defilement away in three stages — this god's river mouth, then the churning tide, then the land of Ne. An ancient processing pipeline built out of the water system." },
+  amenoiwatowake: { name: "Ame-no-Iwatowake", epithet: "Guardian of the gate, who lets no calamity through",
+    description: "God of gates and doorways. He accompanied the descent from heaven and guarded the palace gate. At the imperial court the Mikado-no-Mikannagi enshrined him, with rites at each of the four gates of the inner palace. He is the origin of the guardian gates and gate wardens of Japanese shrines.",
+    trivia: "Standing pine decorations and sacred ropes at the gate at New Year marks out this god's domain and cuts off defilement from outside." },
+  kuraokami: { name: "Kuraokami", epithet: "The dragon of the ravine; water god who brings the rain",
+    description: "A water god born from the blood of Kagutsuchi when Izanagi cut him down. \"Okami\" is an old word for dragon and \"kura\" means ravine. He is the god of the mountain headwaters, calling clouds into the valleys and bringing rain, and was the deity most valued in the court's rites for rain and for its ending.",
+    trivia: "Kifune Jinja is also known as the shrine where the poet Izumi Shikibu prayed over her husband's straying heart and won him back — a water god who draws a following for matchmaking." },
+  amenoohabari: { name: "Ame-no-Ohabari", epithet: "The very sword that cut down the fire god, become a god",
+    description: "The deification of the ten-span sword with which Izanagi cut down Kagutsuchi. In the choosing of an envoy for the ceding of the land he appears as a god dwelling where he has dammed the waters of the heavenly river, and recommends that his son Takemikazuchi be sent instead of himself.",
+    trivia: "A sword with a will of its own, making a personnel recommendation. Nowhere is the Japanese sense that spirit inhabits objects put more plainly." },
+  ookotooshio: { name: "Ōkotooshio", epithet: "\"The great work is done\" — the close of the island-making",
+    description: "The first god born to Izanagi and Izanami after they had finished bearing the eight great islands. The name means the completion of a great undertaking: it deifies the finishing of the island-making itself. The generation of the gods begins from here.",
+    trivia: "Turning the completion of an act into a god shows well how Japanese myth handles abstractions." },
+  tsukitatsufunado: { name: "Tsukitatsu-Funado", epithet: "Born of the staff thrown down at the border of Yomi",
+    description: "The god born from the staff Izanagi threw away to hold off his pursuers as he fled Yomi. He stands at the boundary between this world and the next and blocks calamity from entering. The wayside gods at village edges and crossroads descend from this deity.",
+    trivia: "Being a god who blocks, he also became a god of severing bad ties. A god who guards a boundary is a god who chooses what may pass." },
+  yasomagatsuhi: { name: "Yasomagatsuhi and Ōmagatsuhi", epithet: "Calamity itself, born out of defilement",
+    description: "The gods of calamity born from the defilement Izanagi washed off after Yomi. Every misfortune in the world is traced to them. The gods born immediately after — Kamunaobi and Ōnaobi — take on the task of setting that misfortune right.",
+    trivia: "The god who causes harm and the god who mends it are born in one continuous sequence. Japanese myth has no absolute evil; even calamity is something that purification can settle." },
+  naobi: { name: "Kamunaobi and Ōnaobi", epithet: "Gods who straighten what has been bent",
+    description: "Gods who came into being to return the harm caused by the Magatsuhi gods to its original straight condition. Izunome, born with them, is taken to be the goddess who carries out that cleansing. Deities whose speciality is mending — a very Japanese kind of god.",
+    trivia: "The old idea that purification is not about erasing misfortune but about setting it straight survives in these names." },
+  seoritsuhime: { name: "Seoritsuhime", epithet: "She carries sin and defilement out to sea on the rapids",
+    description: "First of the four gods of purification. She rides the swift shallows and carries human sin and defilement away to the open ocean. She does not appear in the main texts of the chronicles, only in the Great Purification Prayer. Some identify her with Amaterasu's fierce spirit, and she has a devoted following.",
+    trivia: "Because the chronicles do not name her, interpretations piled up from medieval times onward. Scholarly opinion is divided; the only firm source is the prayer itself." },
+  hayaakitsuhime_harae: { name: "Hayaakitsuhime", epithet: "She swallows the defilement carried down to her",
+    description: "Second of the four gods of purification. She swallows, at the bottom of the churning tide where currents meet, the sin and defilement Seoritsuhime has flushed out to sea. The process runs in four stages: carry away, swallow, blow out, dissolve.",
+    trivia: "The fineness of that division of labour shows that ancient purification was designed not as mere prayer but as a procedure with defined steps." },
+  ibukidonushi: { name: "Ibukidonushi", epithet: "He blows the swallowed defilement down to the land of Ne",
+    description: "Third of the four gods of purification. With his breath he blows the sin and defilement Hayaakitsuhime has swallowed down into the land of Ne, the land of the depths. \"Ibuki\" is the act of breathing out; his part is to drive defilement off the earth by the power of wind.",
+    trivia: "The long, drawn-out breath a priest uses when reciting the purification prayer is said to imitate this god's work." },
+  hayasasurahime: { name: "Hayasasurahime", epithet: "In the land of Ne she sets defilement wandering until it is gone",
+    description: "Fourth and last of the four gods of purification. She receives the sin and defilement blown down into the land of Ne, sets it wandering, and makes it vanish without trace. With her the Great Purification is complete.",
+    trivia: "The four roles follow the natural cycle — river, sea, wind, underground. The idea is not to destroy defilement but to return it to circulation." },
+  kukurihime: { name: "Kukurihime", epithet: "She reconciled the quarrelling couple at the border of Yomi",
+    description: "When Izanagi and Izanami were bitterly quarrelling at the Even Pass of Yomi, she appeared just once, said something, and Izanagi praised her words and departed. What she said is not recorded. From this single scene she has drawn a following for matchmaking, as the goddess who binds people together.",
+    trivia: "She is absent from the Kojiki and appears exactly once in a Nihon Shoki variant. Because her words are withheld, interpretation has expanded all the more freely." },
+  yomotsushikome: { name: "Yomotsu-Shikome", epithet: "The hags of Yomi, sent in pursuit — messengers of death",
+    description: "The women of Yomi whom Izanami sent to seize her fleeing husband after he saw her decayed form. Izanagi threw down his hair ornament, which became wild grapes, and his comb, which became bamboo shoots; while they ate he escaped. At the last he blocked the Even Pass of Yomi with a boulder and got away.",
+    trivia: "Thrown objects turning into food to delay pursuers is the motif folklorists call the magic flight, found in escape tales all over the world." },
+  amatsuhikone: { name: "Amatsuhikone", epithet: "Third son of the oath, claimed as ancestor by many provincial houses",
+    description: "The third son born of the oath between Amaterasu and Susanoo. The myths tell of no deeds of his, yet an unusually large number of clans claimed him as ancestor — the Ōshikōchi, Nukatabe-no-Yue, Ibaraki and Yamato-Tanaka houses among them. His function is to tie provincial magnates to the imperial line by genealogy.",
+    trivia: "At Tado Taisha in Ise, where he is enshrined, the saying went: if you make the pilgrimage to Ise, take in Tado as well. It was the companion destination to the Ise pilgrimage." },
+  ikutsuhikone: { name: "Ikutsuhikone", epithet: "Fourth son of the oath, of whom only the name survives",
+    description: "Fourth of the five male gods born of the oath. \"Iku\" is taken to mean brimming with life. He has no deeds in the myths and few clans traced their line to him. What the chronicles wanted to convey was the number five itself, not the stories of individuals.",
+    trivia: "Of the five sons and three daughters born of the oath, only the first two sons and the three goddesses have stories. The rest survive as names alone." },
+  kumanokusubi: { name: "Kumano-Kusubi", epithet: "Fifth son of the oath, whose name survives at Kumano in Izumo",
+    description: "Youngest of the five male gods born of the oath. \"Kusu\" denotes mysterious power. A connection is drawn with Kumano Taisha, the first shrine of Izumo province, and some read him as a trace of an older Izumo cult absorbed into the genealogy as a child of Amaterasu.",
+    trivia: "Kumano Taisha in Izumo, also called the shrine where fire first came forth in Japan, preserves a fire-kindling rite. The chief priest of Izumo Taisha receives fire drilled there." },
+  takirihime: { name: "Takiribime", epithet: "Eldest of the Munakata sisters, enshrined on Okinoshima",
+    description: "Eldest of the three Munakata goddesses, enshrined at Okitsu-miya on the island of Okinoshima in the Genkai Sea. She became the wife of Ōkuninushi and bore Ajisuki-Takahikone and Shitateru-hime — a heavenly god married to the king of Izumo, standing between the two lineages.",
+    trivia: "Okinoshima is still closed to women, and landing requires ritual purification. The rule that nothing seen or heard on the island may be spoken of still holds." },
+  ichikishimahime: { name: "Ichikishimahime", epithet: "Second sister, enshrined at Itsukushima and merged with Benzaiten",
+    description: "Second of the three Munakata goddesses. Her name derives from the island set apart to serve the gods. In medieval times she merged with the Buddhist Benzaiten and spread nationwide as a goddess of the waterside, of music and of wealth. She is the best known of the three sisters.",
+    trivia: "Most shrines that enshrine \"Benten\" are in fact enshrining this goddess. The belief that she grants both artistic skill and money luck comes from that merging." },
+  tagitsuhime: { name: "Tagitsuhime", epithet: "Goddess of the racing tide",
+    description: "Third of the three Munakata goddesses. \"Tagitsu\" means water rushing violently, and stands for the fierce currents of the Genkai Sea themselves. She is enshrined at Hetsu-miya on the Kyushu mainland, guarding the starting point of the route to the continent.",
+    trivia: "The three sisters are placed on the far island, the middle island and the mainland — three points that between them command the whole sea route. Faith and navigation were one thing." },
+  amenomahitotsu: { name: "Ame-no-Mahitotsu", epithet: "Father of smiths, reading the furnace with one eye",
+    description: "The smith god who made the sword, the axe and the iron bells for the rock cave rite. He is shown with a single eye because smiths judged the temperature of the furnace by looking at the fire with one eye. Ancestral deity of the metalworkers.",
+    trivia: "Folklorists hold that the one-eyed goblin of Japanese folk tale is this smith god in decline." },
+  amenohiwashi: { name: "Ame-no-Hiwashi", epithet: "He planted hemp and paper mulberry and wove the offerings",
+    description: "The god who made the offerings of bark cloth and hemp presented to the gods at the rock cave rite. Ancestral deity of the Awa Imbe, he is said to have planted hemp and paper mulberry in Awa (Tokushima) and spread their cultivation. The name is explained by an eagle alighting when he plucked a bowstring.",
+    trivia: "He is the deity of the Otori shrines known for Asakusa's Tori-no-Ichi fair. Raking in good fortune with a bamboo rake grew out of his character as a god of luck." },
+  taokihooi: { name: "Taokihooi and Hikosashiri", epithet: "Fathers of carpentry and joinery, who built the sacred hall",
+    description: "The two artisan gods who built the sacred hall and made the hat and the spear for the rock cave rite. They accompanied the descent from heaven and raised the first palace on earth. Ancestral deities of the Sanuki and Kii Imbe, and guardians of carpenters and joiners.",
+    trivia: "Setting a ritual wand on the ridgepole at a framing ceremony and honouring the gods of the craft continues today as a report to these two." },
+  amenotanabatahime: { name: "Ame-no-Tanabatahime", epithet: "The weaving goddess who makes the robes of the gods",
+    description: "The goddess who wove the sacred robe offered to the gods at the rock cave rite. She is the foremost of the weaving women of the heavenly loom hall, where Amaterasu herself is recorded as weaving. She stands at the origin of Japanese textiles.",
+    trivia: "The \"tanabata\" of the star festival most likely comes from her loom, the tanabata. The festival combines the Chinese weaver-girl legend with this Japanese weaving goddess." },
+  wakahirume: { name: "Wakahirume", epithet: "The young goddess who died at the loom",
+    description: "She was weaving sacred robes in the heavenly weaving hall when Susanoo hurled in a flayed horse; startled, she wounded herself on the shuttle and died. This incident was the direct trigger for Amaterasu's withdrawal into the rock cave. She is variously taken to be Amaterasu's childhood name or her younger sister.",
+    trivia: "The deity of Ikuta Jinja in Kobe. The name Kobe itself comes from the kanbe, the households assigned to serve this goddess." },
+  amenohoakari: { name: "Ame-no-Hoakari", epithet: "Ancestor of the Owari and Amabe — the other heavenly grandchild",
+    description: "A heavenly grandchild, given as Ninigi's elder brother or his son. Ancestral deity of the Owari, Amabe and Tsumori clans, his name carries the brightness of the sun. The Sendai Kuji Hongi identifies him with Nigihayahi, tying him also to the Mononobe line.",
+    trivia: "The Amabe genealogy preserved at Kono Jinja in Tango is designated a National Treasure as the oldest surviving family register in Japan. It begins with this god." },
+  amenooshihi: { name: "Ame-no-Oshihi and Amatsu-Kume", epithet: "Fathers of the guard, who went armed before the heavenly grandchild",
+    description: "The two gods who led the way before Ninigi at the descent from heaven, quivers on their backs, mallet-headed swords at their sides, heavenly bows and great deer arrows in hand. Ancestral deities of the Ōtomo and Kume clans, both of which handled the court's military and guard duties for generations.",
+    trivia: "The court guard's title yugei — quiver-bearer — comes from the sight of these gods advancing with quivers on their backs." },
+  takehazuchi: { name: "Takehazuchi", epithet: "The weaver god who subdued the star the war gods could not",
+    description: "When Takemikazuchi and Futsunushi could not subdue Amatsu-Mikaboshi, the one star god who would not submit after the ceding of the land, this god was sent and brought him to heel. He is the deity of shizuori, an ancient patterned weave.",
+    trivia: "A weaving god overcomes the opponent who defeated the two strongest war gods. One reading holds that he prevailed not by force but by the power of weaving — binding things together." },
+  amenokagaseo: { name: "Amatsu-Mikaboshi", epithet: "The one star god who never submitted",
+    description: "The star god who alone in the Central Land refused to submit to the heavenly gods at the ceding of the land. The name means shining male and is taken to refer to Venus. He was subdued at last by Takehazuchi, and his spirit is said to have been sealed in a rock at Ōmika in Hitachi.",
+    trivia: "One of the very few cases where a star appears clearly as a god in the chronicles. Japanese myth tells of sun and moon at length, but hardly touches the stars." },
+  ajisukitakahikone: { name: "Ajisuki-Takahikone", epithet: "God of thunder and farm tools, who kicked the mourning hut apart",
+    description: "Child of Ōkuninushi and Takiribime. \"Ajisuki\" refers to the plough, and he governs farm tools and thunder. Attending the funeral of his friend Ame-no-Wakahiko, he so resembled the dead man that the family took him for the corpse; in fury he cut down the mourning hut with his sword and kicked it away.",
+    trivia: "Only three gods are called Ōmikami in the Kojiki: Amaterasu, Izanagi, and this god. As ancestral deity of the Kamo he held a very large position." },
+  nunakawahime: { name: "Nunakawa-hime", epithet: "The princess of Koshi, wooed in song and answering in song",
+    description: "A princess of the land of Koshi. Ōkuninushi came courting under the name Yachihoko and sang to her through the night from outside her door. She answered in song that she would not open tonight, but tomorrow night — and on the next night they were joined. The exchange is regarded as the finest poetry in the chronicles.",
+    trivia: "Her home, Itoigawa, is one of the world's oldest sources of jade. The jade beads excavated at Izumo sites came from there, and the myth is thought to preserve the memory of that trade route." },
+  kinomata: { name: "Kinomata", epithet: "The child left wedged in a tree fork; god of wells",
+    description: "Child of Ōkuninushi and Yagamihime. In fear of the principal wife Suseribime, the mother wedged her newborn in the fork of a tree and went home to Inaba — hence the name, god of the tree fork. His other name, Mii, is traced to the three wells used for his first bath.",
+    trivia: "One of the most painful partings in the myths. The chronicles set down the scene of a mother leaving her child, with the reason, in a flat and unhurried voice." },
+  yasogami: { name: "The Eighty Gods", epithet: "Ōkuninushi's brothers, who killed him twice",
+    description: "The collective name for Ōkuninushi's many elder brothers; \"eighty\" simply means a great number. Resentful at losing Yagamihime's hand, they had him catch a boulder they had heated red and told him was a boar, and it killed him; when he revived they crushed him in a split tree and killed him again. In the end he drove them out.",
+    trivia: "Villains of the myth who are merely banished, not destroyed. Antagonists in Japanese myth usually just leave the stage." },
+  usagigami: { name: "The Hare God", epithet: "Japan's oldest matchmaker, who foretold a marriage",
+    description: "The hare who tricked the sea-beasts in order to cross from Oki to Inaba and was skinned for it. The eighty gods gave it false advice that made things worse; Ōkuninushi told it to wash in fresh water and lie in cattail pollen, and it was healed. In thanks it foretold that Yagamihime would choose him.",
+    trivia: "Cattail pollen is still used in traditional medicine to stop bleeding and treat wounds. The prescription in the myth is pharmacologically sound." },
+  yashimajinumi: { name: "Yashimajinumi", epithet: "First child of Susanoo and Kushinadahime",
+    description: "Born to Susanoo and Kushinadahime at the hall of Suga after the slaying of the serpent. Six generations from him lead to Ōkuninushi. He is the starting point of the royal line of Izumo, and the \"eight islands\" of his name means the whole of Japan.",
+    trivia: "The hall at Suga is called the first hall in Japan. Susanoo's remark that the place felt refreshing — sugasugashii — is given as the origin of the name Suga." },
+  kamuoichihime: { name: "Kamu-Ōichihime", epithet: "Goddess of the marketplace; mother of Inari and the year god",
+    description: "Daughter of Ōyamatsumi and wife of Susanoo. She is the mother of Ōtoshi and Uka-no-Mitama, the two gods who between them represent Japanese farming and Japanese commerce. \"Ōichi\" in her name means the great market, and she governs the place where goods gather and change hands.",
+    trivia: "She is Inari's mother. Some read the spread of the Inari cult from farming into commerce as resting on her line — the goddess of the market." },
+  otoshi_children: { name: "The Children of Ōtoshi", epithet: "A family including gods of the homestead, the land, and of overseas origin",
+    description: "The collective name for the sixteen gods Ōtoshi fathered by three wives. Among them are Ōkunimitama, spirit of the land; Karagami and Sohori, of continental origin; and Hayamato, who governs the mountain skirts. At court they were worshipped as Sono and Kara, an important object of Heian-period ritual.",
+    trivia: "It is notable that gods of foreign origin were built into the imperial court's own rites — an example of how ancient Japan handled incoming deities." },
+  asuha: { name: "Asuha and Hahiki", epithet: "Gods of the ground underfoot and of the garden",
+    description: "Children of Ōtoshi who guard the grounds and garden of a dwelling. They are counted among the five deities worshipped by the Ikasuri-no-Mikannagi at court, guarding the very earth beneath the emperor's seat. A frontier guardsman's poem survives in which a mother prays to the garden's Asuha for her departing son.",
+    trivia: "\"To Asuha of the garden I set a branch of brushwood, and I shall keep myself pure until you come home.\" From the Man'yōshū — the plainest prayer there is to the god who keeps a house." },
+  mihotsuhime: { name: "Mihotsuhime", epithet: "The heavenly princess who sealed the ceding of the land by marriage",
+    description: "Daughter of Takamimusuhi. After the land was ceded, heaven married her to Ōmononushi, binding the heavenly and earthly lines by marriage. Hers is a thoroughly political role: fixing the relationship by a match once force had settled it.",
+    trivia: "Miho Jinja enshrines Kotoshironushi and this princess side by side — the two opposing camps of the ceding of the land, in one hall, on the same level." },
+  yasakatome: { name: "Yasakatome", epithet: "Consort of Takeminakata, who makes the ice ridge on Lake Suwa",
+    description: "The deity of the Lower Shrine of Suwa Taisha and consort of Takeminakata. She does not appear in the chronicles, only in Suwa's own traditions. When Lake Suwa freezes in winter and the ice buckles into a ridge, that \"crossing of the god\" is said to be the track of the husband at the Upper Shrine going to his consort at the Lower.",
+    trivia: "The ice ridge has been recorded as a religious observance for more than eight hundred years, and now serves as a valuable historical record of climate change." },
+  moriya: { name: "Moriya", epithet: "The local god who fought with an iron ring and kept Suwa's rites",
+    description: "The god who was already in Suwa. At the mouth of the Tenryū River he fought Takeminakata, iron ring in hand against a wisteria branch, was defeated, and thereafter took the role of supporting his rites. His descendants, the Moriya family, served as high stewards to the chief priest for seventy-eight generations, until the Meiji period.",
+    trivia: "A rare case of the defeated family keeping actual control of the rites. It preserves a stratum of belief the national mythology never entirely painted over." },
+  yatsukamizuomitsuno: { name: "Yatsukamizu-Omitsuno", epithet: "The giant who hauled land in by rope to widen Izumo",
+    description: "A vast god of the Izumo Fudoki who declared Izumo too narrow, threw ropes around spare land in Silla, the northern gate and Koshi, and hauled it in to enlarge his country. The ropes he pulled became the long beach of Sono and the island of Yomi; the stakes became Mount Sanbe and Mount Daisen.",
+    trivia: "A god who never appears in the chronicles at all — he belongs to the Fudoki alone. He shows how rich the regional mythology was that the national account left out." },
+  sadanoookami: { name: "Sada-no-Ōkami", epithet: "Born in a cave shot through by a golden arrow",
+    description: "One of the four great gods of Izumo. His mother Kisakahime, in a dark cave, loosed a golden arrow saying that if the child were truly hers it should pierce the rock — light broke in, and he was born. His shrine is also known for receiving the eight million gods in the month when they gather in Izumo.",
+    trivia: "In the tenth lunar month, once the gathering rite at Izumo Taisha ends, the gods move on to Sada Jinja for the rite of their departure. Izumo's month of the gods runs in two stages." },
+  oomiyanome: { name: "Ōmiyanome", epithet: "The court's goddess of easing things between people",
+    description: "A goddess who serves in the palace and softens relations between sovereign and subject. The liturgies describe her as the god who gentles words and mediates between lord and servant. She is counted among the five deities that make up Inari, and is worshipped for good relations and for the hospitality trades.",
+    trivia: "She is often identified with Ame-no-Uzume. Her work easing the mood before the rock cave is taken to have become her role at court." },
+  hosuseri: { name: "Hosuseri", epithet: "Second son of the heavenly grandchild, born at the height of the blaze",
+    description: "The second of three brothers born to Konohanasakuya-hime in the burning birthing hut. His name marks the moment when the flames burn most fiercely. Where the eldest, Hoderi, and the youngest, Hoori, carry the tale of the sea luck and the mountain luck, of this god only the name survives.",
+    trivia: "The three names mark fire beginning, blazing and dying down. The naming maps the progress of the birth onto the passage of the flames." },
+  shiotsuchi: { name: "Shiotsuchi-no-Oji", epithet: "The old man who shows the way to a hero at a dead end",
+    description: "An old god of the tides and of salt-making. He built a basket boat for the weeping Hoori and showed him the road to the sea god's palace, and he told Jimmu that there was good land in the east, setting the eastern campaign in motion. He appears whenever the story is stuck, and names the next move.",
+    trivia: "Shiogama Jinja in Mutsu is said to stand where he taught the local people to make salt. Its precincts still hold the rite of burning seaweed by the ancient method." },
+  yatagarasu: { name: "Kamo-Taketsunumi (Yatagarasu)", epithet: "He took the form of a three-legged crow and guided Jimmu",
+    description: "The god who, in the form of a great crow, led Jimmu's army out of the steep mountains of Kumano, where it had lost its way, all the way to Yamato. The Yamashiro Fudoki records him as ancestor of the Kamo county lords, who moved from Yamato to Kamo in Yamashiro. He is the deity of Shimogamo Jinja.",
+    trivia: "He is drawn with three legs because the Chinese legend of the crow in the sun became mixed in. The emblem of the Japan Football Association also derives from him." },
+  takakuraji: { name: "Takakuraji", epithet: "He delivered a single sword, told of in a dream",
+    description: "A man of Kumano. When Jimmu's whole army fell before the poisonous breath of a local god, Takemikazuchi appeared to him in a dream and said he would drop a sword into his storehouse. He woke, opened it, and the sword really was standing there; he presented it, and the army woke as one.",
+    trivia: "The sword delivered that night was Futsunomitama. It is still the sacred body of Isonokami Jingu, and in the Meiji era it was actually unearthed from beneath the hall." },
+  isuzuhime: { name: "Hime-Tatara-Isuzuhime", epithet: "Daughter of a god who became a vermilion arrow; the first empress",
+    description: "Daughter of Ōmononushi. Her mother is said to have conceived when the god turned himself into a vermilion-painted arrow and floated down to her as she relieved herself. She became Jimmu's empress and bore the second emperor, Suizei, and others — the point at which the blood of Miwa joins the heavenly line.",
+    trivia: "At Isagawa Jinja in Nara the Saikusa festival, offering her sasa lilies, still continues. It is recorded from the Nara period as a rite against epidemic." },
+  ooyamakui: { name: "Ōyamakui", epithet: "God of mountains and sake, who drove his stakes into Hiei and Matsuo",
+    description: "Child of Ōtoshi. \"Kui\" is a stake, and he is the god who drives stakes into a mountain to mark possession. The Kojiki states plainly that he dwells on Mount Hiei and Mount Matsuo. When Saichō founded Enryaku-ji he became its guardian, Sannō Gongen, and spread across the country with the Tendai school.",
+    trivia: "Matsunoo Taisha is the head shrine of sake brewing. Brewers still add water from its Kame-no-I well to the mash. Kyoto's brewing technology begins with the immigrant Hata clan and this god's cult." },
+  kamowakeikazuchi: { name: "Kamo-Wakeikazuchi", epithet: "The thunder god who, asked who his father was, rose to heaven",
+    description: "Born to Tamayorihime, daughter of Kamo-Taketsunumi, who took home a vermilion arrow that floated down the river and conceived. When his grandfather told him to pour sake for the one he took to be his father, he broke through the roof and rose to heaven — and so it was known that his father was a thunder god.",
+    trivia: "He is the deity of Kamigamo Jinja, among the oldest shrines in Kyoto. The Aoi Festival, which welcomes him, predates the founding of the capital." },
+  yamatoookunitama: { name: "Yamato-no-Ōkunitama", epithet: "The spirit of the land of Yamato itself",
+    description: "The deification of the kunitama — the spirit of the soil — of Yamato province. Emperor Sujin at first enshrined this god and Amaterasu together within the palace, but could not bear their power and moved both outside. That is the beginning of what became the Ise Shrine.",
+    trivia: "The battleship Yamato carried this god in its onboard shrine — taking as its guardian the very spirit of the province it was named for." },
+  hiruko: { name: "Hiruko", epithet: "The first child, set adrift in a reed boat, who became a god of fortune",
+    description: "The first child of Izanagi and Izanami. Because the goddess had spoken first, the birth was held to be flawed; the child still could not stand after three years and was set adrift in a boat of reeds. From medieval times he was linked with Ebisu, the god of fortune who drifts in from beyond the sea, and became a god of thriving trade.",
+    trivia: "The race to be first man at Nishinomiya Jinja's Tōka Ebisu is known nationwide. A discarded god becoming the best-loved god of fortune is a very large reversal." },
+  awashima: { name: "Awashima", epithet: "Protector of women; deity of the shrine of doll offerings",
+    description: "Awashima, whom the Kojiki, like Hiruko, does not count among the children. Later identified with Sukunabikona, the deity was worshipped for healing women's ailments, centred on Awashima Jinja in Wakayama, and has branch shrines across Japan as a place to pray over gynaecological matters.",
+    trivia: "Awashima Jinja is known for its doll offerings and its doll-floating rite; dolls sent from all over Japan line the precincts. The floating of dolls on 3 March is a fixture of spring." },
+  amenohiboko: { name: "Ame-no-Hiboko", epithet: "A prince of Silla who followed his wife across the sea",
+    description: "A prince of Silla who came to Japan as a god. His wife Akaruhime, unable to bear his cruelty, fled to Naniwa; he followed, was refused entry, and settled instead in Tajima. He brought eight sacred treasures, and Empress Jingū is said to descend from him.",
+    trivia: "The central figure of the immigrant traditions that lie thick over Tajima and Harima. He is thought to be the mythologised memory of incoming groups who brought ironworking and civil engineering." },
+  ooyatsuhime: { name: "Ōyatsuhime and Tsumatsuhime", epithet: "Sisters who planted the forests with their brother",
+    description: "Daughters of Susanoo and younger sisters of Isotakeru. With their brother they sowed tree seeds from Tsukushi across the whole country and made the land green. All three came to rest in the province of Kii, and are said to be the origin of its name — the land of trees.",
+    trivia: "Itakiso Jinja, Ōyatsuhime Jinja and Tsumatsuhime Jinja in Wakayama are called the three shrines of the land of trees, each enshrining one of the siblings." },
+  kuninomikumari: { name: "Kuni-no-Mikumari and Ame-no-Mikumari", epithet: "Gods of the watershed, dividing water out to the fields",
+    description: "Children of Hayaakitsuhiko and Hayaakitsuhime, gods who apportion water. \"Mikumari\" means distributing water: they sit on the mountain watershed, divide the river courses, and deliver water to the paddies downstream. In a rice society where irrigation decided life and death, this was a very weighty office.",
+    trivia: "\"Mikumari\" shifted in pronunciation to \"mikomori\", child-guarding, and the gods came to be worshipped for conception and safe birth. Yoshino Mikumari Jinja is called the child-guarding shrine." },
+  ukemochi: { name: "Ukemochi", epithet: "Killed by Tsukuyomi, she produced the grains and the livestock",
+    description: "The food goddess of the Nihon Shoki. To entertain the visiting Tsukuyomi she turned to the land and produced rice from her mouth, turned to the sea and produced fish, turned to the mountains and produced game. Tsukuyomi found this filthy and killed her, and from her corpse came cattle and horses, silkworms, rice, millet, wheat and beans.",
+    trivia: "Almost the same story as the Kojiki's Ōgetsuhime, with Tsukuyomi in place of Susanoo as the killer — a textbook example of how the two chronicles correspond." },
+  umashimaji: { name: "Umashimaji", epithet: "Mononobe ancestor who carried out his father's will and submitted to Jimmu",
+    description: "Son of Nigihayahi. After his father's death he killed his uncle Nagasunehiko, who fought on in Yamato, and submitted to Jimmu. He presented the ten sacred treasures and founded the house that presided over the court's spirit-pacifying rite. He is the direct ancestral god of the Mononobe.",
+    trivia: "The secret rite of spirit-pacification the Mononobe transmitted, the ritual of the ten sacred treasures, is still carried on at Isonokami Jingu as the Chinkonsai." },
+  }
+};
+
+</script>
+  <script>
+/**
  * 天津神・国津神 図鑑 — アプリケーション
  * 依存なし・ビルド不要。index.html を直接開いても動作する。
  */
@@ -2660,6 +3584,35 @@ if (typeof module !== "undefined" && module.exports) { module.exports = DEITIES;
     "国津神": "var(--g-kuni)"
   };
   var SUGGEST_MAX = 8;
+
+  /* 実行時に生成する文言の日本語版。HTML に書けないものだけをここに置く */
+  var JA = {
+    countAll: "全 <b>{total}</b> 柱", countSome: "<b>{n}</b> 柱 / 全 {total} 柱",
+    none: "記載なし", viaAlias: "別名", viaKeyword: "通称",
+    matchedIn: "{field}「{value}」に一致", matchedRomaji: "ローマ字表記に一致",
+    matchedText: "解説文に一致", trivia: "こぼれ話",
+    rowAliases: "別名", rowBenefits: "ご利益", rowShrines: "主な社",
+    rowParents: "親神", rowSpouse: "配偶", rowChildren: "子神",
+    rowMyths: "神話", rowSources: "典拠", rowTags: "属性",
+    fAliases: "別名", fKeywords: "通称", fBenefits: "ご利益",
+    fShrines: "神社", fMyths: "神話", fTags: "属性", fSources: "典拠",
+    metaAliases: "別名", metaBenefits: "ご利益", metaShrines: "主な社"
+  };
+
+  var I18N = window.I18N || {};
+  var lang = "ja";
+  var T = null;                       // 日本語のときは null（原文をそのまま使う）
+
+  function ui(k) { return (T && T.ui[k]) || JA[k] || k; }
+  function term(v) { return (T && T.terms[v]) || v; }
+  function place(v) { return (T && T.places[v]) || v; }
+  function grp(g) { return (T && T.groups[g]) || g; }
+  function tr(d) { return T && T.deities[d.id]; }
+  function dName(d) { var e = tr(d); return (e && e.name) || d.name; }
+  function dEpithet(d) { var e = tr(d); return (e && e.epithet) || d.epithet; }
+  function dDesc(d) { var e = tr(d); return (e && e.description) || d.description; }
+  function dTrivia(d) { var e = tr(d); return e ? e.trivia : d.trivia; }
+  function mapList(arr, fn) { return (arr || []).map(fn); }
 
   var state = {
     q: "",
@@ -2694,7 +3647,7 @@ if (typeof module !== "undefined" && module.exports) { module.exports = DEITIES;
   var el = {};
   ["grid", "tableWrap", "tableBody", "empty", "count", "search", "clearSearch", "suggest",
    "groupFilters", "benefitFilters", "mythFilters", "sort", "resetBtn", "randomBtn", "themeBtn",
-   "viewCard", "viewTable", "overlay", "sheetBody", "sheetClose", "prevBtn", "nextBtn"
+   "lang", "viewCard", "viewTable", "overlay", "sheetBody", "sheetClose", "prevBtn", "nextBtn"
   ].forEach(function (k) { el[k] = document.getElementById(k); });
 
   /* ── 小物 ───────────────────────────── */
@@ -2710,20 +3663,33 @@ if (typeof module !== "undefined" && module.exports) { module.exports = DEITIES;
       return String.fromCharCode(c.charCodeAt(0) - 0x60);
     });
   }
-  function norm(s) { return toHira(String(s).toLowerCase()); }
+  // ローマ字の長音記号を落とす。Ōkuninushi を "okuninushi" で引けるようにするため
+  function deaccent(s) {
+    return String(s).normalize ? String(s).normalize("NFD").replace(/[\u0300-\u036f]/g, "") : String(s);
+  }
+  function norm(s) { return deaccent(toHira(String(s).toLowerCase())); }
 
   // 神名として検索する対象（候補表示に使う）
   function nameFields(d) {
-    if (!d._names) d._names = [d.name, d.kana, d.romaji]
-      .concat(d.aliases, d.keywords || []).map(norm);
+    if (d._namesLang !== lang) {
+      var extra = tr(d) ? [tr(d).name] : [];
+      d._names = [d.name, d.kana, d.romaji].concat(d.aliases, d.keywords || [], extra).map(norm);
+      d._namesLang = lang;
+    }
     return d._names;
   }
   // 全文検索の対象
   function haystack(d) {
-    if (!d._hay) {
-      d._hay = norm([d.name, d.kana, d.romaji, d.group, d.epithet, d.description, d.trivia]
-        .concat(d.aliases, d.keywords || [], d.tags, d.benefits, d.myths, d.shrines, d.sources)
-        .join(" "));
+    if (d._hayLang !== lang) {
+      var e = tr(d) || {};
+      // 訳文と原文の両方を対象にする。英語表示でも日本語で引けるようにするため
+      var parts = [d.name, d.kana, d.romaji, d.group, d.epithet, d.description, d.trivia,
+                   e.name, e.epithet, e.description, e.trivia, grp(d.group)]
+        .concat(d.aliases, d.keywords || [], d.tags, d.benefits, d.myths, d.shrines, d.sources,
+                mapList(d.tags, term), mapList(d.benefits, term), mapList(d.myths, term),
+                mapList(d.shrines, place), mapList(d.sources, term));
+      d._hay = norm(parts.filter(Boolean).join(" "));
+      d._hayLang = lang;
     }
     return d._hay;
   }
@@ -2764,15 +3730,22 @@ if (typeof module !== "undefined" && module.exports) { module.exports = DEITIES;
   function matchReason(d) {
     if (!state.terms.length) return null;
     var t = state.terms[0];
-    if (norm(d.name).indexOf(t) !== -1 || norm(d.kana).indexOf(t) !== -1) return null;
-    var buckets = [["別名", d.aliases], ["通称", d.keywords || []], ["ご利益", d.benefits], ["神社", d.shrines],
-                   ["神話", d.myths], ["属性", d.tags], ["典拠", d.sources]];
+    if (norm(d.name).indexOf(t) !== -1 || norm(d.kana).indexOf(t) !== -1 ||
+        norm(dName(d)).indexOf(t) !== -1) return null;
+    var buckets = [["fAliases", d.aliases, null], ["fKeywords", d.keywords || [], null],
+                   ["fBenefits", d.benefits, term], ["fShrines", d.shrines, place],
+                   ["fMyths", d.myths, term], ["fTags", d.tags, term], ["fSources", d.sources, term]];
     for (var i = 0; i < buckets.length; i++) {
-      var hit = (buckets[i][1] || []).filter(function (v) { return norm(v).indexOf(t) !== -1; })[0];
-      if (hit) return buckets[i][0] + "「" + hit + "」に一致";
+      var conv = buckets[i][2] || function (v) { return v; };
+      var hit = (buckets[i][1] || []).filter(function (v) {
+        return norm(v).indexOf(t) !== -1 || norm(conv(v)).indexOf(t) !== -1;
+      })[0];
+      if (hit) {
+        return ui("matchedIn").replace("{field}", ui(buckets[i][0])).replace("{value}", conv(hit));
+      }
     }
-    if (norm(d.romaji).indexOf(t) !== -1) return "ローマ字表記に一致";
-    return "解説文に一致";
+    if (norm(d.romaji).indexOf(t) !== -1) return ui("matchedRomaji");
+    return ui("matchedText");
   }
 
   function sortList(list) {
@@ -2802,17 +3775,19 @@ if (typeof module !== "undefined" && module.exports) { module.exports = DEITIES;
   function cardHTML(d) {
     var gc = GROUP_VAR[d.group] || "var(--accent)";
     var reason = matchReason(d);
+    // 日本語以外では訳名を見出しにし、漢字表記を下に添える（現地表示と突き合わせるため）
+    var sub = T ? esc(d.name) + " ・ " + esc(d.kana) : esc(d.kana);
     return (
       '<button class="card" type="button" data-id="' + esc(d.id) + '" style="--gc:' + gc + '">' +
         '<span class="card__glyph" aria-hidden="true">' + esc(d.name.charAt(0)) + "</span>" +
-        '<span class="card__group">' + esc(d.group) + "</span>" +
-        '<h3 class="card__name">' + esc(d.name) + "</h3>" +
-        '<span class="card__kana">' + esc(d.kana) + "</span>" +
-        '<p class="card__epithet">' + esc(d.epithet) + "</p>" +
+        '<span class="card__group">' + esc(grp(d.group)) + "</span>" +
+        '<h3 class="card__name">' + esc(dName(d)) + "</h3>" +
+        '<span class="card__kana">' + sub + "</span>" +
+        '<p class="card__epithet">' + esc(dEpithet(d)) + "</p>" +
         '<span class="card__metas">' +
-          metaRow("別名", d.aliases, 2) +
-          metaRow("ご利益", d.benefits, 3, "mini--benefit") +
-          metaRow("主な社", d.shrines, 1) +
+          metaRow(ui("metaAliases"), d.aliases, 2) +
+          metaRow(ui("metaBenefits"), mapList(d.benefits, term), 3, "mini--benefit") +
+          metaRow(ui("metaShrines"), mapList(d.shrines, place), 1) +
         "</span>" +
         (reason ? '<span class="card__reason">' + esc(reason) + "</span>" : "") +
       "</button>"
@@ -2829,13 +3804,14 @@ if (typeof module !== "undefined" && module.exports) { module.exports = DEITIES;
 
   function rowHTML(d) {
     var gc = GROUP_VAR[d.group] || "var(--accent)";
+    var sub = T ? esc(d.name) + " ・ " + esc(d.kana) : esc(d.kana);
     return '<tr data-id="' + esc(d.id) + '" tabindex="0">' +
-      '<th scope="row"><span class="t-name">' + esc(d.name) + "</span>" +
-        '<span class="t-kana">' + esc(d.kana) + "</span></th>" +
-      '<td><span class="t-group" style="--gc:' + gc + '">' + esc(d.group) + "</span></td>" +
+      '<th scope="row"><span class="t-name">' + esc(dName(d)) + "</span>" +
+        '<span class="t-kana">' + sub + "</span></th>" +
+      '<td><span class="t-group" style="--gc:' + gc + '">' + esc(grp(d.group)) + "</span></td>" +
       "<td>" + cell(d.aliases, 3) + "</td>" +
-      "<td>" + cell(d.benefits, 4, "mini--benefit") + "</td>" +
-      "<td>" + cell(d.shrines, 2) + "</td>" +
+      "<td>" + cell(mapList(d.benefits, term), 4, "mini--benefit") + "</td>" +
+      "<td>" + cell(mapList(d.shrines, place), 2) + "</td>" +
       "</tr>";
   }
 
@@ -2856,8 +3832,8 @@ if (typeof module !== "undefined" && module.exports) { module.exports = DEITIES;
 
     var total = DEITIES.length;
     el.count.innerHTML = list.length === total
-      ? "全 <b>" + total + "</b> 柱"
-      : "<b>" + list.length + "</b> 柱 / 全 " + total + " 柱";
+      ? ui("countAll").replace("{total}", total)
+      : ui("countSome").replace("{n}", list.length).replace("{total}", total);
 
     el.clearSearch.hidden = !state.q;
     updateChipCounts();
@@ -2892,17 +3868,18 @@ if (typeof module !== "undefined" && module.exports) { module.exports = DEITIES;
     el.suggest.innerHTML = list.map(function (d, i) {
       // 入力語がどの表記に当たったかを添える（別名で引けたことが分かるように）
       var via = "";
-      if (norm(d.name).indexOf(t) === -1 && norm(d.kana).indexOf(t) === -1) {
+      if (norm(d.name).indexOf(t) === -1 && norm(d.kana).indexOf(t) === -1 &&
+          norm(dName(d)).indexOf(t) === -1) {
         var alias = d.aliases.filter(function (a) { return norm(a).indexOf(t) !== -1; })[0];
         var kw = (d.keywords || []).filter(function (a) { return norm(a).indexOf(t) !== -1; })[0];
-        if (alias) via = '<span class="suggest__via">別名: ' + esc(alias) + "</span>";
-        else if (kw) via = '<span class="suggest__via">通称: ' + esc(kw) + "</span>";
+        if (alias) via = '<span class="suggest__via">' + ui("viaAlias") + ": " + esc(alias) + "</span>";
+        else if (kw) via = '<span class="suggest__via">' + ui("viaKeyword") + ": " + esc(kw) + "</span>";
       }
       return '<li id="sg-' + i + '" class="suggest__item" role="option" data-id="' + esc(d.id) + '"' +
         (i === state.suggestIndex ? ' aria-selected="true"' : ' aria-selected="false"') + ">" +
-        '<span class="suggest__name">' + esc(d.name) + "</span>" +
-        '<span class="suggest__kana">' + esc(d.kana) + "</span>" + via +
-        '<span class="suggest__group">' + esc(d.group) + "</span></li>";
+        '<span class="suggest__name">' + esc(dName(d)) + "</span>" +
+        '<span class="suggest__kana">' + esc(T ? d.name : d.kana) + "</span>" + via +
+        '<span class="suggest__group">' + esc(grp(d.group)) + "</span></li>";
     }).join("");
     el.suggest.hidden = false;
     el.search.setAttribute("aria-expanded", "true");
@@ -2915,6 +3892,16 @@ if (typeof module !== "undefined" && module.exports) { module.exports = DEITIES;
   }
 
   /* ── チップ ─────────────────────────── */
+  // チップの表示だけを現在の言語で描き直す（値は原文のまま保つ）
+  function paintChips(container, label) {
+    Array.prototype.forEach.call(container.querySelectorAll(".chip"), function (chip) {
+      var v = chip.getAttribute("data-value");
+      var n = chip.querySelector(".chip__n");
+      chip.textContent = label(v);
+      if (n) chip.appendChild(n);
+    });
+  }
+
   function buildChips(container, items, set, withCount) {
     container.innerHTML = items.map(function (it) {
       var v = it.value !== undefined ? it.value : it;
@@ -2963,17 +3950,17 @@ if (typeof module !== "undefined" && module.exports) { module.exports = DEITIES;
 
   /* ── 詳細シート ─────────────────────── */
   function relPills(ids) {
-    if (!ids || !ids.length) return '<span class="pill pill--none">記載なし</span>';
+    if (!ids || !ids.length) return '<span class="pill pill--none">' + ui("none") + "</span>";
     return ids.map(function (id) {
       var t = byId[id];
       return t ? '<button class="pill pill--link" type="button" data-goto="' + esc(id) + '">' +
-        esc(t.name) + "</button>" : "";
+        esc(dName(t)) + "</button>" : "";
     }).join("");
   }
 
   function plainPills(arr, cls) {
     var a = listOrDash(arr);
-    if (!a) return '<span class="pill pill--none">記載なし</span>';
+    if (!a) return '<span class="pill pill--none">' + ui("none") + "</span>";
     return a.map(function (v) { return '<span class="pill ' + (cls || "") + '">' + esc(v) + "</span>"; }).join("");
   }
 
@@ -2992,24 +3979,25 @@ if (typeof module !== "undefined" && module.exports) { module.exports = DEITIES;
     el.sheetBody.innerHTML =
       '<div style="--gc:' + gc + '">' +
         '<div class="d-head">' +
-          '<span class="d-group">' + esc(d.group) + "</span>" +
-          '<h2 class="d-name" id="sheetName">' + esc(d.name) + "</h2>" +
-          '<div class="d-kana">' + esc(d.kana) + "</div>" +
+          '<span class="d-group">' + esc(grp(d.group)) + "</span>" +
+          '<h2 class="d-name" id="sheetName">' + esc(dName(d)) + "</h2>" +
+          '<div class="d-kana">' + esc(T ? d.name + " ・ " + d.kana : d.kana) + "</div>" +
           '<div class="d-romaji">' + esc(d.romaji) + "</div>" +
-          '<p class="d-epithet">' + esc(d.epithet) + "</p>" +
+          '<p class="d-epithet">' + esc(dEpithet(d)) + "</p>" +
         "</div>" +
-        '<p class="d-desc">' + esc(d.description) + "</p>" +
-        (d.trivia ? '<div class="d-trivia"><h4>こぼれ話</h4><p>' + esc(d.trivia) + "</p></div>" : "") +
+        '<p class="d-desc">' + esc(dDesc(d)) + "</p>" +
+        (dTrivia(d) ? '<div class="d-trivia"><h4>' + ui("trivia") + "</h4><p>" +
+          esc(dTrivia(d)) + "</p></div>" : "") +
         '<div class="d-rows">' +
-          row("別名", plainPills(d.aliases)) +
-          row("ご利益", plainPills(d.benefits, "pill--benefit")) +
-          row("主な社", plainPills(d.shrines)) +
-          row("親神", relPills(d.parents)) +
-          row("配偶", relPills(d.spouse)) +
-          row("子神", relPills(d.children)) +
-          row("神話", plainPills(d.myths)) +
-          row("典拠", plainPills(d.sources)) +
-          row("属性", plainPills(d.tags)) +
+          row(ui("rowAliases"), plainPills(d.aliases)) +
+          row(ui("rowBenefits"), plainPills(mapList(d.benefits, term), "pill--benefit")) +
+          row(ui("rowShrines"), plainPills(mapList(d.shrines, place))) +
+          row(ui("rowParents"), relPills(d.parents)) +
+          row(ui("rowSpouse"), relPills(d.spouse)) +
+          row(ui("rowChildren"), relPills(d.children)) +
+          row(ui("rowMyths"), plainPills(mapList(d.myths, term))) +
+          row(ui("rowSources"), plainPills(mapList(d.sources, term))) +
+          row(ui("rowTags"), plainPills(mapList(d.tags, term))) +
         "</div>" +
       "</div>";
 
@@ -3043,6 +4031,55 @@ if (typeof module !== "undefined" && module.exports) { module.exports = DEITIES;
 
   function currentTheme() { return document.documentElement.getAttribute("data-theme"); }
   function applyTheme(t) { document.documentElement.setAttribute("data-theme", t); store("kamigami-theme", t); }
+
+  /* HTML に書かれた日本語を原本として保持し、切替時に差し替える */
+  var uiNodes = [];
+  function collectUiNodes() {
+    Array.prototype.forEach.call(document.querySelectorAll("[data-i18n]"), function (n) {
+      uiNodes.push({ node: n, key: n.getAttribute("data-i18n"), ja: n.innerHTML });
+    });
+    Array.prototype.forEach.call(document.querySelectorAll("[data-i18n-attr]"), function (n) {
+      n.getAttribute("data-i18n-attr").split("|").forEach(function (pair) {
+        var a = pair.split(":");
+        uiNodes.push({ node: n, attr: a[0], key: a[1], ja: n.getAttribute(a[0]) });
+      });
+    });
+  }
+
+  function applyUiLang() {
+    uiNodes.forEach(function (r) {
+      var v = T && T.ui[r.key];
+      if (r.attr) r.node.setAttribute(r.attr, v || r.ja);
+      else r.node.innerHTML = v || r.ja;
+    });
+    document.documentElement.lang = (T && T.htmlLang) || "ja";
+    paintChips(el.groupFilters, grp);
+    paintChips(el.benefitFilters, term);
+    paintChips(el.mythFilters, term);
+  }
+
+  function setLang(code) {
+    lang = I18N[code] ? code : "ja";
+    T = I18N[lang] || null;
+    el.lang.value = lang;
+    store("kamigami-lang", lang);
+    applyUiLang();
+    render();
+    if (!el.overlay.hidden) {
+      var id = location.hash.replace(/^#/, "");
+      if (byId[id]) openDeity(id, false);
+    }
+  }
+
+  function detectLang() {
+    var q = (location.search.match(/[?&]lang=([\w-]+)/) || [])[1];
+    if (q && I18N[q]) return q;
+    var saved = load("kamigami-lang");
+    if (saved && (saved === "ja" || I18N[saved])) return saved;
+    var nav = (navigator.language || "").toLowerCase();
+    if (nav.indexOf("ja") === 0) return "ja";
+    return I18N.en ? "en" : "ja";
+  }
 
   function setView(v) {
     state.view = v;
@@ -3188,7 +4225,13 @@ if (typeof module !== "undefined" && module.exports) { module.exports = DEITIES;
   buildChips(el.benefitFilters, uniqueValues("benefits").slice(0, 28), state.benefits, true);
   buildChips(el.mythFilters, uniqueValues("myths").slice(0, 22), state.myths, true);
 
-  setView(load("kamigami-view") === "table" ? "table" : "card");
+  collectUiNodes();
+  el.lang.addEventListener("change", function () { setLang(el.lang.value); });
+
+  state.view = load("kamigami-view") === "table" ? "table" : "card";
+  el.viewCard.setAttribute("aria-pressed", String(state.view === "card"));
+  el.viewTable.setAttribute("aria-pressed", String(state.view === "table"));
+  setLang(detectLang());
 
   var initial = location.hash.replace(/^#/, "");
   if (initial && byId[initial]) openDeity(initial, false);

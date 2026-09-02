@@ -21,6 +21,7 @@ const html = read("index.html");
 const css = read("assets/styles.css");
 const js = read("assets/app.js");
 const data = read("data/deities.js");
+const i18nEn = read("data/i18n/en.js");
 
 // </script> を含む文字列があるとタグが途中で閉じてしまうため無害化する
 const safe = (s) => s.replace(/<\/script>/gi, "<\\/script>");
@@ -28,9 +29,11 @@ const safe = (s) => s.replace(/<\/script>/gi, "<\\/script>");
 const inlined = html
   .replace('<link rel="stylesheet" href="assets/styles.css">', "<style>\n" + css + "\n</style>")
   .replace('<script src="data/deities.js"></script>', "<script>\n" + safe(data) + "\n</script>")
+  .replace('<script src="data/i18n/en.js"></script>', "<script>\n" + safe(i18nEn) + "\n</script>")
   .replace('<script src="assets/app.js"></script>', "<script>\n" + safe(js) + "\n</script>");
 
-if (inlined.includes("assets/") || inlined.includes("data/deities.js")) {
+if (inlined.includes("assets/") || inlined.includes("data/deities.js") ||
+    inlined.includes("data/i18n/")) {
   console.error("外部参照が残っています。index.html の参照名が変わっていないか確認してください。");
   process.exit(1);
 }

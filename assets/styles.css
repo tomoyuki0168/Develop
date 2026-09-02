@@ -543,3 +543,29 @@ h1, h2, h3, .serif { font-family: var(--serif); font-weight: 600; }
   .card__metak { width: 3em; }
   .viewtoggle__btn { padding: 5px 9px; }
 }
+
+/* ── 言語切替 ───────────────────────────── */
+.langpick { display: inline-flex; align-items: center; gap: 6px; }
+.langpick__label {
+  font-size: 10px; letter-spacing: .12em; color: var(--text-3);
+  font-family: var(--serif);
+}
+.langpick select {
+  font: inherit; font-size: 12px;
+  background: var(--surface); color: var(--text);
+  border: 1px solid var(--line); border-radius: 999px;
+  padding: 5px 10px; cursor: pointer;
+}
+.langpick select:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ── 開発者クレジット ───────────────────── */
+.credit {
+  margin: 0 0 6px; font-family: var(--serif);
+  font-size: 12.5px; letter-spacing: .06em; color: var(--text-2);
+  display: flex; align-items: center; gap: 6px;
+}
+.credit__mark { font-size: 14px; line-height: 1; }
+
+@media (max-width: 640px) {
+  .langpick__label { display: none; }
+}

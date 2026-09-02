@@ -14,6 +14,35 @@
   };
   var SUGGEST_MAX = 8;
 
+  /* 実行時に生成する文言の日本語版。HTML に書けないものだけをここに置く */
+  var JA = {
+    countAll: "全 <b>{total}</b> 柱", countSome: "<b>{n}</b> 柱 / 全 {total} 柱",
+    none: "記載なし", viaAlias: "別名", viaKeyword: "通称",
+    matchedIn: "{field}「{value}」に一致", matchedRomaji: "ローマ字表記に一致",
+    matchedText: "解説文に一致", trivia: "こぼれ話",
+    rowAliases: "別名", rowBenefits: "ご利益", rowShrines: "主な社",
+    rowParents: "親神", rowSpouse: "配偶", rowChildren: "子神",
+    rowMyths: "神話", rowSources: "典拠", rowTags: "属性",
+    fAliases: "別名", fKeywords: "通称", fBenefits: "ご利益",
+    fShrines: "神社", fMyths: "神話", fTags: "属性", fSources: "典拠",
+    metaAliases: "別名", metaBenefits: "ご利益", metaShrines: "主な社"
+  };
+
+  var I18N = window.I18N || {};
+  var lang = "ja";
+  var T = null;                       // 日本語のときは null（原文をそのまま使う）
+
+  function ui(k) { return (T && T.ui[k]) || JA[k] || k; }
+  function term(v) { return (T && T.terms[v]) || v; }
+  function place(v) { return (T && T.places[v]) || v; }
+  function grp(g) { return (T && T.groups[g]) || g; }
+  function tr(d) { return T && T.deities[d.id]; }
+  function dName(d) { var e = tr(d); return (e && e.name) || d.name; }
+  function dEpithet(d) { var e = tr(d); return (e && e.epithet) || d.epithet; }
+  function dDesc(d) { var e = tr(d); return (e && e.description) || d.description; }
+  function dTrivia(d) { var e = tr(d); return e ? e.trivia : d.trivia; }
+  function mapList(arr, fn) { return (arr || []).map(fn); }
+
   var state = {
     q: "",
     terms: [],
@@ -47,7 +76,7 @@
   var el = {};
   ["grid", "tableWrap", "tableBody", "empty", "count", "search", "clearSearch", "suggest",
    "groupFilters", "benefitFilters", "mythFilters", "sort", "resetBtn", "randomBtn", "themeBtn",
-   "viewCard", "viewTable", "overlay", "sheetBody", "sheetClose", "prevBtn", "nextBtn"
+   "lang", "viewCard", "viewTable", "overlay", "sheetBody", "sheetClose", "prevBtn", "nextBtn"
   ].forEach(function (k) { el[k] = document.getElementById(k); });
 
   /* ── 小物 ───────────────────────────── */
@@ -63,20 +92,33 @@
       return String.fromCharCode(c.charCodeAt(0) - 0x60);
     });
   }
-  function norm(s) { return toHira(String(s).toLowerCase()); }
+  // ローマ字の長音記号を落とす。Ōkuninushi を "okuninushi" で引けるようにするため
+  function deaccent(s) {
+    return String(s).normalize ? String(s).normalize("NFD").replace(/[\u0300-\u036f]/g, "") : String(s);
+  }
+  function norm(s) { return deaccent(toHira(String(s).toLowerCase())); }
 
   // 神名として検索する対象（候補表示に使う）
   function nameFields(d) {
-    if (!d._names) d._names = [d.name, d.kana, d.romaji]
-      .concat(d.aliases, d.keywords || []).map(norm);
+    if (d._namesLang !== lang) {
+      var extra = tr(d) ? [tr(d).name] : [];
+      d._names = [d.name, d.kana, d.romaji].concat(d.aliases, d.keywords || [], extra).map(norm);
+      d._namesLang = lang;
+    }
     return d._names;
   }
   // 全文検索の対象
   function haystack(d) {
-    if (!d._hay) {
-      d._hay = norm([d.name, d.kana, d.romaji, d.group, d.epithet, d.description, d.trivia]
-        .concat(d.aliases, d.keywords || [], d.tags, d.benefits, d.myths, d.shrines, d.sources)
-        .join(" "));
+    if (d._hayLang !== lang) {
+      var e = tr(d) || {};
+      // 訳文と原文の両方を対象にする。英語表示でも日本語で引けるようにするため
+      var parts = [d.name, d.kana, d.romaji, d.group, d.epithet, d.description, d.trivia,
+                   e.name, e.epithet, e.description, e.trivia, grp(d.group)]
+        .concat(d.aliases, d.keywords || [], d.tags, d.benefits, d.myths, d.shrines, d.sources,
+                mapList(d.tags, term), mapList(d.benefits, term), mapList(d.myths, term),
+                mapList(d.shrines, place), mapList(d.sources, term));
+      d._hay = norm(parts.filter(Boolean).join(" "));
+      d._hayLang = lang;
     }
     return d._hay;
   }
@@ -117,15 +159,22 @@
   function matchReason(d) {
     if (!state.terms.length) return null;
     var t = state.terms[0];
-    if (norm(d.name).indexOf(t) !== -1 || norm(d.kana).indexOf(t) !== -1) return null;
-    var buckets = [["別名", d.aliases], ["通称", d.keywords || []], ["ご利益", d.benefits], ["神社", d.shrines],
-                   ["神話", d.myths], ["属性", d.tags], ["典拠", d.sources]];
+    if (norm(d.name).indexOf(t) !== -1 || norm(d.kana).indexOf(t) !== -1 ||
+        norm(dName(d)).indexOf(t) !== -1) return null;
+    var buckets = [["fAliases", d.aliases, null], ["fKeywords", d.keywords || [], null],
+                   ["fBenefits", d.benefits, term], ["fShrines", d.shrines, place],
+                   ["fMyths", d.myths, term], ["fTags", d.tags, term], ["fSources", d.sources, term]];
     for (var i = 0; i < buckets.length; i++) {
-      var hit = (buckets[i][1] || []).filter(function (v) { return norm(v).indexOf(t) !== -1; })[0];
-      if (hit) return buckets[i][0] + "「" + hit + "」に一致";
+      var conv = buckets[i][2] || function (v) { return v; };
+      var hit = (buckets[i][1] || []).filter(function (v) {
+        return norm(v).indexOf(t) !== -1 || norm(conv(v)).indexOf(t) !== -1;
+      })[0];
+      if (hit) {
+        return ui("matchedIn").replace("{field}", ui(buckets[i][0])).replace("{value}", conv(hit));
+      }
     }
-    if (norm(d.romaji).indexOf(t) !== -1) return "ローマ字表記に一致";
-    return "解説文に一致";
+    if (norm(d.romaji).indexOf(t) !== -1) return ui("matchedRomaji");
+    return ui("matchedText");
   }
 
   function sortList(list) {
@@ -155,17 +204,19 @@
   function cardHTML(d) {
     var gc = GROUP_VAR[d.group] || "var(--accent)";
     var reason = matchReason(d);
+    // 日本語以外では訳名を見出しにし、漢字表記を下に添える（現地表示と突き合わせるため）
+    var sub = T ? esc(d.name) + " ・ " + esc(d.kana) : esc(d.kana);
     return (
       '<button class="card" type="button" data-id="' + esc(d.id) + '" style="--gc:' + gc + '">' +
         '<span class="card__glyph" aria-hidden="true">' + esc(d.name.charAt(0)) + "</span>" +
-        '<span class="card__group">' + esc(d.group) + "</span>" +
-        '<h3 class="card__name">' + esc(d.name) + "</h3>" +
-        '<span class="card__kana">' + esc(d.kana) + "</span>" +
-        '<p class="card__epithet">' + esc(d.epithet) + "</p>" +
+        '<span class="card__group">' + esc(grp(d.group)) + "</span>" +
+        '<h3 class="card__name">' + esc(dName(d)) + "</h3>" +
+        '<span class="card__kana">' + sub + "</span>" +
+        '<p class="card__epithet">' + esc(dEpithet(d)) + "</p>" +
         '<span class="card__metas">' +
-          metaRow("別名", d.aliases, 2) +
-          metaRow("ご利益", d.benefits, 3, "mini--benefit") +
-          metaRow("主な社", d.shrines, 1) +
+          metaRow(ui("metaAliases"), d.aliases, 2) +
+          metaRow(ui("metaBenefits"), mapList(d.benefits, term), 3, "mini--benefit") +
+          metaRow(ui("metaShrines"), mapList(d.shrines, place), 1) +
         "</span>" +
         (reason ? '<span class="card__reason">' + esc(reason) + "</span>" : "") +
       "</button>"
@@ -182,13 +233,14 @@
 
   function rowHTML(d) {
     var gc = GROUP_VAR[d.group] || "var(--accent)";
+    var sub = T ? esc(d.name) + " ・ " + esc(d.kana) : esc(d.kana);
     return '<tr data-id="' + esc(d.id) + '" tabindex="0">' +
-      '<th scope="row"><span class="t-name">' + esc(d.name) + "</span>" +
-        '<span class="t-kana">' + esc(d.kana) + "</span></th>" +
-      '<td><span class="t-group" style="--gc:' + gc + '">' + esc(d.group) + "</span></td>" +
+      '<th scope="row"><span class="t-name">' + esc(dName(d)) + "</span>" +
+        '<span class="t-kana">' + sub + "</span></th>" +
+      '<td><span class="t-group" style="--gc:' + gc + '">' + esc(grp(d.group)) + "</span></td>" +
       "<td>" + cell(d.aliases, 3) + "</td>" +
-      "<td>" + cell(d.benefits, 4, "mini--benefit") + "</td>" +
-      "<td>" + cell(d.shrines, 2) + "</td>" +
+      "<td>" + cell(mapList(d.benefits, term), 4, "mini--benefit") + "</td>" +
+      "<td>" + cell(mapList(d.shrines, place), 2) + "</td>" +
       "</tr>";
   }
 
@@ -209,8 +261,8 @@
 
     var total = DEITIES.length;
     el.count.innerHTML = list.length === total
-      ? "全 <b>" + total + "</b> 柱"
-      : "<b>" + list.length + "</b> 柱 / 全 " + total + " 柱";
+      ? ui("countAll").replace("{total}", total)
+      : ui("countSome").replace("{n}", list.length).replace("{total}", total);
 
     el.clearSearch.hidden = !state.q;
     updateChipCounts();
@@ -245,17 +297,18 @@
     el.suggest.innerHTML = list.map(function (d, i) {
       // 入力語がどの表記に当たったかを添える（別名で引けたことが分かるように）
       var via = "";
-      if (norm(d.name).indexOf(t) === -1 && norm(d.kana).indexOf(t) === -1) {
+      if (norm(d.name).indexOf(t) === -1 && norm(d.kana).indexOf(t) === -1 &&
+          norm(dName(d)).indexOf(t) === -1) {
         var alias = d.aliases.filter(function (a) { return norm(a).indexOf(t) !== -1; })[0];
         var kw = (d.keywords || []).filter(function (a) { return norm(a).indexOf(t) !== -1; })[0];
-        if (alias) via = '<span class="suggest__via">別名: ' + esc(alias) + "</span>";
-        else if (kw) via = '<span class="suggest__via">通称: ' + esc(kw) + "</span>";
+        if (alias) via = '<span class="suggest__via">' + ui("viaAlias") + ": " + esc(alias) + "</span>";
+        else if (kw) via = '<span class="suggest__via">' + ui("viaKeyword") + ": " + esc(kw) + "</span>";
       }
       return '<li id="sg-' + i + '" class="suggest__item" role="option" data-id="' + esc(d.id) + '"' +
         (i === state.suggestIndex ? ' aria-selected="true"' : ' aria-selected="false"') + ">" +
-        '<span class="suggest__name">' + esc(d.name) + "</span>" +
-        '<span class="suggest__kana">' + esc(d.kana) + "</span>" + via +
-        '<span class="suggest__group">' + esc(d.group) + "</span></li>";
+        '<span class="suggest__name">' + esc(dName(d)) + "</span>" +
+        '<span class="suggest__kana">' + esc(T ? d.name : d.kana) + "</span>" + via +
+        '<span class="suggest__group">' + esc(grp(d.group)) + "</span></li>";
     }).join("");
     el.suggest.hidden = false;
     el.search.setAttribute("aria-expanded", "true");
@@ -268,6 +321,16 @@
   }
 
   /* ── チップ ─────────────────────────── */
+  // チップの表示だけを現在の言語で描き直す（値は原文のまま保つ）
+  function paintChips(container, label) {
+    Array.prototype.forEach.call(container.querySelectorAll(".chip"), function (chip) {
+      var v = chip.getAttribute("data-value");
+      var n = chip.querySelector(".chip__n");
+      chip.textContent = label(v);
+      if (n) chip.appendChild(n);
+    });
+  }
+
   function buildChips(container, items, set, withCount) {
     container.innerHTML = items.map(function (it) {
       var v = it.value !== undefined ? it.value : it;
@@ -316,17 +379,17 @@
 
   /* ── 詳細シート ─────────────────────── */
   function relPills(ids) {
-    if (!ids || !ids.length) return '<span class="pill pill--none">記載なし</span>';
+    if (!ids || !ids.length) return '<span class="pill pill--none">' + ui("none") + "</span>";
     return ids.map(function (id) {
       var t = byId[id];
       return t ? '<button class="pill pill--link" type="button" data-goto="' + esc(id) + '">' +
-        esc(t.name) + "</button>" : "";
+        esc(dName(t)) + "</button>" : "";
     }).join("");
   }
 
   function plainPills(arr, cls) {
     var a = listOrDash(arr);
-    if (!a) return '<span class="pill pill--none">記載なし</span>';
+    if (!a) return '<span class="pill pill--none">' + ui("none") + "</span>";
     return a.map(function (v) { return '<span class="pill ' + (cls || "") + '">' + esc(v) + "</span>"; }).join("");
   }
 
@@ -345,24 +408,25 @@
     el.sheetBody.innerHTML =
       '<div style="--gc:' + gc + '">' +
         '<div class="d-head">' +
-          '<span class="d-group">' + esc(d.group) + "</span>" +
-          '<h2 class="d-name" id="sheetName">' + esc(d.name) + "</h2>" +
-          '<div class="d-kana">' + esc(d.kana) + "</div>" +
+          '<span class="d-group">' + esc(grp(d.group)) + "</span>" +
+          '<h2 class="d-name" id="sheetName">' + esc(dName(d)) + "</h2>" +
+          '<div class="d-kana">' + esc(T ? d.name + " ・ " + d.kana : d.kana) + "</div>" +
           '<div class="d-romaji">' + esc(d.romaji) + "</div>" +
-          '<p class="d-epithet">' + esc(d.epithet) + "</p>" +
+          '<p class="d-epithet">' + esc(dEpithet(d)) + "</p>" +
         "</div>" +
-        '<p class="d-desc">' + esc(d.description) + "</p>" +
-        (d.trivia ? '<div class="d-trivia"><h4>こぼれ話</h4><p>' + esc(d.trivia) + "</p></div>" : "") +
+        '<p class="d-desc">' + esc(dDesc(d)) + "</p>" +
+        (dTrivia(d) ? '<div class="d-trivia"><h4>' + ui("trivia") + "</h4><p>" +
+          esc(dTrivia(d)) + "</p></div>" : "") +
         '<div class="d-rows">' +
-          row("別名", plainPills(d.aliases)) +
-          row("ご利益", plainPills(d.benefits, "pill--benefit")) +
-          row("主な社", plainPills(d.shrines)) +
-          row("親神", relPills(d.parents)) +
-          row("配偶", relPills(d.spouse)) +
-          row("子神", relPills(d.children)) +
-          row("神話", plainPills(d.myths)) +
-          row("典拠", plainPills(d.sources)) +
-          row("属性", plainPills(d.tags)) +
+          row(ui("rowAliases"), plainPills(d.aliases)) +
+          row(ui("rowBenefits"), plainPills(mapList(d.benefits, term), "pill--benefit")) +
+          row(ui("rowShrines"), plainPills(mapList(d.shrines, place))) +
+          row(ui("rowParents"), relPills(d.parents)) +
+          row(ui("rowSpouse"), relPills(d.spouse)) +
+          row(ui("rowChildren"), relPills(d.children)) +
+          row(ui("rowMyths"), plainPills(mapList(d.myths, term))) +
+          row(ui("rowSources"), plainPills(mapList(d.sources, term))) +
+          row(ui("rowTags"), plainPills(mapList(d.tags, term))) +
         "</div>" +
       "</div>";
 
@@ -396,6 +460,55 @@
 
   function currentTheme() { return document.documentElement.getAttribute("data-theme"); }
   function applyTheme(t) { document.documentElement.setAttribute("data-theme", t); store("kamigami-theme", t); }
+
+  /* HTML に書かれた日本語を原本として保持し、切替時に差し替える */
+  var uiNodes = [];
+  function collectUiNodes() {
+    Array.prototype.forEach.call(document.querySelectorAll("[data-i18n]"), function (n) {
+      uiNodes.push({ node: n, key: n.getAttribute("data-i18n"), ja: n.innerHTML });
+    });
+    Array.prototype.forEach.call(document.querySelectorAll("[data-i18n-attr]"), function (n) {
+      n.getAttribute("data-i18n-attr").split("|").forEach(function (pair) {
+        var a = pair.split(":");
+        uiNodes.push({ node: n, attr: a[0], key: a[1], ja: n.getAttribute(a[0]) });
+      });
+    });
+  }
+
+  function applyUiLang() {
+    uiNodes.forEach(function (r) {
+      var v = T && T.ui[r.key];
+      if (r.attr) r.node.setAttribute(r.attr, v || r.ja);
+      else r.node.innerHTML = v || r.ja;
+    });
+    document.documentElement.lang = (T && T.htmlLang) || "ja";
+    paintChips(el.groupFilters, grp);
+    paintChips(el.benefitFilters, term);
+    paintChips(el.mythFilters, term);
+  }
+
+  function setLang(code) {
+    lang = I18N[code] ? code : "ja";
+    T = I18N[lang] || null;
+    el.lang.value = lang;
+    store("kamigami-lang", lang);
+    applyUiLang();
+    render();
+    if (!el.overlay.hidden) {
+      var id = location.hash.replace(/^#/, "");
+      if (byId[id]) openDeity(id, false);
+    }
+  }
+
+  function detectLang() {
+    var q = (location.search.match(/[?&]lang=([\w-]+)/) || [])[1];
+    if (q && I18N[q]) return q;
+    var saved = load("kamigami-lang");
+    if (saved && (saved === "ja" || I18N[saved])) return saved;
+    var nav = (navigator.language || "").toLowerCase();
+    if (nav.indexOf("ja") === 0) return "ja";
+    return I18N.en ? "en" : "ja";
+  }
 
   function setView(v) {
     state.view = v;
@@ -541,7 +654,13 @@
   buildChips(el.benefitFilters, uniqueValues("benefits").slice(0, 28), state.benefits, true);
   buildChips(el.mythFilters, uniqueValues("myths").slice(0, 22), state.myths, true);
 
-  setView(load("kamigami-view") === "table" ? "table" : "card");
+  collectUiNodes();
+  el.lang.addEventListener("change", function () { setLang(el.lang.value); });
+
+  state.view = load("kamigami-view") === "table" ? "table" : "card";
+  el.viewCard.setAttribute("aria-pressed", String(state.view === "card"));
+  el.viewTable.setAttribute("aria-pressed", String(state.view === "table"));
+  setLang(detectLang());
 
   var initial = location.hash.replace(/^#/, "");
   if (initial && byId[initial]) openDeity(initial, false);
