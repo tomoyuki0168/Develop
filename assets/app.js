@@ -34,7 +34,14 @@
 
   function ui(k) { return (T && T.ui[k]) || JA[k] || k; }
   function term(v) { return (T && T.terms[v]) || v; }
-  function place(v) { return (T && T.places[v]) || v; }
+  function place(v) {
+    if (!T) return v;
+    if (T.places && T.places[v]) return T.places[v];
+    // placesFrom を持つ言語は、その言語の表記を借りる（例: 韓国語はローマ字表記を使う）
+    var from = T.placesFrom && I18N[T.placesFrom];
+    if (from && from.places && from.places[v]) return from.places[v];
+    return v;
+  }
   function grp(g) { return (T && T.groups[g]) || g; }
   function tr(d) { return T && T.deities[d.id]; }
   function dName(d) { var e = tr(d); return (e && e.name) || d.name; }
@@ -42,6 +49,11 @@
   function dDesc(d) { var e = tr(d); return (e && e.description) || d.description; }
   function dTrivia(d) { var e = tr(d); return e ? e.trivia : d.trivia; }
   function mapList(arr, fn) { return (arr || []).map(fn); }
+
+  /* 見出しの下に添える行。見出しが漢字表記そのものなら、重ねて出さない */
+  function subLine(d) {
+    return (T && dName(d) !== d.name) ? esc(d.name) + " ・ " + esc(d.kana) : esc(d.kana);
+  }
 
   var state = {
     q: "",
@@ -96,12 +108,26 @@
   function deaccent(s) {
     return String(s).normalize ? String(s).normalize("NFD").replace(/[\u0300-\u036f]/g, "") : String(s);
   }
-  function norm(s) { return deaccent(toHira(String(s).toLowerCase())); }
+
+  /* 日本語の新字体・簡体字・繁体字を同じ形に畳む表。
+     「大國主」と「大国主」、「毘賣」と「毘売」を同じものとして扱うために使う。
+     検索語と検索対象の両方に同じ変換をかけるので、取りこぼしは起きない。
+     tools/make-variants.py で生成した。 */
+  var VARIANTS = {"丑":"醜","业":"業","东":"東","严":"厳","个":"箇","临":"臨","丽":"麗","义":"義","乌":"烏","乐":"楽","习":"習","书":"書","亂":"乱","云":"雲","产":"産","亩":"畝","仓":"倉","仪":"儀","伤":"傷","來":"来","俁":"俣","兔":"兎","內":"内","关":"関","兴":"興","养":"養","冈":"岡","农":"農","冰":"氷","冲":"沖","凑":"湊","创":"創","别":"別","制":"製","剧":"劇","势":"勢","卖":"売","卫":"衛","县":"県","參":"参","叶":"葉","呜":"嗚","嚴":"厳","园":"園","国":"國","圣":"聖","场":"場","壽":"寿","备":"備","复":"復","头":"頭","奧":"奥","妇":"婦","孙":"孫","學":"学","宫":"宮","导":"導","尔":"爾","屬":"属","岚":"嵐","岛":"島","岳":"嶽","巖":"巌","广":"広","库":"庫","廣":"広","开":"開","异":"異","张":"張","弥":"彌","彥":"彦","後":"后","徵":"征","愈":"癒","愿":"願","戋":"戔","托":"託","护":"護","斋":"斎","斩":"斬","时":"時","暗":"闇","术":"術","机":"機","杀":"殺","条":"條","枪":"槍","栉":"櫛","树":"樹","梦":"夢","榮":"栄","樂":"楽","樱":"桜","櫻":"桜","歲":"歳","气":"気","氣":"気","汤":"湯","泄":"洩","泷":"滝","泽":"沢","涂":"塗","淺":"浅","渔":"漁","溫":"温","滨":"浜","澤":"沢","濱":"浜","瀧":"滝","灣":"湾","灭":"滅","灵":"霊","灶":"竈","灾":"災","爱":"愛","狹":"狭","现":"現","琼":"瓊","瓮":"甕","电":"電","盐":"塩","盜":"盗","矶":"磯","础":"礎","祸":"禍","禮":"礼","秽":"穢","窗":"窓","笼":"籠","筑":"築","系":"係","縣":"県","约":"約","级":"級","纪":"紀","练":"練","织":"織","结":"結","统":"統","绵":"綿","罗":"羅","肤":"膚","胜":"勝","腳":"脚","舊":"旧","艺":"芸","苇":"葦","荣":"栄","萨":"薩","萬":"万","著":"着","藝":"芸","號":"号","蠶":"蚕","觀":"観","见":"見","观":"観","视":"視","许":"許","访":"訪","诃":"訶","词":"詞","试":"試","话":"話","诞":"誕","说":"説","诸":"諸","诹":"諏","诺":"諾","调":"調","谋":"謀","谱":"譜","谷":"穀","豐":"豊","豬":"猪","賣":"売","负":"負","财":"財","贵":"貴","贺":"賀","轮":"輪","轲":"軻","辟":"闢","边":"辺","达":"達","运":"運","进":"進","远":"遠","连":"連","迩":"邇","迹":"跡","邊":"辺","邻":"隣","醫":"医","钿":"鈿","铁":"鉄","铃":"鈴","锻":"鍛","镇":"鎮","镜":"鏡","长":"長","關":"関","门":"門","问":"問","间":"間","阑":"闌","阳":"陽","难":"難","雞":"鶏","雾":"霧","靈":"霊","靜":"静","韩":"韓","须":"須","风":"風","飞":"飛","餘":"余","饶":"饒","馆":"館","馔":"饌","驛":"駅","马":"馬","驰":"馳","驹":"駒","驿":"駅","體":"体","鬥":"斗","鸟":"鳥","鸡":"鶏","鸬":"鸕","鸭":"鴨","鹈":"鵜","鹚":"鶿","鹫":"鷲","鹽":"塩","黃":"黄","齋":"斎","龍":"竜","龙":"竜","龜":"亀","龟":"亀"};
+  function foldKanji(s) {
+    var out = "", i;
+    for (i = 0; i < s.length; i++) out += VARIANTS[s.charAt(i)] || s.charAt(i);
+    return out;
+  }
+
+  function norm(s) { return foldKanji(deaccent(toHira(String(s).toLowerCase()))); }
 
   // 神名として検索する対象（候補表示に使う）
   function nameFields(d) {
     if (d._namesLang !== lang) {
-      var extra = tr(d) ? [tr(d).name] : [];
+      var extra = [];
+      if (tr(d) && tr(d).name) extra.push(tr(d).name);
+      if (I18N.en && I18N.en.deities[d.id]) extra.push(I18N.en.deities[d.id].name);
       d._names = [d.name, d.kana, d.romaji].concat(d.aliases, d.keywords || [], extra).map(norm);
       d._namesLang = lang;
     }
@@ -111,12 +137,16 @@
   function haystack(d) {
     if (d._hayLang !== lang) {
       var e = tr(d) || {};
+      var en = (I18N.en && I18N.en.deities[d.id]) || {};   // 英語は常に引けるようにする
       // 訳文と原文の両方を対象にする。英語表示でも日本語で引けるようにするため
       var parts = [d.name, d.kana, d.romaji, d.group, d.epithet, d.description, d.trivia,
-                   e.name, e.epithet, e.description, e.trivia, grp(d.group)]
+                   e.name, e.epithet, e.description, e.trivia, grp(d.group),
+                   en.name, en.epithet]
         .concat(d.aliases, d.keywords || [], d.tags, d.benefits, d.myths, d.shrines, d.sources,
                 mapList(d.tags, term), mapList(d.benefits, term), mapList(d.myths, term),
-                mapList(d.shrines, place), mapList(d.sources, term));
+                mapList(d.shrines, place), mapList(d.sources, term),
+                I18N.en ? mapList(d.benefits, function (v) { return I18N.en.terms[v] || v; }) : [],
+                I18N.en ? mapList(d.myths, function (v) { return I18N.en.terms[v] || v; }) : []);
       d._hay = norm(parts.filter(Boolean).join(" "));
       d._hayLang = lang;
     }
@@ -205,7 +235,7 @@
     var gc = GROUP_VAR[d.group] || "var(--accent)";
     var reason = matchReason(d);
     // 日本語以外では訳名を見出しにし、漢字表記を下に添える（現地表示と突き合わせるため）
-    var sub = T ? esc(d.name) + " ・ " + esc(d.kana) : esc(d.kana);
+    var sub = subLine(d);
     return (
       '<button class="card" type="button" data-id="' + esc(d.id) + '" style="--gc:' + gc + '">' +
         '<span class="card__glyph" aria-hidden="true">' + esc(d.name.charAt(0)) + "</span>" +
@@ -233,7 +263,7 @@
 
   function rowHTML(d) {
     var gc = GROUP_VAR[d.group] || "var(--accent)";
-    var sub = T ? esc(d.name) + " ・ " + esc(d.kana) : esc(d.kana);
+    var sub = subLine(d);
     return '<tr data-id="' + esc(d.id) + '" tabindex="0">' +
       '<th scope="row"><span class="t-name">' + esc(dName(d)) + "</span>" +
         '<span class="t-kana">' + sub + "</span></th>" +
@@ -289,6 +319,7 @@
   function renderSuggestions() {
     var list = state.suggestions;
     if (!list.length) {
+      el.suggest.innerHTML = "";          // 残しておくと次の検索まで古い候補が DOM に残る
       el.suggest.hidden = true;
       el.search.setAttribute("aria-expanded", "false");
       return;
@@ -307,7 +338,7 @@
       return '<li id="sg-' + i + '" class="suggest__item" role="option" data-id="' + esc(d.id) + '"' +
         (i === state.suggestIndex ? ' aria-selected="true"' : ' aria-selected="false"') + ">" +
         '<span class="suggest__name">' + esc(dName(d)) + "</span>" +
-        '<span class="suggest__kana">' + esc(T ? d.name : d.kana) + "</span>" + via +
+        '<span class="suggest__kana">' + esc(T && dName(d) !== d.name ? d.name : d.kana) + "</span>" + via +
         '<span class="suggest__group">' + esc(grp(d.group)) + "</span></li>";
     }).join("");
     el.suggest.hidden = false;
@@ -316,6 +347,7 @@
 
   function closeSuggest() {
     state.suggestions = []; state.suggestIndex = -1;
+    el.suggest.innerHTML = "";
     el.suggest.hidden = true;
     el.search.setAttribute("aria-expanded", "false");
   }
@@ -410,7 +442,7 @@
         '<div class="d-head">' +
           '<span class="d-group">' + esc(grp(d.group)) + "</span>" +
           '<h2 class="d-name" id="sheetName">' + esc(dName(d)) + "</h2>" +
-          '<div class="d-kana">' + esc(T ? d.name + " ・ " + d.kana : d.kana) + "</div>" +
+          '<div class="d-kana">' + subLine(d) + "</div>" +
           '<div class="d-romaji">' + esc(d.romaji) + "</div>" +
           '<p class="d-epithet">' + esc(dEpithet(d)) + "</p>" +
         "</div>" +

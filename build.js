@@ -21,16 +21,25 @@ const html = read("index.html");
 const css = read("assets/styles.css");
 const js = read("assets/app.js");
 const data = read("data/deities.js");
-const i18nEn = read("data/i18n/en.js");
+const langs = ["en", "zh-Hans", "zh-Hant", "ko"];
 
 // </script> を含む文字列があるとタグが途中で閉じてしまうため無害化する
 const safe = (s) => s.replace(/<\/script>/gi, "<\\/script>");
 
-const inlined = html
+const base = html
   .replace('<link rel="stylesheet" href="assets/styles.css">', "<style>\n" + css + "\n</style>")
   .replace('<script src="data/deities.js"></script>', "<script>\n" + safe(data) + "\n</script>")
-  .replace('<script src="data/i18n/en.js"></script>', "<script>\n" + safe(i18nEn) + "\n</script>")
   .replace('<script src="assets/app.js"></script>', "<script>\n" + safe(js) + "\n</script>");
+
+// 各言語ファイルを順に流し込む
+const inlined = langs.reduce(
+  (acc, code) =>
+    acc.replace(
+      `<script src="data/i18n/${code}.js"></script>`,
+      "<script>\n" + safe(read(`data/i18n/${code}.js`)) + "\n</script>"
+    ),
+  base
+);
 
 if (inlined.includes("assets/") || inlined.includes("data/deities.js") ||
     inlined.includes("data/i18n/")) {
