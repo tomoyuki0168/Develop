@@ -119,7 +119,7 @@ index.html をブラウザで開く
 ### 1. 一般公開URL（GitHub Pages）
 
 ```
-https://tomoyuki0168.github.io/kamigami-zukan/
+https://tomoyuki0168.github.io/Develop/
 ```
 
 誰でも開ける。`main` への変更を `.github/workflows/pages.yml` が検知し、
