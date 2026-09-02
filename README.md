@@ -8,7 +8,7 @@ Developed by Tomoyuki☯️
 ## 使い方
 
 ```
-apps/kamigami-zukan/index.html をブラウザで開く
+index.html をブラウザで開く
 ```
 
 ビルド不要・依存パッケージなし・外部通信なし。`file://` で直接開いても動作する。
@@ -119,17 +119,11 @@ apps/kamigami-zukan/index.html をブラウザで開く
 ### 1. 一般公開URL（GitHub Pages）
 
 ```
-https://tomoyuki0168.github.io/-/kamigami-zukan/
+https://tomoyuki0168.github.io/kamigami-zukan/
 ```
 
-誰でも開ける。`.github/workflows/pages-kamigami.yml` が、
-このリポジトリの `apps/kamigami-zukan/**` への変更を検知して自動で更新する。
-
-> **注意 — このリポジトリの Pages には先客がいる。**
-> ルビカメラが `gh-pages` ブランチの直下を使っており、その公開処理は
-> ブランチを force push で丸ごと入れ替える。図鑑は `/kamigami-zukan/` 配下に
-> 置いて共存させているが、**ルビカメラが次に公開したときこの配下は消える。**
-> 恒久的には両者の公開処理を1本に統合する必要がある（未着手）。
+誰でも開ける。`main` への変更を `.github/workflows/pages.yml` が検知し、
+整合性検査と翻訳の抜け検査を通したうえで自動で更新する。
 
 ### 2. 限定リンク（Artifact）
 
@@ -154,13 +148,12 @@ CSS・JS・データをすべて1ファイルに流し込んだ完全版。**外
 
 ### 4. 別のサーバに置く
 
-`apps/kamigami-zukan/` をディレクトリごと静的ホスティングに上げるだけ。
+このリポジトリの中身をそのまま静的ホスティングに上げるだけ。
 サーバ側の設定・ビルド工程は不要。
 
 ## 構成
 
 ```
-apps/kamigami-zukan/
 ├── index.html          画面構造
 ├── assets/styles.css   和の伝統色（墨・生成り・朱・金・藍）を基調とした配色
 ├── assets/app.js       検索・サジェスト・絞り込み・詳細表示（依存なし）
@@ -173,6 +166,7 @@ apps/kamigami-zukan/
 ├── tools/
 │   ├── make-zh-hant.py 繁体版の生成
 │   └── make-variants.py 検索用の字体対応表の生成
+└── .github/workflows/pages.yml  公開の自動化
 ├── build.js            配布用に1ファイルへまとめるビルド
 └── dist/
     ├── kamigami-zukan.html   単体で開ける完全版（配布用）
