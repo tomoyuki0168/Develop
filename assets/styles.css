@@ -46,6 +46,7 @@
   --g-nanayo:var(--ai);
   --g-ama:   var(--shu);
   --g-kuni:  var(--matsu);
+  --g-hito:  var(--kin);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -69,6 +70,7 @@
     --g-ama:   #e0796f;
     --g-kuni:  #79b39c;
     --kin: #d8b455;
+    --g-hito:  #c9973f;
   }
 }
 
@@ -92,6 +94,7 @@
   --g-ama:   #e0796f;
   --g-kuni:  #79b39c;
   --kin: #d8b455;
+  --g-hito:  #c9973f;
 }
 
 * { box-sizing: border-box; }
