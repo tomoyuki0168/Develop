@@ -72,8 +72,9 @@ jobs:
         run: |
           set -eu
           rm -rf _site
-          mkdir -p _site/assets _site/data/i18n _site/dist
+          mkdir -p _site/assets _site/data/i18n _site/dist _site/tesou
           cp index.html                 _site/
+          cp tesou/index.html           _site/tesou/
           cp assets/styles.css          _site/assets/
           cp assets/app.js              _site/assets/
           cp data/deities.js            _site/data/

@@ -1,0 +1,868 @@
+<title>手相鑑定所</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;1,300&family=Shippori+Mincho+B1:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500&display=swap">
+<style>
+:root{
+  --void:#0B0A11; --deep:#15121F; --plate:#171526; --plate-2:#1E1B2E;
+  --gold:#D9B565; --gold-dim:#8D7539; --gold-line:rgba(217,181,101,.20); --gold-glow:rgba(217,181,101,.55);
+  --shu:#E2604A; --fuji:#A395E0; --text:#EFE9DC; --muted:#9C93AC; --faint:#6C6480;
+  --ok:#7BC49A; --warn:#E0B15C; --bad:#D9756A;
+  --serif:"Shippori Mincho B1","Yu Mincho","Hiragino Mincho ProN",serif;
+  --roman:"Cormorant Garamond",Georgia,serif;
+  --sans:"Zen Kaku Gothic New","Hiragino Kaku Gothic ProN","Yu Gothic",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+body{
+  background:
+    radial-gradient(120% 70% at 50% -12%, #241E3C 0%, rgba(11,10,17,0) 62%),
+    radial-gradient(80% 50% at 88% 108%, #1D1A2E 0%, rgba(11,10,17,0) 60%),
+    var(--void);
+  background-attachment:fixed; color:var(--text); font-family:var(--sans);
+  font-size:15px; line-height:1.9; -webkit-text-size-adjust:100%; min-height:100vh;
+}
+.wrap{max-width:1120px; margin:0 auto; padding:44px 20px 72px}
+h1,h2,h3{font-family:var(--serif); font-weight:500; text-wrap:balance; margin:0}
+.roman{font-family:var(--roman); font-style:italic; font-weight:300; letter-spacing:.34em; text-transform:uppercase}
+
+/* ── header ── */
+header{text-align:center; margin-bottom:40px}
+header .roman{font-size:12px; color:var(--gold-dim); display:block; margin-bottom:14px}
+header h1{font-size:clamp(30px,6vw,46px); letter-spacing:.28em; text-indent:.28em; color:var(--text)}
+header h1 em{font-style:normal; color:var(--gold)}
+.rule{height:1px; margin:20px auto 0; max-width:340px;
+  background:linear-gradient(90deg,transparent,var(--gold-glow),transparent); opacity:.7}
+.rule.wide{max-width:none; margin:0}
+header p{color:var(--muted); font-size:13.5px; max-width:46ch; margin:18px auto 0}
+
+/* ── plates ── */
+.cols{display:grid; grid-template-columns:minmax(0,1.35fr) minmax(0,1fr); gap:20px; align-items:start}
+@media (max-width:880px){ .cols{grid-template-columns:minmax(0,1fr)} }
+.plate{background:linear-gradient(160deg,rgba(255,255,255,.055),rgba(255,255,255,.018));
+  border:1px solid var(--gold-line); border-radius:3px; position:relative}
+.plate-hd{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:13px 16px}
+.plate-hd h2{font-size:14px; letter-spacing:.22em; color:var(--text)}
+.plate-hd .roman{font-size:10px; color:var(--faint); letter-spacing:.26em}
+.plate-bd{padding:16px}
+.hr{height:1px; background:linear-gradient(90deg,rgba(217,181,101,.03),var(--gold-line) 20%,var(--gold-line) 80%,rgba(217,181,101,.03))}
+
+/* ── stage ── */
+.stage{position:relative; padding:12px}
+.stage::before{content:""; position:absolute; inset:14%; border-radius:50%;
+  background:radial-gradient(circle,rgba(217,181,101,.13),transparent 68%); pointer-events:none}
+svg.palm{display:block; width:100%; aspect-ratio:320/420; touch-action:none; position:relative;
+  border-radius:2px; background:radial-gradient(circle at 50% 42%, #1D1A2C, #100E19 78%)}
+.guide{fill:none; stroke:rgba(217,181,101,.30); stroke-width:1.4; stroke-dasharray:4 6}
+.guide-fill{fill:rgba(217,181,101,.035)}
+.frame{fill:none; stroke:rgba(217,181,101,.45); stroke-width:1; stroke-dasharray:2 4}
+.frame-lbl{fill:var(--gold-dim); font-size:9px; letter-spacing:.24em; font-family:var(--roman); font-style:italic}
+.ln{fill:none; stroke-width:2.6; stroke-linecap:round}
+.ln.glow{stroke-width:8; opacity:.20; filter:blur(3px)}
+.hd{cursor:grab; stroke:rgba(11,10,17,.85); stroke-width:1.5; opacity:.92}
+.hd:hover{opacity:1; stroke-width:2.5}
+.note{fill:var(--faint); font-size:10.5px; letter-spacing:.16em}
+.busy{fill:var(--gold); font-size:11px; letter-spacing:.24em; font-family:var(--roman); font-style:italic}
+@keyframes draw{from{stroke-dashoffset:var(--len)}to{stroke-dashoffset:0}}
+.animate .ln{animation:draw .95s cubic-bezier(.32,.8,.3,1) both}
+
+/* ── controls ── */
+.btn{display:inline-flex; align-items:center; justify-content:center; gap:8px; font:inherit; font-size:13px;
+  letter-spacing:.12em; padding:11px 18px; border-radius:2px; cursor:pointer; color:var(--text);
+  background:rgba(255,255,255,.04); border:1px solid var(--gold-line); transition:background .2s,border-color .2s}
+.btn:hover{background:rgba(217,181,101,.10); border-color:rgba(217,181,101,.42)}
+.btn-main{width:100%; padding:15px 18px; font-size:14.5px; letter-spacing:.24em; color:#171020; font-weight:500;
+  background:linear-gradient(135deg,#E9CB84,#C79E4C); border-color:transparent}
+.btn-main:hover{background:linear-gradient(135deg,#F2D794,#D2AA55); border-color:transparent}
+.btn[disabled]{opacity:.4; cursor:default}
+[hidden]{display:none !important}
+.pick{position:relative; display:block}
+.pick .btn{width:100%; pointer-events:none}   /* 見た目だけ。実際に触れるのは input 本体 */
+.pick input{position:absolute; inset:0; width:100%; height:100%; opacity:0; cursor:pointer;
+  font-size:0; color:transparent; -webkit-appearance:none}
+.cam{position:absolute; inset:12px; border-radius:2px; overflow:hidden; background:#07070C;
+  display:flex; align-items:flex-end; justify-content:center}
+.cam video{position:absolute; inset:0; width:100%; height:100%; object-fit:cover}
+.cam .ctl{position:relative; z-index:2; display:flex; gap:8px; margin-bottom:16px}
+.cam .btn{background:rgba(12,10,18,.72); backdrop-filter:blur(6px)}
+.drop{outline:1px dashed var(--gold); outline-offset:-6px}
+.env{display:grid; gap:6px; margin-bottom:4px}
+.env div{display:flex; align-items:center; justify-content:space-between; gap:10px; font-size:11.5px; color:var(--muted)}
+.env b{font-weight:400; font-size:11px; letter-spacing:.1em}
+.pastebox{min-height:52px; border:1px dashed var(--gold-line); border-radius:2px; padding:14px 12px;
+  font-size:12px; color:var(--muted); line-height:1.6; -webkit-user-select:text; user-select:text; overflow:hidden}
+.pastebox:empty::before{content:"ここを長押し →「ペースト」でも写真を読み込めます"; color:var(--faint)}
+.pastebox:focus{outline:1px solid var(--gold); outline-offset:2px}
+.steps{display:grid; grid-template-columns:repeat(3,1fr); gap:6px}
+.steps button{font:inherit; font-family:var(--serif); font-size:12.5px; letter-spacing:.1em; padding:10px 2px;
+  cursor:pointer; background:rgba(255,255,255,.03); border:1px solid var(--gold-line); border-radius:2px; color:inherit}
+.steps button[aria-pressed="true"]{background:rgba(217,181,101,.12); border-color:currentColor}
+.dim{opacity:.28}
+.ring{fill:none; stroke:var(--gold); stroke-width:1; opacity:.5}
+@keyframes pulse{0%,100%{r:13;opacity:.5}50%{r:17;opacity:.15}}
+.ring.on{animation:pulse 1.8s ease-in-out infinite}
+:where(button,label.file,input):focus-visible{outline:1px solid var(--gold); outline-offset:3px}
+.stack{display:grid; gap:9px}
+.lbl{font-family:var(--roman); font-size:10px; letter-spacing:.28em; color:var(--faint); display:block; margin-bottom:10px}
+.seg{display:flex; border:1px solid var(--gold-line); border-radius:2px; overflow:hidden}
+.seg button{flex:1; font:inherit; font-size:12.5px; padding:9px 4px; letter-spacing:.08em; cursor:pointer;
+  background:transparent; border:0; color:var(--muted)}
+.seg button + button{border-left:1px solid var(--gold-line)}
+.seg button[aria-pressed="true"]{background:rgba(217,181,101,.14); color:var(--gold)}
+.hint{font-size:11.5px; color:var(--faint); line-height:1.8; margin:12px 0 0}
+
+/* ── detection status ── */
+.det{display:grid; gap:11px}
+.det-row{display:grid; grid-template-columns:5.2em 1fr auto; align-items:center; gap:10px; font-size:12.5px}
+.det-row .nm{color:var(--muted); letter-spacing:.08em}
+.det-row .mtr{height:2px; background:rgba(255,255,255,.09); border-radius:2px; overflow:hidden}
+.det-row .mtr i{display:block; height:100%; border-radius:2px; transition:width .6s ease}
+.det-row .st{font-size:11px; letter-spacing:.14em; color:var(--faint); font-variant-numeric:tabular-nums}
+.dot{display:inline-block; width:5px; height:5px; border-radius:50%; margin-right:6px; vertical-align:middle}
+
+/* ── verdict ── */
+.verdict{margin-top:20px}
+.vd-top{display:flex; gap:24px; align-items:center; justify-content:space-between; flex-wrap:wrap; padding:22px 24px}
+.vd-top h2{font-size:19px; letter-spacing:.3em}
+.vd-top .meta{font-size:11px; color:var(--faint); letter-spacing:.1em; margin-top:5px}
+.score{display:flex; align-items:baseline; gap:10px}
+.score b{font-family:var(--serif); font-size:52px; line-height:.9; color:var(--gold);
+  font-variant-numeric:tabular-nums; text-shadow:0 0 26px rgba(217,181,101,.35)}
+.score span{font-family:var(--roman); font-size:11px; letter-spacing:.3em; color:var(--faint)}
+.lead{padding:20px 24px; font-size:15px}
+.lead b{display:block; font-family:var(--serif); font-size:18.5px; font-weight:500; letter-spacing:.06em;
+  color:var(--gold); margin-bottom:8px; line-height:1.7}
+.lead p{margin:0; color:var(--muted); font-size:13.5px}
+.axes{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:4px 28px; padding:20px 24px}
+.ax{display:grid; grid-template-columns:4.6em 1fr 2.6em; align-items:center; gap:11px; padding:6px 0}
+.ax .n{font-size:12.5px; color:var(--muted); letter-spacing:.1em}
+.ax .tr{display:block; height:3px; background:rgba(255,255,255,.08); border-radius:3px; overflow:hidden}
+.ax .fl{display:block; height:100%; border-radius:3px; transition:width .7s cubic-bezier(.22,.9,.3,1)}
+.ax .v{text-align:right; font-family:var(--serif); font-size:15px; font-variant-numeric:tabular-nums; color:var(--text)}
+.finds{display:grid; grid-template-columns:1fr}
+@media (min-width:600px){ .finds{grid-template-columns:1fr 1fr} }
+@media (min-width:960px){ .finds{grid-template-columns:repeat(4,1fr)} }
+.find{padding:17px 20px; border-top:1px solid rgba(217,181,101,.13); border-left:2px solid currentColor}
+.find .t{display:flex; align-items:baseline; gap:9px; margin-bottom:6px}
+.find .t b{font-family:var(--serif); font-size:14.5px; letter-spacing:.1em; font-weight:500}
+.find .t i{font-style:normal; font-size:10.5px; color:var(--faint); font-variant-numeric:tabular-nums; letter-spacing:.04em}
+.find .chip{display:inline-block; font-size:11px; letter-spacing:.12em; padding:2px 10px; border:1px solid currentColor;
+  border-radius:1px; margin-bottom:8px; opacity:.9}
+.find p{margin:0; font-size:13px; color:var(--muted); line-height:1.85}
+.c-life{color:var(--shu)} .c-head{color:var(--fuji)} .c-heart{color:var(--gold)}
+.b-life{background:var(--shu); box-shadow:0 0 10px rgba(226,96,74,.5)}
+.b-head{background:var(--fuji); box-shadow:0 0 10px rgba(163,149,224,.5)}
+.b-heart{background:var(--gold); box-shadow:0 0 10px rgba(217,181,101,.5)}
+.closing{padding:20px 24px; display:grid; gap:7px; background:rgba(217,181,101,.045)}
+.closing p{margin:0; font-size:13.5px}
+.foot{margin-top:26px; font-size:11px; color:var(--faint); line-height:2; max-width:76ch}
+.toast{position:fixed; left:50%; bottom:28px; transform:translateX(-50%) translateY(10px); opacity:0; z-index:9;
+  background:#EFE9DC; color:#15121F; padding:9px 20px; border-radius:2px; font-size:12.5px; letter-spacing:.08em;
+  pointer-events:none; transition:opacity .25s, transform .25s}
+.toast.on{opacity:1; transform:translateX(-50%) translateY(0)}
+@media (prefers-reduced-motion:reduce){ *{animation:none !important; transition:none !important} }
+</style>
+
+<div class="wrap">
+  <header>
+    <span class="roman">Palmistry Studio</span>
+    <h1>手相<em>鑑定</em>所</h1>
+    <div class="rule"></div>
+    <p>写真から手の輪郭と三大線を自動で読み取り、線の形を実測して鑑定書を組みます。写真が使えない画面でも、線を手で合わせれば同じ鑑定が出ます。</p>
+  </header>
+
+  <div class="cols">
+    <section class="plate">
+      <div class="plate-hd"><h2>掌紋</h2><span class="roman" id="stageTag">no image</span></div>
+      <div class="hr"></div>
+      <div class="stage">
+        <svg class="palm" id="palm" viewBox="0 0 320 420" aria-label="手のひらの図。検出された三本の線。点をドラッグして手で直せます。"></svg>
+        <div class="cam" id="camPane" hidden>
+          <video id="vid" playsinline autoplay muted></video>
+          <div class="ctl"><button class="btn" id="shot">シャッター</button><button class="btn" id="camx">閉じる</button></div>
+        </div>
+      </div>
+    </section>
+
+    <aside class="stack" style="gap:20px">
+      <div class="plate">
+        <div class="plate-hd"><h2>撮影</h2><span class="roman">capture</span></div>
+        <div class="hr"></div>
+        <div class="plate-bd stack">
+          <div class="env" id="env"></div>
+          <button class="btn btn-main" id="btnCam">カメラを起動して撮る</button>
+          <span class="pick"><span class="btn">写真アプリで撮る</span>
+            <input type="file" id="fileShot" accept="image/*" capture="environment" aria-label="カメラで撮影する"></span>
+          <span class="pick"><span class="btn">保存済みの写真から選ぶ</span>
+            <input type="file" id="filePick" accept="image/*" aria-label="写真を選ぶ"></span>
+          <button class="btn" id="btnClip">コピーした写真を貼り付ける</button>
+          <div class="pastebox" id="pasteBox" contenteditable="true" role="textbox" aria-label="ここに写真を貼り付け"></div>
+          <div class="stack" style="grid-auto-flow:column; gap:9px">
+            <button class="btn" id="again" disabled>再検出</button>
+            <button class="btn" id="clear" disabled>写真を外す</button>
+          </div>
+          <p class="hint">明るい場所で、<b style="color:var(--muted)">指を上に向けて</b>手のひら全体が入るように。背景は手と色の違うものが写ると精度が上がります。パソコンなら、画像をこの画面にドラッグするか貼り付け（⌘V）でも読み込めます。写真は端末の中だけで処理され、どこにも送信されません。</p>
+          <p class="hint" id="camErr" hidden style="color:var(--warn)"></p>
+        </div>
+      </div>
+
+      <div class="plate">
+        <div class="plate-hd"><h2>手で合わせる</h2><span class="roman">by hand</span></div>
+        <div class="hr"></div>
+        <div class="plate-bd">
+          <p class="hint" style="margin:0 0 12px">写真が使えない画面でも、こちらで鑑定できます。自分の手のひらを見ながら、三本の線を順に合わせてください。</p>
+          <div class="steps" role="group" aria-label="なぞる線を選ぶ">
+            <button data-k="life" class="c-life">壱　生命線</button>
+            <button data-k="head" class="c-head">弐　知能線</button>
+            <button data-k="heart" class="c-heart">参　感情線</button>
+          </div>
+          <p class="hint" id="stepHint"></p>
+        </div>
+      </div>
+
+      <div class="plate">
+        <div class="plate-hd"><h2>読み取り</h2><span class="roman">detection</span></div>
+        <div class="hr"></div>
+        <div class="plate-bd">
+          <div class="det" id="det"></div>
+          <p class="hint" id="detNote">まだ写真がありません。標準の手の形で鑑定を出しています。</p>
+        </div>
+      </div>
+
+      <div class="plate">
+        <div class="plate-hd"><h2>どちらの手</h2><span class="roman">hand</span></div>
+        <div class="hr"></div>
+        <div class="plate-bd">
+          <div class="seg" role="group" aria-label="鑑定する手">
+            <button id="handR" aria-pressed="true">右手・後天</button>
+            <button id="handL" aria-pressed="false">左手・先天</button>
+          </div>
+          <p class="hint" id="handNote">右手は、これまでの選択で後から作られた「いまのあなた」を映すとされます。</p>
+        </div>
+      </div>
+
+      <div class="stack" style="grid-auto-flow:column; gap:9px">
+        <button class="btn" id="reset">線を戻す</button>
+        <button class="btn" id="copy">結果を写す</button>
+      </div>
+    </aside>
+  </div>
+
+  <section class="plate verdict" id="verdict" aria-live="polite"></section>
+
+  <p class="foot">娯楽としての手相の読み解きです。健康・お金・進路の判断材料には使わないでください。線の検出は写真の明暗差から行うため、照明・手の角度・肌の色によって外れることがあります。確度が「低」と出たときは、撮り直すか、点をドラッグして手で直してください。数値はすべて、その線の形から計算した実測値です。</p>
+</div>
+<div class="toast" id="toast" role="status"></div>
+<script>
+(function(){
+"use strict";
+var VB={w:320,h:420}, S=2, CW=VB.w*S, CH=VB.h*S;
+var $=function(id){return document.getElementById(id);};
+var clamp=function(v,a,b){return v<a?a:(v>b?b:v);};
+var norm=function(v,a,b){return clamp((v-a)/(b-a),0,1);};
+var KEYS=["life","head","heart"];
+var META={life:{n:"生命線",c:"var(--shu)"},head:{n:"知能線",c:"var(--fuji)"},heart:{n:"感情線",c:"var(--gold)"}};
+
+/* ══ 標準の手（写真がないときの基準） ══ */
+var GUIDE_PALM={L:100,R:262,T:170,B:395,thumb:"left"};
+var DEFAULTS={life:[[118,198],[152,300],[112,388]],head:[[122,212],[186,250],[250,276]],heart:[[262,206],[200,178],[142,172]]};
+var FINGERS=[{x:133,base:172,tip:58,w:27},{x:172,base:162,tip:40,w:28},{x:210,base:170,tip:60,w:27},{x:246,base:198,tip:92,w:24}];
+function handPath(){
+  var p=["M 104 400","C 80 384 62 356 58 320","C 40 306 26 256 40 232","C 52 212 74 220 86 244","C 94 260 100 250 106 226"];
+  for(var i=0;i<FINGERS.length;i++){
+    var f=FINGERS[i], l=f.x-f.w/2, r=f.x+f.w/2, cap=f.w/2+3;
+    p.push("L "+l.toFixed(1)+" "+f.base);
+    p.push("C "+l.toFixed(1)+" "+(f.tip+cap)+" "+(l+1).toFixed(1)+" "+f.tip+" "+f.x+" "+f.tip);
+    p.push("C "+(r-1).toFixed(1)+" "+f.tip+" "+r.toFixed(1)+" "+(f.tip+cap)+" "+r.toFixed(1)+" "+f.base);
+    var nx=FINGERS[i+1];
+    if(nx) p.push("Q "+((r+(nx.x-nx.w/2))/2).toFixed(1)+" "+(Math.max(f.base,nx.base)+16)+" "+(nx.x-nx.w/2).toFixed(1)+" "+nx.base);
+  }
+  p.push("C 268 232 272 320 250 372","C 244 388 232 398 224 402","Q 164 414 104 400 Z");
+  return p.join(" ");
+}
+
+/* ══ 曲線 ══ */
+function ctrl(a,m,b){return [2*m[0]-(a[0]+b[0])/2, 2*m[1]-(a[1]+b[1])/2];}
+function at(p,t){var c=ctrl(p[0],p[1],p[2]),u=1-t;
+  return [u*u*p[0][0]+2*u*t*c[0]+t*t*p[2][0], u*u*p[0][1]+2*u*t*c[1]+t*t*p[2][1]];}
+function d3(p){var c=ctrl(p[0],p[1],p[2]);
+  return "M "+p[0][0].toFixed(1)+" "+p[0][1].toFixed(1)+" Q "+c[0].toFixed(1)+" "+c[1].toFixed(1)+" "+p[2][0].toFixed(1)+" "+p[2][1].toFixed(1);}
+function arcLen(p){var n=48,L=0,pr=at(p,0);for(var i=1;i<=n;i++){var q=at(p,i/n);L+=Math.hypot(q[0]-pr[0],q[1]-pr[1]);pr=q;}return L;}
+
+/* ══ 状態 ══ */
+var COARSE=(window.matchMedia&&matchMedia("(pointer:coarse)").matches);
+var state={hand:"right", focus:"life", img:null, photo:null, box:null, palm:null,
+  lines:JSON.parse(JSON.stringify(DEFAULTS)), conf:null, depth:null};
+try{var sv=JSON.parse(localStorage.getItem("tesou.v2")||"null"); if(sv&&sv.hand) state.hand=sv.hand;}catch(e){}
+function save(){try{localStorage.setItem("tesou.v2",JSON.stringify({hand:state.hand}));}catch(e){}}
+function palmFrame(){return state.palm||GUIDE_PALM;}
+
+/* ══ 描画 ══ */
+var svg=$("palm");
+svg.innerHTML='<g id="lyPhoto"></g><path id="gFill" class="guide-fill"></path><path id="gLine" class="guide"></path>'+
+  '<g id="lyFrame"></g><g id="lyLine"></g><g id="lyHd"></g><g id="lyMsg"></g>';
+$("gFill").setAttribute("d",handPath()); $("gLine").setAttribute("d",handPath());
+
+function renderPhoto(){
+  var g=$("lyPhoto"), on=!!state.photo;
+  $("gFill").style.display=on?"none":""; $("gLine").style.display=on?"none":"";
+  g.innerHTML = on ? '<image href="'+state.photo+'" x="'+state.box.x+'" y="'+state.box.y+'" width="'+state.box.w+
+    '" height="'+state.box.h+'" preserveAspectRatio="none"></image>' : "";
+  var f=state.palm, fr=$("lyFrame");
+  fr.innerHTML = f ? '<rect class="frame" x="'+f.L.toFixed(1)+'" y="'+f.T.toFixed(1)+'" width="'+(f.R-f.L).toFixed(1)+
+    '" height="'+(f.B-f.T).toFixed(1)+'" rx="6"></rect><text class="frame-lbl" x="'+f.L.toFixed(1)+'" y="'+(f.T-6).toFixed(1)+
+    '">palm '+(f.thumb==="left"?"R":"L")+'</text>' : "";
+}
+function renderLines(animate){
+  var ln="",hd="", R=COARSE?9:7, RT=COARSE?18:13;
+  for(var i=0;i<KEYS.length;i++){
+    var k=KEYS[i], p=state.lines[k], m=META[k], d=d3(p);
+    var on=(state.focus===k), dim=(!state.photo && !on) ? " dim" : "";
+    ln+='<path class="ln glow'+dim+'" stroke="'+m.c+'" d="'+d+'"></path><path class="ln'+dim+'" stroke="'+m.c+'" d="'+d+'"></path>';
+    for(var j=0;j<3;j++){
+      var cx=p[j][0].toFixed(1), cy=p[j][1].toFixed(1);
+      /* 指で触れる範囲を、見た目の点より大きく取る */
+      hd+='<circle class="hd" data-k="'+k+'" data-i="'+j+'" cx="'+cx+'" cy="'+cy+'" r="'+RT+'" fill="transparent"></circle>';
+      if(on && !state.photo) hd+='<circle class="ring on" cx="'+cx+'" cy="'+cy+'" r="13"></circle>';
+      hd+='<circle class="hd'+dim+'" data-k="'+k+'" data-i="'+j+'" cx="'+cx+'" cy="'+cy+
+        '" r="'+(j===1?R-1.5:R)+'" fill="'+m.c+'"><title>'+m.n+(j===0?"の始点":j===1?"の途中":"の終点")+'（ドラッグで調整）</title></circle>';
+    }
+  }
+  var ly=$("lyLine"); ly.innerHTML=ln; $("lyHd").innerHTML=hd;
+  ly.classList.remove("animate");
+  if(animate){
+    var ps=ly.querySelectorAll("path");
+    for(var q=0;q<ps.length;q++){var L=ps[q].getTotalLength(); ps[q].style.strokeDasharray=L; ps[q].style.setProperty("--len",L);}
+    void ly.offsetWidth; ly.classList.add("animate");
+    setTimeout(function(){for(var q2=0;q2<ps.length;q2++) ps[q2].style.strokeDasharray="";},1000);
+  }
+}
+function msg(text,cls){
+  $("lyMsg").innerHTML = text ? '<text class="'+(cls||"note")+'" x="160" y="'+(cls==="busy"?214:406)+'" text-anchor="middle">'+text+'</text>' : "";
+}
+
+/* ══ 写真から手のひらと三大線を検出 ══ */
+var work=document.createElement("canvas"); work.width=CW; work.height=CH;
+var wctx=work.getContext("2d",{willReadFrequently:true});
+var LN=null, COMP=null, lnMean=0;
+
+function detect(){
+  var img=state.img; if(!img) return null;
+  wctx.clearRect(0,0,CW,CH);
+  wctx.drawImage(img, state.box.x*S, state.box.y*S, state.box.w*S, state.box.h*S);
+  var d=wctx.getImageData(0,0,CW,CH).data, N=CW*CH;
+  var gray=new Float32Array(N), skin=new Uint8Array(N), sk=0, inside=0, sumY=0;
+  for(var i=0,o=0;i<N;i++,o+=4){
+    if(d[o+3]<8){gray[i]=255;continue;}
+    var r=d[o],g=d[o+1],b=d[o+2];
+    var Y=0.299*r+0.587*g+0.114*b;
+    gray[i]=Y; inside++; sumY+=Y;
+    var Cb=128-0.168736*r-0.331264*g+0.5*b, Cr=128+0.5*r-0.418688*g-0.081312*b;
+    if(Y>42&&Y<252&&Cb>=76&&Cb<=132&&Cr>=131&&Cr<=180&&r>g&&r*0.92>b){skin[i]=1;sk++;}
+  }
+  if(inside<1000) return null;
+  if(sk < inside*0.10){                       /* 肌色で取れないときは明るさで代替 */
+    var mY=sumY/inside; sk=0;
+    for(var i2=0,o2=0;i2<N;i2++,o2+=4){ skin[i2]=(d[o2+3]>=8 && gray[i2]>mY*1.02)?1:0; if(skin[i2])sk++; }
+    if(sk < inside*0.06) return null;
+  }
+  /* 最大連結成分 */
+  var comp=new Uint8Array(N), seen=new Uint8Array(N), qu=new Int32Array(N), best=0, bestSeed=-1, bestSize=0;
+  for(var y=0;y<CH;y+=2) for(var x=0;x<CW;x+=2){
+    var s0=y*CW+x; if(!skin[s0]||seen[s0]) continue;
+    var head=0,tail=0,size=0; qu[tail++]=s0; seen[s0]=1;
+    while(head<tail){
+      var c=qu[head++]; size++;
+      var cx=c%CW, cy=(c-cx)/CW;
+      if(cx>0&&skin[c-1]&&!seen[c-1]){seen[c-1]=1;qu[tail++]=c-1;}
+      if(cx<CW-1&&skin[c+1]&&!seen[c+1]){seen[c+1]=1;qu[tail++]=c+1;}
+      if(cy>0&&skin[c-CW]&&!seen[c-CW]){seen[c-CW]=1;qu[tail++]=c-CW;}
+      if(cy<CH-1&&skin[c+CW]&&!seen[c+CW]){seen[c+CW]=1;qu[tail++]=c+CW;}
+    }
+    if(size>bestSize){bestSize=size;bestSeed=s0;best=tail;}
+  }
+  if(bestSize<inside*0.08) return null;
+  seen.fill(0);
+  var h2=0,t2=0; qu[t2++]=bestSeed; seen[bestSeed]=1;
+  while(h2<t2){
+    var c2=qu[h2++]; comp[c2]=1;
+    var x2=c2%CW, y2=(c2-x2)/CW;
+    if(x2>0&&skin[c2-1]&&!seen[c2-1]){seen[c2-1]=1;qu[t2++]=c2-1;}
+    if(x2<CW-1&&skin[c2+1]&&!seen[c2+1]){seen[c2+1]=1;qu[t2++]=c2+1;}
+    if(y2>0&&skin[c2-CW]&&!seen[c2-CW]){seen[c2-CW]=1;qu[t2++]=c2-CW;}
+    if(y2<CH-1&&skin[c2+CW]&&!seen[c2+CW]){seen[c2+CW]=1;qu[t2++]=c2+CW;}
+  }
+  /* 行ごとの幅と分割数 → 指の付け根を探す */
+  var wid=new Int32Array(CH), runs=new Int32Array(CH), le=new Int32Array(CH), ri=new Int32Array(CH), maxW=0, top=-1, bot=-1;
+  for(var y3=0;y3<CH;y3++){
+    var w3=0,r3=0,prev=0,l3=-1,rr=-1;
+    for(var x3=0;x3<CW;x3++){
+      var v=comp[y3*CW+x3];
+      if(v){w3++; if(l3<0)l3=x3; rr=x3; if(!prev)r3++;}
+      prev=v;
+    }
+    wid[y3]=w3; runs[y3]=r3; le[y3]=l3; ri[y3]=rr;
+    if(w3>maxW)maxW=w3;
+    if(w3>maxW*0.06){ if(top<0)top=y3; bot=y3; }
+  }
+  if(top<0||bot-top<40) return null;
+  var span=bot-top, fb=-1;
+  for(var y4=top+Math.round(span*0.12); y4<top+span*0.75; y4++){
+    if(runs[y4]<=1 && wid[y4]>=maxW*0.62){fb=y4;break;}
+  }
+  if(fb<0) fb=top+Math.round(span*0.38);
+  /* 手のひらの左右（親指のふくらみを除くため中央値を使う） */
+  var band=[], bandL=[], bandR=[], hEst=Math.min(bot,fb+Math.round(maxW*1.35))-fb;
+  for(var y5=fb+Math.round(hEst*0.12); y5<fb+hEst*0.68; y5++){ if(wid[y5]>0){bandL.push(le[y5]); bandR.push(ri[y5]);} }
+  if(bandL.length<8) return null;
+  var srt=function(a){return a.slice().sort(function(p,q){return p-q;});};
+  var med=function(a){var s=srt(a);return s[Math.floor(s.length/2)];};
+  var pct=function(a,p){var s=srt(a);return s[clamp(Math.floor(s.length*p),0,s.length-1)];};
+  var mL=med(bandL), mR=med(bandR), pL=pct(bandL,0.08), pR=pct(bandR,0.92);
+  var thumb=((mL-pL) >= (pR-mR)) ? "left" : "right";
+  var frame={L:mL,R:mR,T:fb,B:fb+hEst,thumb:thumb};
+  if(frame.R-frame.L<40||frame.B-frame.T<40) return null;
+
+  /* 線らしさ（周囲より暗い＝谷） */
+  var iw=CW+1, iA=new Float64Array(iw*(CH+1)), iB=new Float64Array(iw*(CH+1));
+  for(var y6=0;y6<CH;y6++){
+    var ra=0, rb=0;
+    for(var x6=0;x6<CW;x6++){
+      var id6=y6*CW+x6;
+      if(comp[id6]){ra+=gray[id6];rb++;}
+      iA[(y6+1)*iw+x6+1]=iA[y6*iw+x6+1]+ra; iB[(y6+1)*iw+x6+1]=iB[y6*iw+x6+1]+rb;
+    }
+  }
+  var rad=Math.max(3,Math.round((frame.R-frame.L)*0.035));
+  var box=function(I,x0,y0,x1,y1){return I[(y1+1)*iw+x1+1]-I[y0*iw+x1+1]-I[(y1+1)*iw+x0]+I[y0*iw+x0];};
+  var lin=new Float32Array(N), sum=0, cnt=0;
+  for(var y7=0;y7<CH;y7++)for(var x7=0;x7<CW;x7++){
+    var id=y7*CW+x7; if(!comp[id])continue;
+    var x0=Math.max(0,x7-rad),x1=Math.min(CW-1,x7+rad),y0=Math.max(0,y7-rad),y1=Math.min(CH-1,y7+rad);
+    var nb=box(iB,x0,y0,x1,y1); if(nb<12){lin[id]=0;continue;}
+    var m2=box(iA,x0,y0,x1,y1)/nb;      /* 周囲の明るさは手の内側の画素だけで測る */
+    var vv=m2-gray[id]; if(vv<0)vv=0;
+    lin[id]=vv; sum+=vv; cnt++;
+  }
+  LN=lin; COMP=comp; lnMean=cnt?sum/cnt:1;
+  return frame;
+}
+
+/* ══ 曲線あてはめ ══ */
+function fit(frame){
+  var W=frame.R-frame.L, H=frame.B-frame.T, thumb=frame.thumb;
+  function xy(u,v){return [thumb==="left"?frame.L+u*W:frame.R-u*W, frame.T+v*H];}
+  function pts(c){
+    var a=xy(c[0],c[1]), b=xy(c[2],c[3]);
+    var mu=(c[0]+c[2])/2+(c[5]==="u"?c[4]:0), mv=(c[1]+c[3])/2+(c[5]==="v"?c[4]:0);
+    return [a, xy(mu,mv), b];
+  }
+  function score(c){
+    var p=pts(c), n=32, s=0, out=0, len=0, pr=null;
+    if(Math.hypot(p[2][0]-p[0][0],p[2][1]-p[0][1]) < Math.min(W,H)*0.45) return -1;
+    for(var i=0;i<=n;i++){
+      var q=at(p,i/n), x=Math.round(q[0]), y=Math.round(q[1]);
+      if(pr) len+=Math.hypot(q[0]-pr[0],q[1]-pr[1]);
+      pr=q;
+      if(x<0||y<0||x>=CW||y>=CH||!COMP[y*CW+x]){ out++; continue; }   /* 手の外に出た分は0点 */
+      s+=LN[y*CW+x];
+    }
+    if(out>n*0.18) return -1;
+    return (s/(n+1)) * Math.pow(len/((W+H)/2), 0.30);   /* 線に乗ったまま長く伸びる形を優先 */
+  }
+  var SPEC={   /* 手のひらを正規化した座標での、各線の存在範囲（u:親指側0→小指側1, v:指の付け根0→手首1） */
+    life :{su:[0.10,0.44],sv:[-0.04,0.20],eu:[0.00,0.34],ev:[0.78,1.06],b:[0.04,0.46],ax:"u"},
+    head :{su:[0.06,0.42],sv:[0.06,0.36],eu:[0.70,1.06],ev:[0.28,0.82],b:[-0.14,0.12],ax:"v"},
+    heart:{su:[0.72,1.08],sv:[-0.06,0.26],eu:[0.12,0.64],ev:[-0.10,0.22],b:[-0.16,0.08],ax:"v"}
+  };
+  var out={}, conf={};
+  for(var n2=0;n2<KEYS.length;n2++){
+    var k=KEYS[n2], sp=SPEC[k], bestC=null, bestS=-1;
+    var g=function(r,n){var a=[],st=(r[1]-r[0])/(n-1);for(var i=0;i<n;i++)a.push(r[0]+st*i);return a;};
+    var SU=g(sp.su,5),SV=g(sp.sv,4),EU=g(sp.eu,5),EV=g(sp.ev,5),BB=g(sp.b,5);
+    for(var a1=0;a1<SU.length;a1++)for(var a2=0;a2<SV.length;a2++)
+    for(var a3=0;a3<EU.length;a3++)for(var a4=0;a4<EV.length;a4++)
+    for(var a5=0;a5<BB.length;a5++){
+      var c=[SU[a1],SV[a2],EU[a3],EV[a4],BB[a5],sp.ax], s2=score(c);
+      if(s2>bestS){bestS=s2;bestC=c;}
+    }
+    if(!bestC){out[k]=null;conf[k]=0;continue;}
+    /* 局所調整。端点は2軸を同時に動かさないと線から外れるので、斜めの手も試す */
+    var step=[(sp.su[1]-sp.su[0])/4,(sp.sv[1]-sp.sv[0])/3,(sp.eu[1]-sp.eu[0])/4,(sp.ev[1]-sp.ev[0])/4,(sp.b[1]-sp.b[0])/4];
+    var moves=[];
+    for(var mi=0;mi<5;mi++){moves.push([[mi,-1]]);moves.push([[mi,1]]);}
+    var pairs=[[0,1],[2,3],[0,2],[1,3]];
+    for(var pj=0;pj<pairs.length;pj++)
+      for(var s1=-1;s1<=1;s1+=2) for(var s3=-1;s3<=1;s3+=2)
+        moves.push([[pairs[pj][0],s1],[pairs[pj][1],s3]]);
+    for(var pass=0;pass<6;pass++){
+      var moved=false;
+      var rng=[sp.su,sp.sv,sp.eu,sp.ev,sp.b];
+      for(var mv=0;mv<moves.length;mv++){
+        var t=bestC.slice(), mo=moves[mv];
+        for(var q2=0;q2<mo.length;q2++){
+          var pidx=mo[q2][0];
+          t[pidx]=clamp(t[pidx]+mo[q2][1]*step[pidx], rng[pidx][0], rng[pidx][1]);
+        }
+        var st2=score(t); if(st2>bestS){bestS=st2;bestC=t;moved=true;}
+      }
+      if(!moved){ for(var si=0;si<5;si++) step[si]*=0.5; }
+    }
+    out[k]=pts(bestC).map(function(p){return [p[0]/S,p[1]/S];});
+    conf[k]=lnMean>0.01 ? bestS/lnMean : 0;
+  }
+  return {lines:out, conf:conf};
+}
+
+/* ══ 線の濃さ ══ */
+function lineDepth(){
+  if(!LN||!COMP) return null;
+  var tot=0,c=0;
+  for(var i=0;i<KEYS.length;i++){
+    var p=state.lines[KEYS[i]];
+    for(var t=2;t<28;t++){
+      var q=at(p,t/30), x=Math.round(q[0]*S), y=Math.round(q[1]*S);
+      if(x<0||y<0||x>=CW||y>=CH) continue;
+      var id=y*CW+x; if(!COMP[id]) continue;
+      tot+=LN[id]; c++;
+    }
+  }
+  return c>40 ? tot/c : null;
+}
+
+/* ══ 鑑定の読み ══ */
+function bucket(v,t){for(var i=0;i<t.length;i++) if(v<t[i][0]) return t[i]; return t[t.length-1];}
+function readings(){
+  var F=palmFrame(), W=F.R-F.L, H=F.B-F.T;
+  var uOf=function(p){return F.thumb==="left"?(p[0]-F.L)/W:(F.R-p[0])/W;}, vOf=function(p){return (p[1]-F.T)/H;};
+  var L=state.lines.life, Hd=state.lines.head, T=state.lines.heart;
+  var m={
+    lifeLen:arcLen(L)/H,
+    lifeArc:uOf(L[1])-(uOf(L[0])+uOf(L[2]))/2,
+    headLen:arcLen(Hd)/W,
+    headSlope:(vOf(Hd[2])-vOf(Hd[0]))/Math.max(0.18,Math.abs(uOf(Hd[2])-uOf(Hd[0]))),
+    heartLen:arcLen(T)/W,
+    heartEnd:uOf(T[2]),
+    heartRise:vOf(T[0])-vOf(T[2]),
+    gap:Math.hypot(L[0][0]-Hd[0][0],L[0][1]-Hd[0][1])/W
+  };
+  var f=[];
+  f.push(["life","生命線の長さ","掌長比 "+m.lifeLen.toFixed(2),bucket(m.lifeLen,[
+    [0.78,"短め","短い生命線は寿命の話ではなく、力の使い方の話です。一点集中で燃やして結果を出す型。長丁場ほど落ちるので、疲れてから休むのではなく、休む予定を先に入れておくと持ちが変わります。"],
+    [0.98,"標準","無理の効かせ方をわきまえた、扱いやすい体力の持ち主。日常の負荷では崩れません。崩れるとしたら、頑張れてしまう時期に上限を試したときです。"],
+    [99,"長い","土台の頑丈さが出ています。走り続けられるぶん、まわりの息切れに気づきにくい。自分の基準を人に当てないほうが、うまくいきます。"]])]);
+  f.push(["life","生命線の張り出し","張り出し "+m.lifeArc.toFixed(2),bucket(m.lifeArc,[
+    [0.12,"内寄り","線が親指側に寄っています。守りの構えで、環境の変化に体が先に反応する繊細さ。自分の場所を整えることが、そのまま調子の管理になります。"],
+    [0.26,"ほどよい","内と外の張りが釣り合っています。動くときは動き、退くときは退ける。手相としては最も安定した形です。"],
+    [99,"大きい","母指球を大きく囲む形。活力と情の厚さがそのまま出ます。人を巻き込む力がある一方、抱えすぎる癖もここに出ます。"]])]);
+  f.push(["head","知能線の長さ","掌幅比 "+m.headLen.toFixed(2),bucket(m.headLen,[
+    [0.62,"短め","考えるより先に手が出る、決断の速い型。迷う時間が短いぶん、試行回数で勝てます。大きな買い物と契約だけは一晩置くこと。"],
+    [0.86,"標準","考える時間と動く時間の配分が良い形。人に説明してから動く仕事に向きます。"],
+    [99,"長い","熟考型。筋を通して考え抜けるぶん、着手が遅れます。締切を自分で前倒しに置くと、この線の強さだけが残ります。"]])]);
+  f.push(["head","知能線の傾き","傾き "+m.headSlope.toFixed(2),bucket(m.headSlope,[
+    [0.18,"水平","現実派。数字と段取りで物を考えます。実務と経営の相性が良い形。理屈の通らない話に苛立ちやすいので、そこだけ人に任せると楽になります。"],
+    [0.50,"ゆるやかに下降","現実と発想の両輪。人の話を筋に翻訳するのが得意な形です。企画と実行のあいだに立つ役回りで力が出ます。"],
+    [99,"はっきり下降","想像力が強く出る形。手を動かして作るもの、書くもの、設計するものに向きます。地味な反復は苦手なので、そこは仕組みか人に渡すこと。"]])]);
+  f.push(["heart","感情線の終点","終点 "+m.heartEnd.toFixed(2),bucket(m.heartEnd,[
+    [0.24,"人差し指の下まで","情が深く、一途。求める基準も高く、その基準を相手にも当ててしまいがちです。言わなくても伝わると思わないほうが、関係が長持ちします。"],
+    [0.46,"中指と人差し指の間","情の出し方と守り方の均衡が取れた形。近すぎず遠すぎない距離を保てます。人間関係で消耗しにくいタイプです。"],
+    [99,"中指の下あたり","情熱が先に出る形。好き嫌いがはっきりし、動き出しが早い。冷める速さも同じなので、決めるのは一度寝てからにすると失敗が減ります。"]])]);
+  f.push(["heart","感情線の反り","反り "+m.heartRise.toFixed(2),bucket(m.heartRise,[
+    [0.06,"ほぼ直線","感情を内側に置く人。落ち着いて見られる一方、我慢に気づかれません。近い人にだけは、言葉にして渡すこと。"],
+    [99,"上向き","感情の表現が豊かで、まわりに伝わります。場を明るくする力があり、人が集まる形です。"]])]);
+  f.push(["life","二線の起点の間隔","間隔 "+m.gap.toFixed(2),bucket(m.gap,[
+    [0.06,"接している","石橋を叩く慎重派。準備が整うまで動かないぶん、失敗が少ない。動く前に締切を決めておくと、慎重さが遅さに変わりません。"],
+    [0.15,"やや離れる","慎重さと行動力の釣り合いが取れた形。人に相談しつつ、自分で決められます。"],
+    [99,"大きく離れる","独立心が強く、自分で決めて動く型。組織の中では窮屈に感じます。任される立場に移るほど結果が出ます。"]])]);
+  var dp=state.depth;
+  if(dp===null||dp===undefined){
+    f.push(["head","線の濃さ","未計測",[0,"写真なし","写真を撮ると、検出した線に沿って明暗差を測り、線の濃さ（＝勢いの出方）まで鑑定に入ります。いまの結果は、線の形だけから出しています。"]]);
+  } else {
+    f.push(["life","線の濃さ","明暗差 "+dp.toFixed(1),bucket(dp,[
+      [7,"淡い","線が薄く出ています。エネルギーを外に見せない型。静かに続ける仕事で強さが出ます。（照明が明るすぎても薄く出ます）"],
+      [16,"標準","はっきり読める濃さ。生活の負荷と体力が釣り合っている状態です。"],
+      [99,"濃い","強く刻まれた線。押し出しが強く、決めたことをやり切ります。力みが体に出やすいので、抜くほうを意識して。"]])]);
+  }
+  var n={lifeLen:norm(m.lifeLen,0.65,1.10),lifeArc:norm(m.lifeArc,0.05,0.40),
+    headLen:norm(m.headLen,0.50,1.00),headDesc:norm(m.headSlope,-0.05,0.70),
+    heartLen:norm(m.heartLen,0.55,1.05),heartRise:norm(m.heartRise,-0.05,0.35),
+    heartIdx:norm(m.heartEnd,0.12,0.60),gap:norm(m.gap,0.02,0.20),
+    depth:(dp===null||dp===undefined)?0.5:norm(dp,5,22)};
+  var s={
+    health:40+55*(0.45*n.lifeLen+0.35*n.lifeArc+0.20*n.depth),
+    work:  40+55*(0.38*n.headLen+0.27*(1-n.headDesc)+0.20*n.gap+0.15*n.depth),
+    love:  40+55*(0.36*n.heartLen+0.30*n.heartRise+0.34*(1-n.heartIdx)),
+    money: 40+55*(0.30*n.headLen+0.25*n.gap+0.25*n.depth+0.20*n.lifeArc)};
+  for(var k in s) s[k]=Math.round(s[k]);
+  s.total=Math.round((s.health+s.work+s.love+s.money)/4);
+  return {m:m,f:f,s:s};
+}
+
+var AXES=[["work","仕事運","b-head"],["love","恋愛運","b-heart"],["health","健康運","b-life"],["money","金運","b-head"]];
+var ADVICE={
+  work:"手を動かす前に、今日やることを三つだけ紙に書き出す。多く書くほど、この手相は動きが鈍ります。",
+  love:"近い人にひとつだけ、言わずに済ませていたことを言葉にして渡す。この線は、伝えた分だけ返ってきます。",
+  health:"寝る時刻を先に決めて、そこから逆算して一日を畳む。疲れてから休むと、この線は取り返しに時間がかかります。",
+  money:"使った金額ではなく、使った理由を一行だけ残す。この手相は、理由を書くと無駄が自然に減ります。"};
+
+function summary(r){
+  var hw=state.hand==="right"?"右手に出ているのは、これまでの選択で後から作られた、いまのあなたです。":"左手に出ているのは、生まれ持った素質、まだ変えていない部分のあなたです。";
+  var top=AXES.slice().sort(function(a,b){return r.s[b[0]]-r.s[a[0]];})[0];
+  var low=AXES.slice().sort(function(a,b){return r.s[a[0]]-r.s[b[0]];})[0];
+  var hd=r.m.headSlope<0.18?"現実を数字で捉える型":(r.m.headSlope<0.50?"現実と発想を行き来する型":"発想が先に立つ型");
+  var lf=r.m.lifeLen<0.78?"短期決戦で燃える体力":(r.m.lifeLen<0.98?"崩れにくい体力":"長く走れる体力");
+  return {lead:hd+"に、"+lf+"。いま最も強く出ているのは"+top[1]+"です。",
+    body:hw+"四つの運のうち、"+top[1]+"（"+r.s[top[0]]+"）が前に出て、"+low[1]+"（"+r.s[low[0]]+
+      "）が控えています。強いほうを伸ばすより、控えているほうに小さな手当てをするほうが、この手相は全体が上がります。",
+    low:low[0]};
+}
+
+/* ══ 鑑定書 ══ */
+var lastText="";
+function verdict(){
+  var r=readings(), sm=summary(r);
+  var axes=AXES.map(function(a){return '<div class="ax"><span class="n">'+a[1]+'</span><span class="tr"><i class="fl '+a[2]+
+    '" style="width:'+r.s[a[0]]+'%"></i></span><span class="v">'+r.s[a[0]]+'</span></div>';}).join("");
+  var finds=r.f.map(function(x){return '<div class="find c-'+x[0]+'"><div class="t"><b>'+x[1]+'</b><i>'+x[2]+
+    '</i></div><span class="chip">'+x[3][1]+'</span><p>'+x[3][2]+'</p></div>';}).join("");
+  var src=state.palm?"写真から自動検出した線で計測":(state.img?"自動検出できず・標準の線で計測":"写真なし・標準の線で計測");
+  $("verdict").innerHTML=
+    '<div class="vd-top"><div><h2>鑑定書</h2><div class="meta">'+(state.hand==="right"?"右手・後天":"左手・先天")+'　／　'+src+'</div></div>'+
+      '<div class="score"><b>'+r.s.total+'</b><span>total</span></div></div><div class="hr"></div>'+
+    '<div class="lead"><b>'+sm.lead+'</b><p>'+sm.body+'</p></div><div class="hr"></div>'+
+    '<div class="axes">'+axes+'</div>'+
+    '<div class="finds">'+finds+'</div>'+
+    '<div class="closing"><span class="lbl">今日の一手</span><p>'+ADVICE[sm.low]+'</p></div>';
+  lastText="【手相鑑定所】"+(state.hand==="right"?"右手":"左手")+"／総合 "+r.s.total+"\n"+sm.lead+"\n"+
+    AXES.map(function(a){return a[1]+" "+r.s[a[0]];}).join("　")+"\n\n"+
+    r.f.map(function(x){return "■"+x[1]+"（"+x[3][1]+"）\n"+x[3][2];}).join("\n\n")+"\n\n今日の一手："+ADVICE[sm.low];
+}
+
+/* ══ 読み取り状況 ══ */
+function renderDet(){
+  var c=state.conf, rows="";
+  var head='<div class="det-row"><span class="nm">手のひら</span><span class="mtr"><i style="width:'+
+    (state.palm?100:0)+'%;background:var(--ok)"></i></span><span class="st">'+
+    (state.palm?'<span class="dot" style="background:var(--ok)"></span>検出':'<span class="dot" style="background:var(--faint)"></span>未検出')+'</span></div>';
+  for(var i=0;i<KEYS.length;i++){
+    var k=KEYS[i], v=c?c[k]:0;
+    var lv=v>=2.0?["高","var(--ok)"]:v>=1.45?["中","var(--warn)"]:v>0?["低","var(--bad)"]:["—","var(--faint)"];
+    rows+='<div class="det-row"><span class="nm" style="color:'+META[k].c+'">'+META[k].n+'</span><span class="mtr"><i style="width:'+
+      Math.round(clamp((v-1)/1.4,0,1)*100)+'%;background:'+lv[1]+'"></i></span><span class="st"><span class="dot" style="background:'+
+      lv[1]+'"></span>'+lv[0]+'</span></div>';
+  }
+  $("det").innerHTML=head+rows;
+}
+
+/* ══ 写真の読み込みと検出 ══ */
+function loadPhoto(file){
+  if(!file||!/^image\//.test(file.type||"")){ toast("画像ファイルを選んでください"); return; }
+  var fr=new FileReader();
+  fr.onerror=function(){ toast("写真を読み込めませんでした"); };
+  fr.onload=function(){ usePhoto(fr.result); };
+  fr.readAsDataURL(file);
+}
+function usePhoto(url){
+  (function(){
+    var fr={result:url};
+    var im=new Image();
+    im.onload=function(){
+      var ar=im.width/im.height, bw,bh;
+      if(ar>VB.w/VB.h){bw=VB.w;bh=VB.w/ar;}else{bh=VB.h;bw=VB.h*ar;}
+      state.img=im; state.photo=fr.result;
+      state.box={x:(VB.w-bw)/2,y:(VB.h-bh)/2,w:bw,h:bh};
+      $("again").disabled=false; $("clear").disabled=false; camErr("");
+      $("stageTag").textContent="analysing";
+      renderPhoto(); msg("読み取り中","busy");
+      setTimeout(runDetect,40);
+    };
+    im.onerror=function(){toast("この画像は読み込めませんでした");};
+    im.src=fr.result;
+  })();
+}
+function runDetect(){
+  var frame=null;
+  try{ frame=detect(); }catch(e){ frame=null; }
+  if(!frame){
+    state.palm=null; state.conf=null; state.depth=null; LN=null; COMP=null;
+    state.lines=JSON.parse(JSON.stringify(DEFAULTS));
+    $("stageTag").textContent="not found";
+    $("detNote").textContent="手のひらを検出できませんでした。明るい場所で、指を上に向けて手のひら全体が入るように撮り直すか、点をドラッグして手で線を合わせてください。";
+    msg("手のひらを検出できませんでした");
+    renderPhoto(); renderLines(false); renderDet(); verdict(); return;
+  }
+  var res=fit(frame), lines=JSON.parse(JSON.stringify(DEFAULTS)), got=0;
+  for(var i=0;i<KEYS.length;i++){ if(res.lines[KEYS[i]]){ lines[KEYS[i]]=res.lines[KEYS[i]]; got++; } }
+  state.palm={L:frame.L/S,R:frame.R/S,T:frame.T/S,B:frame.B/S,thumb:frame.thumb};
+  state.lines=lines; state.conf=res.conf;
+  state.depth=lineDepth();
+  var lows=KEYS.filter(function(k){return res.conf[k]<1.45;});
+  $("stageTag").textContent=(frame.thumb==="left"?"right hand":"left hand");
+  $("detNote").innerHTML = lows.length===0
+    ? "三本とも読み取れました。ずれている線があれば、点をドラッグすると鑑定に反映されます。"
+    : "<b style='color:var(--warn)'>"+lows.map(function(k){return META[k].n;}).join("・")+"</b> の確度が低めです。点をドラッグして合わせるか、撮り直してください。";
+  msg("");
+  renderPhoto(); renderLines(true); renderDet(); verdict();
+}
+
+/* ══ 操作 ══ */
+var drag=null;
+function toVB(ev){var r=svg.getBoundingClientRect();return {x:(ev.clientX-r.left)/r.width*VB.w,y:(ev.clientY-r.top)/r.height*VB.h};}
+svg.addEventListener("pointerdown",function(ev){
+  var t=ev.target; if(!t.classList||!t.classList.contains("hd"))return;
+  drag={k:t.dataset.k,i:+t.dataset.i};
+  if(state.focus!==drag.k) setFocus(drag.k);
+  svg.setPointerCapture(ev.pointerId); ev.preventDefault();
+});
+svg.addEventListener("pointermove",function(ev){
+  if(!drag)return; var p=toVB(ev);
+  state.lines[drag.k][drag.i]=[clamp(p.x,4,VB.w-4),clamp(p.y,4,VB.h-4)];
+  renderLines(false);
+});
+function endDrag(){ if(!drag)return; drag=null; state.depth=lineDepth(); verdict(); }
+svg.addEventListener("pointerup",endDrag); svg.addEventListener("pointercancel",endDrag);
+
+function onFile(e){ var f=e.target.files&&e.target.files[0]; if(f) loadPhoto(f); }
+$("fileShot").addEventListener("change",onFile);
+$("filePick").addEventListener("change",onFile);
+
+/* ── カメラを直接起動する経路（ファイル選択が塞がれている環境むけ） ── */
+var stream=null;
+function camErr(t){ var el=$("camErr"); if(!t){el.hidden=true;return;} el.textContent=t; el.hidden=false; }
+function stopCam(){
+  if(stream){ stream.getTracks().forEach(function(t){t.stop();}); stream=null; }
+  $("camPane").hidden=true; $("vid").srcObject=null;
+}
+$("btnCam").addEventListener("click",function(){
+  camErr("");
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){
+    camErr("この環境ではカメラを直接起動できません。下の「写真アプリで撮る」からお願いします。"); return;
+  }
+  var settled=false;
+  setTimeout(function(){ if(!settled)
+    camErr("カメラから応答がありません。この画面ではカメラを使えないようです。右の「手で合わせる」でそのまま鑑定できます。"); },6000);
+  navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:"environment"},width:{ideal:1280},height:{ideal:1280}},audio:false})
+    .then(function(st){
+      settled=true;
+      stream=st; var v=$("vid"); v.srcObject=st; v.play();
+      $("camPane").hidden=false;
+    })
+    .catch(function(err){
+      settled=true;
+      var n=err&&err.name;
+      camErr(n==="NotAllowedError" ? "カメラの使用が許可されませんでした。ブラウザの権限を許可するか、下の「写真アプリで撮る」からお願いします。"
+        : n==="NotFoundError" ? "カメラが見つかりませんでした。下の「保存済みの写真から選ぶ」をお使いください。"
+        : "カメラを起動できませんでした（"+(n||"不明")+"）。下の二つのボタンからお願いします。");
+    });
+});
+$("camx").addEventListener("click",stopCam);
+
+/* ── この画面で何が使えるかを、押す前に出す ── */
+function envCheck(){
+  var hasCam=!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia);
+  var hasClip=!!(navigator.clipboard&&navigator.clipboard.read);
+  var row=function(n,ok,note){return '<div><b>'+n+'</b><span style="color:'+(ok?"var(--ok)":"var(--bad)")+'">'+
+    (ok?"使える":note||"使えない")+'</span></div>';};
+  $("env").innerHTML=row("カメラ",hasCam)+row("クリップボード",hasClip)+
+    '<div><b>ファイル選択</b><span style="color:var(--faint)">押して確かめる</span></div>';
+  if(!hasCam){ $("btnCam").disabled=true; $("btnCam").textContent="カメラは使えません"; }
+  if(!hasClip){ $("btnClip").disabled=true; $("btnClip").textContent="クリップボードは使えません"; }
+  if(!hasCam&&!hasClip)
+    camErr("この画面はカメラもクリップボードも塞がれています。ファイル選択も反応しない場合は、右の「手で合わせる」でそのまま鑑定できます。");
+}
+envCheck();
+
+/* ── コピーした写真を読み込む ── */
+$("btnClip").addEventListener("click",function(){
+  camErr("");
+  if(!(navigator.clipboard&&navigator.clipboard.read)){
+    camErr("この環境ではクリップボードを読めません。下の枠を長押しして「ペースト」をお試しください。"); return; }
+  navigator.clipboard.read().then(function(items){
+    for(var i=0;i<items.length;i++){
+      var ty=items[i].types.filter(function(t){return t.indexOf("image/")===0;})[0];
+      if(ty) return items[i].getType(ty).then(loadPhoto);
+    }
+    camElse();
+  }).catch(function(err){
+    camErr("クリップボードから読み込めませんでした（"+((err&&err.name)||"不明")+"）。写真アプリで写真をコピーしてから、もう一度お試しください。");
+  });
+  function camElse(){ camErr("クリップボードに写真がありません。写真アプリでコピーしてから、もう一度お試しください。"); }
+});
+/* iOSの長押しペースト（貼り付け欄に画像が入る） */
+$("pasteBox").addEventListener("input",function(){
+  var im=this.querySelector("img");
+  if(im&&im.src){ var src=im.src; this.innerHTML=""; camErr(""); usePhoto(src); }
+  else if(this.textContent.trim()) this.innerHTML="";
+});
+
+/* ── 手で合わせる：線を選んで、大きな点を動かす ── */
+var STEP={
+  life:"親指のふくらみを囲む線。始点は親指と人差し指の間、終点は手首側。三つの点を自分の線に重ねてください。",
+  head:"手のひらを横切る線。生命線と同じあたりから始まり、小指側へ伸びます。",
+  heart:"小指の付け根から始まり、人差し指のほうへ伸びる、いちばん上の線。"};
+function setFocus(k){
+  state.focus=k;
+  var bs=document.querySelectorAll(".steps button");
+  for(var i=0;i<bs.length;i++) bs[i].setAttribute("aria-pressed",String(bs[i].dataset.k===k));
+  $("stepHint").textContent=STEP[k];
+  renderLines(false);
+}
+(function(){
+  var bs=document.querySelectorAll(".steps button");
+  for(var i=0;i<bs.length;i++) bs[i].addEventListener("click",function(){ setFocus(this.dataset.k); });
+})();
+setFocus("life");
+$("shot").addEventListener("click",function(){
+  var v=$("vid"); if(!v.videoWidth){ camErr("まだ映像が出ていません。少し待ってからもう一度。"); return; }
+  var c=document.createElement("canvas"); c.width=v.videoWidth; c.height=v.videoHeight;
+  c.getContext("2d").drawImage(v,0,0);
+  var url=c.toDataURL("image/jpeg",0.92);
+  stopCam(); usePhoto(url);
+});
+
+/* ── ドラッグ＆ドロップ／貼り付け ── */
+var stageEl=document.querySelector(".stage");
+["dragenter","dragover"].forEach(function(ev){ document.addEventListener(ev,function(e){
+  e.preventDefault(); stageEl.classList.add("drop"); }); });
+["dragleave","drop"].forEach(function(ev){ document.addEventListener(ev,function(){ stageEl.classList.remove("drop"); }); });
+document.addEventListener("drop",function(e){
+  e.preventDefault();
+  var f=e.dataTransfer&&e.dataTransfer.files&&e.dataTransfer.files[0]; if(f) loadPhoto(f);
+});
+document.addEventListener("paste",function(e){
+  var it=e.clipboardData&&e.clipboardData.items; if(!it)return;
+  for(var i=0;i<it.length;i++) if(it[i].type.indexOf("image/")===0){ loadPhoto(it[i].getAsFile()); break; }
+});
+$("again").addEventListener("click",function(){ if(!state.img)return; msg("読み取り中","busy"); setTimeout(runDetect,40); });
+$("clear").addEventListener("click",function(){
+  state.img=null; state.photo=null; state.box=null; state.palm=null; state.conf=null; state.depth=null; LN=null; COMP=null;
+  state.lines=JSON.parse(JSON.stringify(DEFAULTS));
+  $("fileShot").value=""; $("filePick").value=""; $("again").disabled=true; $("clear").disabled=true;
+  $("stageTag").textContent="no image";
+  $("detNote").textContent="まだ写真がありません。標準の手の形で鑑定を出しています。";
+  msg(""); renderPhoto(); renderLines(false); renderDet(); verdict();
+});
+$("reset").addEventListener("click",function(){
+  if(state.img&&state.palm){ msg("読み取り中","busy"); setTimeout(runDetect,40); toast("自動検出をやり直しました"); }
+  else { state.lines=JSON.parse(JSON.stringify(DEFAULTS)); renderLines(false); verdict(); toast("線を戻しました"); }
+});
+$("copy").addEventListener("click",function(){
+  if(navigator.clipboard&&navigator.clipboard.writeText)
+    navigator.clipboard.writeText(lastText).then(function(){toast("鑑定結果を写しました");},function(){toast("この環境では写せませんでした");});
+  else toast("この環境では写せませんでした");
+});
+function setHand(h){
+  state.hand=h;
+  $("handR").setAttribute("aria-pressed",String(h==="right"));
+  $("handL").setAttribute("aria-pressed",String(h==="left"));
+  $("handNote").textContent=h==="right"?"右手は、これまでの選択で後から作られた「いまのあなた」を映すとされます。":"左手は、生まれ持った素質と、まだ変えていない部分を映すとされます。";
+  save(); verdict();
+}
+$("handR").addEventListener("click",function(){setHand("right");});
+$("handL").addEventListener("click",function(){setHand("left");});
+var tt; function toast(t){var el=$("toast");el.textContent=t;el.classList.add("on");clearTimeout(tt);
+  tt=setTimeout(function(){el.classList.remove("on");},2200);}
+
+renderPhoto(); renderLines(false); renderDet(); msg("点をドラッグして、自分の線に合わせられます");
+setHand(state.hand);
+})();
+</script>
