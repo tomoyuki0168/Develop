@@ -80,17 +80,6 @@ svg.palm{display:block; width:100%; aspect-ratio:320/420; touch-action:none; pos
 .pick .btn{width:100%; pointer-events:none}   /* 見た目だけ。実際に触れるのは input 本体 */
 .pick input{position:absolute; inset:0; width:100%; height:100%; opacity:0; cursor:pointer;
   font-size:0; color:transparent; -webkit-appearance:none}
-.cam{position:absolute; inset:12px; border-radius:2px; overflow:hidden; background:#07070C;
-  display:flex; align-items:flex-end; justify-content:center}
-.cam video{position:absolute; inset:0; width:100%; height:100%; object-fit:cover}
-.cam .ctl{position:relative; z-index:2; display:flex; gap:8px; margin-bottom:9px}
-.cam .ctl .btn{padding:9px 15px; font-size:12.5px}
-.cam::after{content:""; position:absolute; left:0; right:0; bottom:0; height:74px; pointer-events:none;
-  background:linear-gradient(transparent,rgba(6,5,10,.72))}
-.cam .btn{background:rgba(12,10,18,.72); backdrop-filter:blur(6px)}
-.camguide{position:absolute; inset:0; width:100%; height:100%; pointer-events:none}
-.camframe{fill:none; stroke:var(--gold); stroke-width:1.8; stroke-dasharray:7 5; opacity:.95}
-.camnote{fill:var(--gold); font-size:11px; letter-spacing:.14em; font-family:var(--serif)}
 .frameguide{fill:none; stroke:rgba(217,181,101,.42); stroke-width:1.2; stroke-dasharray:5 5}
 .framefill{fill:rgba(6,5,10,.36)}
 .drop{outline:1px dashed var(--gold); outline-offset:-6px}
@@ -228,15 +217,6 @@ input[type=range]{width:100%; accent-color:var(--gold)}
       <div class="hr"></div>
       <div class="stage">
         <svg class="palm" id="palm" viewBox="0 0 320 420" aria-label="手のひらの図。検出された三本の線。点をドラッグして手で直せます。"></svg>
-        <div class="cam" id="camPane" hidden>
-          <video id="vid" playsinline autoplay muted></video>
-          <svg class="camguide" viewBox="0 0 320 420" aria-hidden="true">
-            <path id="camMask" fill="rgba(6,5,10,.58)" fill-rule="evenodd"></path>
-            <path id="camLine" class="camframe"></path>
-            <text class="camnote" x="160" y="30" text-anchor="middle">枠に手のひらを合わせてください</text>
-          </svg>
-          <div class="ctl"><button class="btn" id="shot">シャッター</button><button class="btn" id="camx">閉じる</button></div>
-        </div>
       </div>
     </section>
 
@@ -246,8 +226,7 @@ input[type=range]{width:100%; accent-color:var(--gold)}
         <div class="hr"></div>
         <div class="plate-bd stack">
           <div class="env" id="env"></div>
-          <button class="btn btn-main" id="btnCam">カメラを起動して撮る</button>
-          <span class="pick"><span class="btn">写真アプリで撮る</span>
+          <span class="pick"><span class="btn btn-main">写真アプリで撮る</span>
             <input type="file" id="fileShot" accept="image/*" capture="environment" aria-label="カメラで撮影する"></span>
           <span class="pick"><span class="btn">保存済みの写真から選ぶ</span>
             <input type="file" id="filePick" accept="image/*" aria-label="写真を選ぶ"></span>
@@ -262,7 +241,7 @@ input[type=range]{width:100%; accent-color:var(--gold)}
             <button class="btn" id="again" disabled>再検出</button>
             <button class="btn" id="clear" disabled>写真を外す</button>
           </div>
-          <p class="hint">明るい場所で、<b style="color:var(--muted)">指を上に向けて</b>手のひら全体が入るように。背景は手と色の違うものが写ると精度が上がります。パソコンなら、画像をこの画面にドラッグするか貼り付け（⌘V）でも読み込めます。写真は端末の中だけで処理され、どこにも送信されません。</p>
+          <p class="hint">写真アプリで手のひらを撮ってから読み込んでください。<b style="color:var(--muted)">指を上に向けて</b>手のひら全体が入るように、明るい場所で。背景は手と色の違うものが写ると精度が上がります。多少の傾きは自動でまっすぐに直します。パソコンなら、画像をこの画面にドラッグするか貼り付け（⌘V）でも読み込めます。写真は端末の中だけで処理され、どこにも送信されません。</p>
           <p class="hint" id="camErr" hidden style="color:var(--warn)"></p>
         </div>
       </div>
@@ -377,7 +356,7 @@ function arcLen(p){var n=48,L=0,pr=at(p,0);for(var i=1;i<=n;i++){var q=at(p,i/n)
 /* ══ 状態 ══ */
 var COARSE=(window.matchMedia&&matchMedia("(pointer:coarse)").matches);
 var state={hand:"right", focus:"life", img:null, photo:null, box:null, palm:null,
-  lines:JSON.parse(JSON.stringify(DEFAULTS)), conf:null, depth:null,
+  lines:JSON.parse(JSON.stringify(DEFAULTS)), conf:null, depth:null, rot:null,
   rare:null, rareOn:{}, rareLines:{}};
 try{var sv=JSON.parse(localStorage.getItem("tesou.v2")||"null"); if(sv&&sv.hand) state.hand=sv.hand;}catch(e){}
 function save(){try{localStorage.setItem("tesou.v2",JSON.stringify({hand:state.hand}));}catch(e){}}
@@ -388,8 +367,6 @@ var svg=$("palm");
 svg.innerHTML='<g id="lyPhoto"></g><path id="gFill" class="guide-fill"></path><path id="gLine" class="guide"></path>'+
   '<g id="lyFrame"></g><g id="lyLine"></g><g id="lyHd"></g><g id="lyMsg"></g>';
 $("gFill").setAttribute("d",handPath()); $("gLine").setAttribute("d",handPath());
-$("camMask").setAttribute("d","M0 0 H320 V420 H0 Z "+handPath());
-$("camLine").setAttribute("d",handPath());
 
 function renderPhoto(){
   var g=$("lyPhoto"), on=!!state.photo;
@@ -400,8 +377,9 @@ function renderPhoto(){
   $("gFill").setAttribute("d", on ? ("M0 0 H320 V420 H0 Z "+handPath(tf)) : handPath());
   $("gLine").setAttribute("d", handPath(on?tf:null));
   $("gFill").setAttribute("fill-rule", on?"evenodd":"nonzero");
+  var rt = (on&&state.rot) ? ' transform="rotate('+state.rot.deg.toFixed(2)+' '+state.rot.cx.toFixed(1)+' '+state.rot.cy.toFixed(1)+')"' : '';
   g.innerHTML = on ? '<image href="'+state.photo+'" x="'+state.box.x+'" y="'+state.box.y+'" width="'+state.box.w+
-    '" height="'+state.box.h+'" preserveAspectRatio="none"></image>' : "";
+    '" height="'+state.box.h+'" preserveAspectRatio="none"'+rt+'></image>' : "";
   var f=state.palm, fr=$("lyFrame");
   fr.innerHTML = f ? '<text class="frame-lbl" x="10" y="16">'+(f.thumb==="left"?"right hand":"left hand")+'</text>' : "";
 }
@@ -446,11 +424,17 @@ var work=document.createElement("canvas"); work.width=CW; work.height=CH;
 var wctx=work.getContext("2d",{willReadFrequently:true});
 var GRAY=null, COMP=null, LIN=null, CLAIM=null, lnMean=0, BASE=1, PW=1, D1=3, D2=7;
 
-function detect(){
-  var img=state.img; if(!img) return null;
+function drawWork(rotDeg,cx,cy){
+  wctx.setTransform(1,0,0,1,0,0);
   wctx.clearRect(0,0,CW,CH);
-  wctx.drawImage(img, state.box.x*S, state.box.y*S, state.box.w*S, state.box.h*S);
-  var d=wctx.getImageData(0,0,CW,CH).data, N=CW*CH;
+  if(rotDeg){ wctx.translate(cx,cy); wctx.rotate(rotDeg*Math.PI/180); wctx.translate(-cx,-cy); }
+  wctx.drawImage(state.img, state.box.x*S, state.box.y*S, state.box.w*S, state.box.h*S);
+  wctx.setTransform(1,0,0,1,0,0);
+}
+
+/* 肌を取り、いちばん大きい塊＝手だけを残す。あわせて重心と傾きも測る */
+function segment(){
+  var N=CW*CH, d=wctx.getImageData(0,0,CW,CH).data;
   var gray=new Float32Array(N), skin=new Uint8Array(N), sk=0, inside=0, sumY=0;
   for(var i=0,o=0;i<N;i++,o+=4){
     if(d[o+3]<8){gray[i]=255;continue;}
@@ -467,31 +451,59 @@ function detect(){
     if(sk < inside*0.06) return null;
   }
   /* 最大連結成分 */
+  var y,x,id;
   var comp=new Uint8Array(N), seen=new Uint8Array(N), qu=new Int32Array(N), bestSeed=-1, bestSize=0;
-  for(var y=0;y<CH;y+=2) for(var x=0;x<CW;x+=2){
+  for(y=0;y<CH;y+=2) for(x=0;x<CW;x+=2){
     var s0=y*CW+x; if(!skin[s0]||seen[s0]) continue;
     var head=0,tail=0,size=0; qu[tail++]=s0; seen[s0]=1;
     while(head<tail){
       var c=qu[head++]; size++;
-      var cx=c%CW, cy=(c-cx)/CW;
-      if(cx>0&&skin[c-1]&&!seen[c-1]){seen[c-1]=1;qu[tail++]=c-1;}
-      if(cx<CW-1&&skin[c+1]&&!seen[c+1]){seen[c+1]=1;qu[tail++]=c+1;}
-      if(cy>0&&skin[c-CW]&&!seen[c-CW]){seen[c-CW]=1;qu[tail++]=c-CW;}
-      if(cy<CH-1&&skin[c+CW]&&!seen[c+CW]){seen[c+CW]=1;qu[tail++]=c+CW;}
+      var cx0=c%CW, cy0=(c-cx0)/CW;
+      if(cx0>0&&skin[c-1]&&!seen[c-1]){seen[c-1]=1;qu[tail++]=c-1;}
+      if(cx0<CW-1&&skin[c+1]&&!seen[c+1]){seen[c+1]=1;qu[tail++]=c+1;}
+      if(cy0>0&&skin[c-CW]&&!seen[c-CW]){seen[c-CW]=1;qu[tail++]=c-CW;}
+      if(cy0<CH-1&&skin[c+CW]&&!seen[c+CW]){seen[c+CW]=1;qu[tail++]=c+CW;}
     }
     if(size>bestSize){bestSize=size;bestSeed=s0;}
   }
   if(bestSize<inside*0.08) return null;
   seen.fill(0);
-  var h2=0,t2=0; qu[t2++]=bestSeed; seen[bestSeed]=1;
+  var h2=0,t2=0, n=0, sx=0, sy=0; qu[t2++]=bestSeed; seen[bestSeed]=1;
   while(h2<t2){
     var c2=qu[h2++]; comp[c2]=1;
     var x2=c2%CW, y2=(c2-x2)/CW;
+    n++; sx+=x2; sy+=y2;
     if(x2>0&&skin[c2-1]&&!seen[c2-1]){seen[c2-1]=1;qu[t2++]=c2-1;}
     if(x2<CW-1&&skin[c2+1]&&!seen[c2+1]){seen[c2+1]=1;qu[t2++]=c2+1;}
     if(y2>0&&skin[c2-CW]&&!seen[c2-CW]){seen[c2-CW]=1;qu[t2++]=c2-CW;}
     if(y2<CH-1&&skin[c2+CW]&&!seen[c2+CW]){seen[c2+CW]=1;qu[t2++]=c2+CW;}
   }
+  if(n<500) return null;
+  var mx=sx/n, my=sy/n, m20=0, m02=0, m11=0;
+  for(y=0;y<CH;y++)for(x=0;x<CW;x++){
+    if(!comp[y*CW+x]) continue;
+    var dx=x-mx, dy=y-my;
+    m20+=dx*dx; m02+=dy*dy; m11+=dx*dy;
+  }
+  return {gray:gray, comp:comp, N:N, size:n, cx:mx, cy:my, mu20:m20/n, mu02:m02/n, mu11:m11/n};
+}
+
+function detect(){
+  if(!state.img) return null;
+  state.rot=null;
+  drawWork(0);
+  var A=segment(); if(!A) return null;
+  /* 手の主軸を縦に立てる。写真の傾きをここで吸収する */
+  var deg = 90 - Math.atan2(2*A.mu11, A.mu20-A.mu02)*90/Math.PI;
+  while(deg>90) deg-=180; while(deg<-90) deg+=180;
+  var B=A;
+  if(Math.abs(deg)>=3 && Math.abs(deg)<=45){
+    drawWork(deg, A.cx, A.cy);
+    var C=segment();
+    if(C && C.size>A.size*0.7){ B=C; state.rot={deg:deg, cx:A.cx/S, cy:A.cy/S}; }
+    else drawWork(0);
+  }
+  var gray=B.gray, comp=B.comp, N=B.N;
   /* 行ごとの幅と分割数 → 指の付け根を探す */
   var wid=new Int32Array(CH), runs=new Int32Array(CH), le=new Int32Array(CH), ri=new Int32Array(CH), maxW=0, top=-1, bot=-1;
   for(var y3=0;y3<CH;y3++){
@@ -1046,7 +1058,7 @@ function runDetect(){
   var frame=null;
   try{ frame=detect(); }catch(e){ frame=null; }
   if(!frame){
-    state.palm=null; state.conf=null; state.depth=null; GRAY=null; COMP=null;
+    state.palm=null; state.conf=null; state.depth=null; state.rot=null; GRAY=null; COMP=null;
     state.lines=JSON.parse(JSON.stringify(DEFAULTS)); state.rare=null; state.rareOn={}; state.rareLines={};
     renderRare();
     $("stageTag").textContent="not found";
@@ -1109,56 +1121,17 @@ function onFile(e){ var f=e.target.files&&e.target.files[0]; if(f) loadPhoto(f);
 $("fileShot").addEventListener("change",onFile);
 $("filePick").addEventListener("change",onFile);
 
-/* ── カメラを直接起動する経路（ファイル選択が塞がれている環境むけ） ── */
-var stream=null;
+/* 取り込みの案内（うまくいかないときの表示） */
 function camErr(t){ var el=$("camErr"); if(!t){el.hidden=true;return;} el.textContent=t; el.hidden=false; }
-function stopCam(){
-  if(stream){ stream.getTracks().forEach(function(t){t.stop();}); stream=null; }
-  $("camPane").hidden=true; $("vid").srcObject=null;
-}
-$("btnCam").addEventListener("click",function(){
-  camErr("");
-  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){
-    camErr("この環境ではカメラを直接起動できません。下の「写真アプリで撮る」からお願いします。"); return;
-  }
-  var settled=false;
-  setTimeout(function(){ if(!settled)
-    camErr("カメラから応答がありません。この画面ではカメラを使えないようです。右の「手で合わせる」でそのまま鑑定できます。"); },6000);
-  navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:"environment"},width:{ideal:1280},height:{ideal:1280}},audio:false})
-    .then(function(st){
-      settled=true;
-      stream=st; var v=$("vid"); v.srcObject=st; v.play();
-      $("camPane").hidden=false;
-    })
-    .catch(function(err){
-      settled=true;
-      var n=err&&err.name;
-      camErr(n==="NotAllowedError" ? "カメラの使用が許可されませんでした。ブラウザの権限を許可するか、下の「写真アプリで撮る」からお願いします。"
-        : n==="NotFoundError" ? "カメラが見つかりませんでした。下の「保存済みの写真から選ぶ」をお使いください。"
-        : "カメラを起動できませんでした（"+(n||"不明")+"）。下の二つのボタンからお願いします。");
-    });
-});
-$("camx").addEventListener("click",stopCam);
-$("zoom").addEventListener("input",function(){
-  if(!state.base) return;
-  var k=+this.value/100, nw=state.base.w*k, nh=state.base.h*k, b=state.box;
-  b.x+=(b.w-nw)/2; b.y+=(b.h-nh)/2; b.w=nw; b.h=nh;
-  renderPhoto();
-});
-$("zoom").addEventListener("change",function(){ if(state.img){ msg("読み取り中","busy"); setTimeout(runDetect,40); } });
 
 /* ── この画面で何が使えるかを、押す前に出す ── */
 function envCheck(){
-  var hasCam=!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia);
   var hasClip=!!(navigator.clipboard&&navigator.clipboard.read);
   var row=function(n,ok,note){return '<div><b>'+n+'</b><span style="color:'+(ok?"var(--ok)":"var(--bad)")+'">'+
     (ok?"使える":note||"使えない")+'</span></div>';};
-  $("env").innerHTML=row("カメラ",hasCam)+row("クリップボード",hasClip)+
-    '<div><b>ファイル選択</b><span style="color:var(--faint)">押して確かめる</span></div>';
-  if(!hasCam){ $("btnCam").disabled=true; $("btnCam").textContent="カメラは使えません"; }
+  $("env").innerHTML='<div><b>写真の読み込み</b><span style="color:var(--faint)">押して確かめる</span></div>'+
+    row("クリップボード",hasClip);
   if(!hasClip){ $("btnClip").disabled=true; $("btnClip").textContent="クリップボードは使えません"; }
-  if(!hasCam&&!hasClip)
-    camErr("この画面はカメラもクリップボードも塞がれています。ファイル選択も反応しない場合は、右の「手で合わせる」でそのまま鑑定できます。");
 }
 envCheck();
 
@@ -1202,20 +1175,6 @@ function setFocus(k){
   for(var i=0;i<bs.length;i++) bs[i].addEventListener("click",function(){ setFocus(this.dataset.k); });
 })();
 setFocus("life");
-$("shot").addEventListener("click",function(){
-  var v=$("vid"); if(!v.videoWidth){ camErr("まだ映像が出ていません。少し待ってからもう一度。"); return; }
-  /* 画面に見えている枠の中だけを切り出す。合わせた通りに写る */
-  var pane=$("camPane").getBoundingClientRect();
-  var sc=Math.max(pane.width/v.videoWidth, pane.height/v.videoHeight);
-  var sx=(v.videoWidth - pane.width/sc)/2, sy=(v.videoHeight - pane.height/sc)/2;
-  var sw=pane.width/sc, sh=pane.height/sc;
-  var outH=Math.min(1400, Math.round(sh)), outW=Math.round(outH*sw/sh);
-  var c=document.createElement("canvas"); c.width=outW; c.height=outH;
-  c.getContext("2d").drawImage(v, sx,sy,sw,sh, 0,0,outW,outH);
-  var url=c.toDataURL("image/jpeg",0.92);
-  stopCam(); usePhoto(url);
-});
-
 /* ── ドラッグ＆ドロップ／貼り付け ── */
 var stageEl=document.querySelector(".stage");
 ["dragenter","dragover"].forEach(function(ev){ document.addEventListener(ev,function(e){
@@ -1231,7 +1190,7 @@ document.addEventListener("paste",function(e){
 });
 $("again").addEventListener("click",function(){ if(!state.img)return; msg("読み取り中","busy"); setTimeout(runDetect,40); });
 $("clear").addEventListener("click",function(){
-  state.img=null; state.photo=null; state.box=null; state.palm=null; state.conf=null; state.depth=null; LN=null; COMP=null;
+  state.img=null; state.photo=null; state.box=null; state.palm=null; state.conf=null; state.depth=null; state.rot=null; LN=null; COMP=null;
   state.lines=JSON.parse(JSON.stringify(DEFAULTS));
   $("fileShot").value=""; $("filePick").value=""; $("again").disabled=true; $("clear").disabled=true;
   $("fitWrap").hidden=true;
