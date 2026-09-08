@@ -82,8 +82,16 @@ svg.palm{display:block; width:100%; aspect-ratio:320/420; touch-action:none; pos
 .cam{position:absolute; inset:12px; border-radius:2px; overflow:hidden; background:#07070C;
   display:flex; align-items:flex-end; justify-content:center}
 .cam video{position:absolute; inset:0; width:100%; height:100%; object-fit:cover}
-.cam .ctl{position:relative; z-index:2; display:flex; gap:8px; margin-bottom:16px}
+.cam .ctl{position:relative; z-index:2; display:flex; gap:8px; margin-bottom:9px}
+.cam .ctl .btn{padding:9px 15px; font-size:12.5px}
+.cam::after{content:""; position:absolute; left:0; right:0; bottom:0; height:74px; pointer-events:none;
+  background:linear-gradient(transparent,rgba(6,5,10,.72))}
 .cam .btn{background:rgba(12,10,18,.72); backdrop-filter:blur(6px)}
+.camguide{position:absolute; inset:0; width:100%; height:100%; pointer-events:none}
+.camframe{fill:none; stroke:var(--gold); stroke-width:1.8; stroke-dasharray:7 5; opacity:.95}
+.camnote{fill:var(--gold); font-size:11px; letter-spacing:.14em; font-family:var(--serif)}
+.frameguide{fill:none; stroke:rgba(217,181,101,.55); stroke-width:1.6; stroke-dasharray:7 5}
+.framefill{fill:rgba(6,5,10,.42)}
 .drop{outline:1px dashed var(--gold); outline-offset:-6px}
 .env{display:grid; gap:6px; margin-bottom:4px}
 .env div{display:flex; align-items:center; justify-content:space-between; gap:10px; font-size:11.5px; color:var(--muted)}
@@ -92,6 +100,7 @@ svg.palm{display:block; width:100%; aspect-ratio:320/420; touch-action:none; pos
   font-size:12px; color:var(--muted); line-height:1.6; -webkit-user-select:text; user-select:text; overflow:hidden}
 .pastebox:empty::before{content:"ここを長押し →「ペースト」でも写真を読み込めます"; color:var(--faint)}
 .pastebox:focus{outline:1px solid var(--gold); outline-offset:2px}
+input[type=range]{width:100%; accent-color:var(--gold)}
 .steps{display:grid; grid-template-columns:repeat(3,1fr); gap:6px}
 .steps button{font:inherit; font-family:var(--serif); font-size:12.5px; letter-spacing:.1em; padding:10px 2px;
   cursor:pointer; background:rgba(255,255,255,.03); border:1px solid var(--gold-line); border-radius:2px; color:inherit}
@@ -171,6 +180,37 @@ svg.palm{display:block; width:100%; aspect-ratio:320/420; touch-action:none; pos
   pointer-events:none; transition:opacity .25s, transform .25s}
 .toast.on{opacity:1; transform:translateX(-50%) translateY(0)}
 @media (prefers-reduced-motion:reduce){ *{animation:none !important; transition:none !important} }
+
+/* ── スマホ ── */
+@media (max-width:880px){
+  .wrap{display:flex; flex-direction:column; gap:16px; padding:26px 14px 56px}
+  .cols{display:contents}
+  .wrap > header{order:0; margin-bottom:0}
+  .cols > .plate{order:1}          /* 掌紋 */
+  .verdict{order:2; margin-top:0}  /* 鑑定書を写真のすぐ下に */
+  .cols > aside{order:3}
+  .wrap > .foot{order:4; margin-top:0}
+  header p{margin-top:14px}
+}
+@media (max-width:600px){
+  header h1{letter-spacing:.16em; text-indent:.16em}
+  .plate-bd{padding:14px}
+  .vd-top{padding:18px 16px 14px; gap:14px}
+  .vd-top h2{font-size:18px; letter-spacing:.22em}
+  .score b{font-size:46px}
+  .lead{padding:16px}
+  .lead b{font-size:17px; line-height:1.75}
+  .lead p{font-size:13.5px}
+  .axes{grid-template-columns:1fr 1fr; gap:14px 18px; padding:16px}
+  .ax{grid-template-columns:1fr auto; grid-template-areas:"n v" "t t"; gap:3px 8px; padding:0}
+  .ax .n{grid-area:n} .ax .v{grid-area:v; font-size:17px} .ax .tr{grid-area:t; height:4px}
+  .find{padding:15px 16px}
+  .find .t b{font-size:15px}
+  .find p{font-size:13.5px; line-height:1.9}
+  .closing{padding:16px}
+  .closing p{font-size:14px}
+  .foot{font-size:11.5px; line-height:1.9}
+}
 </style>
 
 <div class="wrap">
@@ -189,6 +229,11 @@ svg.palm{display:block; width:100%; aspect-ratio:320/420; touch-action:none; pos
         <svg class="palm" id="palm" viewBox="0 0 320 420" aria-label="手のひらの図。検出された三本の線。点をドラッグして手で直せます。"></svg>
         <div class="cam" id="camPane" hidden>
           <video id="vid" playsinline autoplay muted></video>
+          <svg class="camguide" viewBox="0 0 320 420" aria-hidden="true">
+            <path id="camMask" fill="rgba(6,5,10,.58)" fill-rule="evenodd"></path>
+            <path id="camLine" class="camframe"></path>
+            <text class="camnote" x="160" y="30" text-anchor="middle">枠に手のひらを合わせてください</text>
+          </svg>
           <div class="ctl"><button class="btn" id="shot">シャッター</button><button class="btn" id="camx">閉じる</button></div>
         </div>
       </div>
@@ -205,6 +250,11 @@ svg.palm{display:block; width:100%; aspect-ratio:320/420; touch-action:none; pos
             <input type="file" id="fileShot" accept="image/*" capture="environment" aria-label="カメラで撮影する"></span>
           <span class="pick"><span class="btn">保存済みの写真から選ぶ</span>
             <input type="file" id="filePick" accept="image/*" aria-label="写真を選ぶ"></span>
+          <div id="fitWrap" hidden>
+            <span class="lbl">手型枠に合わせる</span>
+            <input type="range" id="zoom" min="60" max="260" value="100" aria-label="写真の大きさ">
+            <p class="hint" style="margin-top:6px">写真を指でドラッグして動かせます。手のひらを枠に重ねてください。</p>
+          </div>
           <button class="btn" id="btnClip">コピーした写真を貼り付ける</button>
           <div class="pastebox" id="pasteBox" contenteditable="true" role="textbox" aria-label="ここに写真を貼り付け"></div>
           <div class="stack" style="grid-auto-flow:column; gap:9px">
@@ -321,11 +371,17 @@ function palmFrame(){return state.palm||GUIDE_PALM;}
 var svg=$("palm");
 svg.innerHTML='<g id="lyPhoto"></g><path id="gFill" class="guide-fill"></path><path id="gLine" class="guide"></path>'+
   '<g id="lyFrame"></g><g id="lyLine"></g><g id="lyHd"></g><g id="lyMsg"></g>';
+$("camMask").setAttribute("d","M0 0 H320 V420 H0 Z "+handPath());
+$("camLine").setAttribute("d",handPath());
 $("gFill").setAttribute("d",handPath()); $("gLine").setAttribute("d",handPath());
 
 function renderPhoto(){
   var g=$("lyPhoto"), on=!!state.photo;
-  $("gFill").style.display=on?"none":""; $("gLine").style.display=on?"none":"";
+  /* 写真があるときは、手型枠として外側を暗くして輪郭だけ残す */
+  $("gFill").setAttribute("class", on?"framefill":"guide-fill");
+  $("gLine").setAttribute("class", on?"frameguide":"guide");
+  $("gFill").setAttribute("d", on ? ("M0 0 H320 V420 H0 Z "+handPath()) : handPath());
+  $("gFill").setAttribute("fill-rule", on?"evenodd":"nonzero");
   g.innerHTML = on ? '<image href="'+state.photo+'" x="'+state.box.x+'" y="'+state.box.y+'" width="'+state.box.w+
     '" height="'+state.box.h+'" preserveAspectRatio="none"></image>' : "";
   var f=state.palm, fr=$("lyFrame");
@@ -958,8 +1014,10 @@ function usePhoto(url){
       var ar=im.width/im.height, bw,bh;
       if(ar>VB.w/VB.h){bw=VB.w;bh=VB.w/ar;}else{bh=VB.h;bw=VB.h*ar;}
       state.img=im; state.photo=fr.result;
+      state.base={w:bw,h:bh};
       state.box={x:(VB.w-bw)/2,y:(VB.h-bh)/2,w:bw,h:bh};
       $("again").disabled=false; $("clear").disabled=false; camErr("");
+      $("fitWrap").hidden=false; $("zoom").value=100;
       $("stageTag").textContent="analysing";
       renderPhoto(); msg("読み取り中","busy");
       setTimeout(runDetect,40);
@@ -1000,23 +1058,35 @@ function runDetect(){
     : "<b style='color:var(--warn)'>"+lows.map(function(k){return META[k].n;}).join("・")+"</b> の確度が低めです。点をドラッグして合わせるか、撮り直してください。";
   msg("");
   renderPhoto(); renderLines(true); renderDet(); verdict();
+  if(window.innerWidth<=880 && $("verdict").scrollIntoView)
+    setTimeout(function(){ $("verdict").scrollIntoView({behavior:"smooth", block:"start"}); },350);
 }
 
 /* ══ 操作 ══ */
 var drag=null;
 function toVB(ev){var r=svg.getBoundingClientRect();return {x:(ev.clientX-r.left)/r.width*VB.w,y:(ev.clientY-r.top)/r.height*VB.h};}
 svg.addEventListener("pointerdown",function(ev){
-  var t=ev.target; if(!t.classList||!t.classList.contains("hd"))return;
-  drag={k:t.dataset.k,i:+t.dataset.i};
-  if(state.focus!==drag.k) setFocus(drag.k);
+  var t=ev.target, p=toVB(ev);
+  if(t.classList&&t.classList.contains("hd")){
+    drag={k:t.dataset.k,i:+t.dataset.i};
+    if(state.focus!==drag.k) setFocus(drag.k);
+  } else if(state.photo){
+    drag={img:true, ox:p.x-state.box.x, oy:p.y-state.box.y};   /* 写真を枠に合わせて動かす */
+  } else return;
   svg.setPointerCapture(ev.pointerId); ev.preventDefault();
 });
 svg.addEventListener("pointermove",function(ev){
   if(!drag)return; var p=toVB(ev);
+  if(drag.img){ state.box.x=p.x-drag.ox; state.box.y=p.y-drag.oy; renderPhoto(); return; }
   state.lines[drag.k][drag.i]=[clamp(p.x,4,VB.w-4),clamp(p.y,4,VB.h-4)];
   renderLines(false);
 });
-function endDrag(){ if(!drag)return; drag=null; state.depth=lineDepth(); verdict(); }
+function endDrag(){
+  if(!drag)return;
+  var wasImg=drag.img; drag=null;
+  if(wasImg){ msg("読み取り中","busy"); setTimeout(runDetect,40); return; }   /* 動かしたら測り直す */
+  state.depth=lineDepth(); verdict();
+}
 svg.addEventListener("pointerup",endDrag); svg.addEventListener("pointercancel",endDrag);
 
 function onFile(e){ var f=e.target.files&&e.target.files[0]; if(f) loadPhoto(f); }
@@ -1053,6 +1123,13 @@ $("btnCam").addEventListener("click",function(){
     });
 });
 $("camx").addEventListener("click",stopCam);
+$("zoom").addEventListener("input",function(){
+  if(!state.base) return;
+  var k=+this.value/100, nw=state.base.w*k, nh=state.base.h*k, b=state.box;
+  b.x+=(b.w-nw)/2; b.y+=(b.h-nh)/2; b.w=nw; b.h=nh;
+  renderPhoto();
+});
+$("zoom").addEventListener("change",function(){ if(state.img){ msg("読み取り中","busy"); setTimeout(runDetect,40); } });
 
 /* ── この画面で何が使えるかを、押す前に出す ── */
 function envCheck(){
@@ -1111,8 +1188,14 @@ function setFocus(k){
 setFocus("life");
 $("shot").addEventListener("click",function(){
   var v=$("vid"); if(!v.videoWidth){ camErr("まだ映像が出ていません。少し待ってからもう一度。"); return; }
-  var c=document.createElement("canvas"); c.width=v.videoWidth; c.height=v.videoHeight;
-  c.getContext("2d").drawImage(v,0,0);
+  /* 画面に見えている枠の中だけを切り出す。合わせた通りに写る */
+  var pane=$("camPane").getBoundingClientRect();
+  var sc=Math.max(pane.width/v.videoWidth, pane.height/v.videoHeight);
+  var sx=(v.videoWidth - pane.width/sc)/2, sy=(v.videoHeight - pane.height/sc)/2;
+  var sw=pane.width/sc, sh=pane.height/sc;
+  var outH=Math.min(1400, Math.round(sh)), outW=Math.round(outH*sw/sh);
+  var c=document.createElement("canvas"); c.width=outW; c.height=outH;
+  c.getContext("2d").drawImage(v, sx,sy,sw,sh, 0,0,outW,outH);
   var url=c.toDataURL("image/jpeg",0.92);
   stopCam(); usePhoto(url);
 });
@@ -1135,6 +1218,7 @@ $("clear").addEventListener("click",function(){
   state.img=null; state.photo=null; state.box=null; state.palm=null; state.conf=null; state.depth=null; LN=null; COMP=null;
   state.lines=JSON.parse(JSON.stringify(DEFAULTS));
   $("fileShot").value=""; $("filePick").value=""; $("again").disabled=true; $("clear").disabled=true;
+  $("fitWrap").hidden=true;
   $("stageTag").textContent="no image";
   $("detNote").textContent="まだ写真がありません。標準の手の形で鑑定を出しています。";
   msg(""); renderPhoto(); renderLines(false); renderDet(); verdict();
