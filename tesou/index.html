@@ -266,6 +266,12 @@ input[type=range]{width:100%; accent-color:var(--gold)}
         <div class="plate-bd">
           <div class="det" id="det"></div>
           <p class="hint" id="detNote">まだ写真がありません。標準の手の形で鑑定を出しています。</p>
+          <div class="seg" id="diagSeg" role="group" aria-label="診断表示" style="margin-top:12px">
+            <button data-d="off" aria-pressed="true">診断オフ</button>
+            <button data-d="mask" aria-pressed="false">手の範囲</button>
+            <button data-d="resp" aria-pressed="false">線の反応</button>
+          </div>
+          <p class="hint" id="diagNote">「手の範囲」は、アプリが手だと判断した部分。「線の反応」は、線らしさの強さ。うまく読めないときは、ここを見ると原因が分かります。</p>
         </div>
       </div>
 
@@ -364,7 +370,7 @@ function palmFrame(){return state.palm||GUIDE_PALM;}
 
 /* ══ 描画 ══ */
 var svg=$("palm");
-svg.innerHTML='<g id="lyPhoto"></g><path id="gFill" class="guide-fill"></path><path id="gLine" class="guide"></path>'+
+svg.innerHTML='<g id="lyPhoto"></g><g id="lyDiag"></g><path id="gFill" class="guide-fill"></path><path id="gLine" class="guide"></path>'+
   '<g id="lyFrame"></g><g id="lyLine"></g><g id="lyHd"></g><g id="lyMsg"></g>';
 $("gFill").setAttribute("d",handPath()); $("gLine").setAttribute("d",handPath());
 
@@ -414,6 +420,32 @@ function renderLines(animate){
     void ly.offsetWidth; ly.classList.add("animate");
     setTimeout(function(){for(var q2=0;q2<ps.length;q2++) ps[q2].style.strokeDasharray="";},1000);
   }
+}
+/* 診断の重ね描き。手の範囲と、線らしさの強さを見せる */
+var diagMode="off";
+function renderDiag(){
+  var ly=$("lyDiag"); if(!ly) return;
+  if(diagMode==="off"||!COMP){ ly.innerHTML=""; return; }
+  var c=document.createElement("canvas"); c.width=CW; c.height=CH;
+  var ct=c.getContext("2d"), im=ct.createImageData(CW,CH), d=im.data, i;
+  if(diagMode==="mask"){
+    for(i=0;i<CW*CH;i++){ if(COMP[i]){ d[i*4]=110; d[i*4+1]=220; d[i*4+2]=170; d[i*4+3]=90; } }
+  } else {
+    var mx=0;
+    for(i=0;i<CW*CH;i++) if(LIN&&LIN[i]>mx) mx=LIN[i];
+    if(mx<=0) mx=1;
+    for(i=0;i<CW*CH;i++){
+      if(!COMP[i]||!LIN) continue;
+      var v=Math.min(1,LIN[i]/mx);
+      if(v<0.12) continue;
+      d[i*4]=255; d[i*4+1]=Math.round(210*(1-v)); d[i*4+2]=Math.round(120*(1-v)); d[i*4+3]=Math.round(40+180*v);
+    }
+  }
+  ct.putImageData(im,0,0);
+  var f=state.palm, extra="";
+  if(f) extra='<rect x="'+f.L.toFixed(1)+'" y="'+f.T.toFixed(1)+'" width="'+(f.R-f.L).toFixed(1)+
+    '" height="'+(f.B-f.T).toFixed(1)+'" fill="none" stroke="#7FC8C0" stroke-width="1.4" stroke-dasharray="4 3"></rect>';
+  ly.innerHTML='<image href="'+c.toDataURL()+'" x="0" y="0" width="320" height="420" preserveAspectRatio="none"></image>'+extra;
 }
 function msg(text,cls){
   $("lyMsg").innerHTML = text ? '<text class="'+(cls||"note")+'" x="160" y="'+(cls==="busy"?214:406)+'" text-anchor="middle">'+text+'</text>' : "";
@@ -480,6 +512,33 @@ function profileOf(comp){
   if(top<0||bot-top<40) return null;
   return {wid:wid,runs:runs,le:le,ri:ri,maxW:maxW,top:top,bot:bot};
 }
+/* 距離変換。手の内側で、輪郭からいちばん遠い点＝手のひらの中心。指は細いので選ばれない */
+function palmCircle(comp,N){
+  var D=new Float32Array(N), INF=1e9, x,y,id,v;
+  for(id=0;id<N;id++) D[id]=comp[id]?INF:0;
+  for(y=0;y<CH;y++)for(x=0;x<CW;x++){
+    id=y*CW+x; if(!comp[id])continue;
+    v=D[id];
+    if(x>0){ if(D[id-1]+3<v) v=D[id-1]+3; }
+    if(y>0){ if(D[id-CW]+3<v) v=D[id-CW]+3; }
+    if(x>0&&y>0){ if(D[id-CW-1]+4<v) v=D[id-CW-1]+4; }
+    if(x<CW-1&&y>0){ if(D[id-CW+1]+4<v) v=D[id-CW+1]+4; }
+    D[id]=v;
+  }
+  var bx=0,by=0,bd=-1;
+  for(y=CH-1;y>=0;y--)for(x=CW-1;x>=0;x--){
+    id=y*CW+x; if(!comp[id])continue;
+    v=D[id];
+    if(x<CW-1){ if(D[id+1]+3<v) v=D[id+1]+3; }
+    if(y<CH-1){ if(D[id+CW]+3<v) v=D[id+CW]+3; }
+    if(x<CW-1&&y<CH-1){ if(D[id+CW+1]+4<v) v=D[id+CW+1]+4; }
+    if(x>0&&y<CH-1){ if(D[id+CW-1]+4<v) v=D[id+CW-1]+4; }
+    D[id]=v;
+    if(v>bd){bd=v;bx=x;by=y;}
+  }
+  return bd>0 ? {cx:bx, cy:by, r:bd/3} : null;   /* 重みは3で正規化 */
+}
+
 /* 手らしさ。指の側が手のひらより細ければ手。1に近いほど「ただの塊」 */
 function narrowness(pr){
   var span=pr.bot-pr.top;
@@ -562,7 +621,8 @@ function segment(){
     var dx=x-mx, dy=y-my;
     m20+=dx*dx; m02+=dy*dy; m11+=dx*dy;
   }
-  return {gray:gray, comp:comp, N:N, size:n, cx:mx, cy:my,
+  var circ=palmCircle(comp,N);
+  return {gray:gray, comp:comp, N:N, size:n, cx:mx, cy:my, circ:circ,
     mu20:m20/n, mu02:m02/n, mu11:m11/n, prof:best.pr, narrow:best.narrow};
 }
 
@@ -624,7 +684,26 @@ function detect(){
   if(fbA>0) for(y5=top+Math.round(span*0.05); y5<fbA; y5++) if(runs[y5]>sep) sep=runs[y5];
   var frame = (fbA>0 && sep>=3) ? frameFor(fbA) : frameFor(fbB);
   if(!frame) frame = (fbA>0 && sep>=3) ? frameFor(fbB) : frameFor(fbA);
-  if(!frame) return null;
+  /* 掌に収まる最大の円で検算する。行ごとの集計は、腕まで写った写真などで狂うことがある */
+  var ci2=B.circ;
+  if(ci2 && ci2.r>8){
+    var fw=frame.R-frame.L, fcx=(frame.L+frame.R)/2, fcy=(frame.T+frame.B)/2;
+    var bad = Math.abs(fw-1.88*ci2.r)/(1.88*ci2.r) > 0.45 ||
+              Math.hypot(fcx-ci2.cx, fcy-ci2.cy) > 0.9*ci2.r;
+    if(bad){
+      var cl=[], cr=[];
+      for(var yc=Math.round(ci2.cy-0.2*ci2.r); yc<ci2.cy+0.8*ci2.r; yc++){
+        if(yc<0||yc>=CH) continue;
+        if(wid[yc]>0){ cl.push(le[yc]); cr.push(ri[yc]); }
+      }
+      var thumbSide = (cl.length>4 && cr.length>4)
+        ? ((ci2.cx-pct(cl,0.08) >= pct(cr,0.92)-ci2.cx) ? "left" : "right") : frame.thumb;
+      frame={L:ci2.cx-0.94*ci2.r, R:ci2.cx+0.94*ci2.r,
+             T:ci2.cy-1.43*ci2.r, B:ci2.cy+1.15*ci2.r, thumb:thumbSide, fromCircle:true};
+    }
+  }
+  window.__diag={circ:B.circ, frameA:frameFor(fbA), frameB:frameFor(fbB), used:frame, sep:sep,
+    narrow:B.narrow, top:top, bot:bot, maxW:maxW};
 
   GRAY=gray; COMP=comp; CLAIM=new Float32Array(N);
   PW=frame.R-frame.L;
@@ -1155,7 +1234,7 @@ function runDetect(){
     $("stageTag").textContent="not found";
     $("detNote").textContent="手のひらを検出できませんでした。明るい場所で、指を上に向けて手のひら全体が入るように撮り直すか、点をドラッグして手で線を合わせてください。";
     msg("手のひらを検出できませんでした");
-    renderPhoto(); renderLines(false); renderDet(); verdict(); return;
+    renderPhoto(); renderLines(false); renderDet(); renderDiag(); verdict(); return;
   }
   var res=fitAll(frame), lines=JSON.parse(JSON.stringify(DEFAULTS));
   for(var i=0;i<KEYS.length;i++){ if(res.lines[KEYS[i]]){ lines[KEYS[i]]=res.lines[KEYS[i]]; } }
@@ -1176,7 +1255,7 @@ function runDetect(){
     ? "三本とも読み取れました。ずれている線があれば、点をドラッグすると鑑定に反映されます。"
     : "<b style='color:var(--warn)'>"+lows.map(function(k){return META[k].n;}).join("・")+"</b> の確度が低めです。点をドラッグして合わせるか、撮り直してください。";
   msg("");
-  renderPhoto(); renderLines(true); renderDet(); verdict();
+  renderPhoto(); renderLines(true); renderDet(); renderDiag(); verdict();
   if(window.innerWidth<=880 && $("verdict").scrollIntoView)
     setTimeout(function(){ $("verdict").scrollIntoView({behavior:"smooth", block:"start"}); },350);
 }
@@ -1305,6 +1384,14 @@ function setHand(h){
   $("handNote").textContent=h==="right"?"右手は、これまでの選択で後から作られた「いまのあなた」を映すとされます。":"左手は、生まれ持った素質と、まだ変えていない部分を映すとされます。";
   save(); verdict();
 }
+(function(){
+  var bs=$("diagSeg").querySelectorAll("button");
+  for(var i=0;i<bs.length;i++) bs[i].addEventListener("click",function(){
+    diagMode=this.dataset.d;
+    for(var j=0;j<bs.length;j++) bs[j].setAttribute("aria-pressed",String(bs[j].dataset.d===diagMode));
+    renderDiag();
+  });
+})();
 $("handR").addEventListener("click",function(){setHand("right");});
 $("handL").addEventListener("click",function(){setHand("left");});
 var tt; function toast(t){var el=$("toast");el.textContent=t;el.classList.add("on");clearTimeout(tt);
