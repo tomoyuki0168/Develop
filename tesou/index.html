@@ -100,6 +100,17 @@ svg.palm{display:block; width:100%; aspect-ratio:320/420; touch-action:none; pos
 .ring{fill:none; stroke:var(--gold); stroke-width:1; opacity:.5}
 @keyframes pulse{0%,100%{r:13;opacity:.5}50%{r:17;opacity:.15}}
 .ring.on{animation:pulse 1.8s ease-in-out infinite}
+.rare-lbl{font-size:8.5px; letter-spacing:.12em; font-family:var(--serif)}
+.rares{display:grid; gap:2px}
+.rares .r{display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:9px;
+  padding:7px 2px; border-top:1px solid rgba(217,181,101,.10); cursor:pointer}
+.rares .r:first-child{border-top:0}
+.rares .sw{width:9px; height:9px; border-radius:50%; border:1px solid currentColor}
+.rares .r[aria-pressed="true"] .sw{background:currentColor}
+.rares .nm{font-family:var(--serif); font-size:13px; letter-spacing:.08em; color:var(--muted)}
+.rares .r[aria-pressed="true"] .nm{color:var(--text)}
+.rares .st{font-size:10.5px; letter-spacing:.1em; color:var(--faint); font-variant-numeric:tabular-nums}
+.rares .why{grid-column:1/-1; font-size:11.5px; color:var(--faint); line-height:1.75; margin:0 0 4px 18px}
 :where(button,label.file,input):focus-visible{outline:1px solid var(--gold); outline-offset:3px}
 .stack{display:grid; gap:9px}
 .lbl{font-family:var(--roman); font-size:10px; letter-spacing:.28em; color:var(--faint); display:block; margin-bottom:10px}
@@ -229,6 +240,15 @@ svg.palm{display:block; width:100%; aspect-ratio:320/420; touch-action:none; pos
       </div>
 
       <div class="plate">
+        <div class="plate-hd"><h2>珍しい手相</h2><span class="roman">rare marks</span></div>
+        <div class="hr"></div>
+        <div class="plate-bd">
+          <p class="hint" style="margin:0 0 12px">写真があれば自動で探します。違っていたら、自分の手のひらを見ながら直してください。押すと説明が出ます。</p>
+          <div class="rares" id="rares"></div>
+        </div>
+      </div>
+
+      <div class="plate">
         <div class="plate-hd"><h2>どちらの手</h2><span class="roman">hand</span></div>
         <div class="hr"></div>
         <div class="plate-bd">
@@ -291,7 +311,8 @@ function arcLen(p){var n=48,L=0,pr=at(p,0);for(var i=1;i<=n;i++){var q=at(p,i/n)
 /* ══ 状態 ══ */
 var COARSE=(window.matchMedia&&matchMedia("(pointer:coarse)").matches);
 var state={hand:"right", focus:"life", img:null, photo:null, box:null, palm:null,
-  lines:JSON.parse(JSON.stringify(DEFAULTS)), conf:null, depth:null};
+  lines:JSON.parse(JSON.stringify(DEFAULTS)), conf:null, depth:null,
+  rare:null, rareOn:{}, rareLines:{}};
 try{var sv=JSON.parse(localStorage.getItem("tesou.v2")||"null"); if(sv&&sv.hand) state.hand=sv.hand;}catch(e){}
 function save(){try{localStorage.setItem("tesou.v2",JSON.stringify({hand:state.hand}));}catch(e){}}
 function palmFrame(){return state.palm||GUIDE_PALM;}
@@ -327,6 +348,14 @@ function renderLines(animate){
         '" r="'+(j===1?R-1.5:R)+'" fill="'+m.c+'"><title>'+m.n+(j===0?"の始点":j===1?"の途中":"の終点")+'（ドラッグで調整）</title></circle>';
     }
   }
+  for(var rk in state.rareLines){                    /* 珍しい線は細く、名前を添えて描く */
+    if(!state.rareOn[rk]) continue;
+    var rp=state.rareLines[rk], rm=RMETA[rk], rd=d3(rp), wdt=(rk==="masukake"?3.2:1.9);
+    ln+='<path class="ln glow" stroke="'+rm.c+'" d="'+rd+'"></path>'+
+        '<path class="ln" stroke="'+rm.c+'" stroke-width="'+wdt+'" d="'+rd+'"></path>'+
+        '<text class="rare-lbl" fill="'+rm.c+'" x="'+rp[1][0].toFixed(1)+'" y="'+(rp[1][1]-7).toFixed(1)+
+        '" text-anchor="middle">'+rm.n+'</text>';
+  }
   var ly=$("lyLine"); ly.innerHTML=ln; $("lyHd").innerHTML=hd;
   ly.classList.remove("animate");
   if(animate){
@@ -340,10 +369,10 @@ function msg(text,cls){
   $("lyMsg").innerHTML = text ? '<text class="'+(cls||"note")+'" x="160" y="'+(cls==="busy"?214:406)+'" text-anchor="middle">'+text+'</text>' : "";
 }
 
-/* ══ 写真から手のひらと三大線を検出 ══ */
+/* ══ 写真から手のひらと線を検出 ══ */
 var work=document.createElement("canvas"); work.width=CW; work.height=CH;
 var wctx=work.getContext("2d",{willReadFrequently:true});
-var LN=null, COMP=null, lnMean=0;
+var GRAY=null, COMP=null, LIN=null, CLAIM=null, lnMean=0, BASE=1, PW=1, D1=3, D2=7;
 
 function detect(){
   var img=state.img; if(!img) return null;
@@ -366,7 +395,7 @@ function detect(){
     if(sk < inside*0.06) return null;
   }
   /* 最大連結成分 */
-  var comp=new Uint8Array(N), seen=new Uint8Array(N), qu=new Int32Array(N), best=0, bestSeed=-1, bestSize=0;
+  var comp=new Uint8Array(N), seen=new Uint8Array(N), qu=new Int32Array(N), bestSeed=-1, bestSize=0;
   for(var y=0;y<CH;y+=2) for(var x=0;x<CW;x+=2){
     var s0=y*CW+x; if(!skin[s0]||seen[s0]) continue;
     var head=0,tail=0,size=0; qu[tail++]=s0; seen[s0]=1;
@@ -378,7 +407,7 @@ function detect(){
       if(cy>0&&skin[c-CW]&&!seen[c-CW]){seen[c-CW]=1;qu[tail++]=c-CW;}
       if(cy<CH-1&&skin[c+CW]&&!seen[c+CW]){seen[c+CW]=1;qu[tail++]=c+CW;}
     }
-    if(size>bestSize){bestSize=size;bestSeed=s0;best=tail;}
+    if(size>bestSize){bestSize=size;bestSeed=s0;}
   }
   if(bestSize<inside*0.08) return null;
   seen.fill(0);
@@ -411,18 +440,23 @@ function detect(){
   }
   if(fb<0) fb=top+Math.round(span*0.38);
   /* 手のひらの左右（親指のふくらみを除くため中央値を使う） */
-  var band=[], bandL=[], bandR=[], hEst=Math.min(bot,fb+Math.round(maxW*1.35))-fb;
+  var bandL=[], bandR=[], hEst=Math.min(bot,fb+Math.round(maxW*1.35))-fb;
   for(var y5=fb+Math.round(hEst*0.12); y5<fb+hEst*0.68; y5++){ if(wid[y5]>0){bandL.push(le[y5]); bandR.push(ri[y5]);} }
   if(bandL.length<8) return null;
   var srt=function(a){return a.slice().sort(function(p,q){return p-q;});};
-  var med=function(a){var s=srt(a);return s[Math.floor(s.length/2)];};
-  var pct=function(a,p){var s=srt(a);return s[clamp(Math.floor(s.length*p),0,s.length-1)];};
+  var med=function(a){var s2=srt(a);return s2[Math.floor(s2.length/2)];};
+  var pct=function(a,p2){var s2=srt(a);return s2[clamp(Math.floor(s2.length*p2),0,s2.length-1)];};
   var mL=med(bandL), mR=med(bandR), pL=pct(bandL,0.08), pR=pct(bandR,0.92);
   var thumb=((mL-pL) >= (pR-mR)) ? "left" : "right";
   var frame={L:mL,R:mR,T:fb,B:fb+hEst,thumb:thumb};
   if(frame.R-frame.L<40||frame.B-frame.T<40) return null;
 
-  /* 線らしさ（周囲より暗い＝谷） */
+  GRAY=gray; COMP=comp; CLAIM=new Float32Array(N);
+  PW=frame.R-frame.L;
+  D1=Math.max(2,Math.round(PW*0.012));      /* 細い線 */
+  D2=Math.max(4,Math.round(PW*0.030));      /* 太い線 */
+
+  /* 線の濃さ用（等方的に、周囲より暗いか） */
   var iw=CW+1, iA=new Float64Array(iw*(CH+1)), iB=new Float64Array(iw*(CH+1));
   for(var y6=0;y6<CH;y6++){
     var ra=0, rb=0;
@@ -432,7 +466,7 @@ function detect(){
       iA[(y6+1)*iw+x6+1]=iA[y6*iw+x6+1]+ra; iB[(y6+1)*iw+x6+1]=iB[y6*iw+x6+1]+rb;
     }
   }
-  var rad=Math.max(3,Math.round((frame.R-frame.L)*0.035));
+  var rad=Math.max(3,Math.round(PW*0.035));
   var box=function(I,x0,y0,x1,y1){return I[(y1+1)*iw+x1+1]-I[y0*iw+x1+1]-I[(y1+1)*iw+x0]+I[y0*iw+x0];};
   var lin=new Float32Array(N), sum=0, cnt=0;
   for(var y7=0;y7<CH;y7++)for(var x7=0;x7<CW;x7++){
@@ -443,49 +477,110 @@ function detect(){
     var vv=m2-gray[id]; if(vv<0)vv=0;
     lin[id]=vv; sum+=vv; cnt++;
   }
-  LN=lin; COMP=comp; lnMean=cnt?sum/cnt:1;
+  LIN=lin; lnMean=cnt?sum/cnt:1;
+
+  /* 谷の深さの地の値。線が無いところで平均どれだけ出るかを測り、確度の基準にする */
+  var bs=0, bc=0;
+  for(var gy=frame.T; gy<frame.B; gy+=5) for(var gx=frame.L; gx<frame.R; gx+=5){
+    var a1=valley(gx,gy,1,0), a2=valley(gx,gy,0,1);
+    if(a1<0&&a2<0) continue;
+    bs+=Math.max(a1<0?0:a1, a2<0?0:a2); bc++;
+  }
+  BASE=bc>20 ? Math.max(0.6, bs/bc) : 1;
   return frame;
 }
 
+/* 線に垂直な方向の谷の深さ。両側が中心より明るいときだけ点が入る＝本当の溝だけを拾う */
+function lumAt(x,y){
+  var px=Math.round(x), py=Math.round(y);
+  if(px<0||py<0||px>=CW||py>=CH) return -1;
+  var id=py*CW+px; return COMP[id] ? GRAY[id] : -1;
+}
+function valleyD(x,y,nx,ny,d){
+  var c=lumAt(x,y); if(c<0) return -1;
+  var a=lumAt(x+nx*d,y+ny*d), b=lumAt(x-nx*d,y-ny*d);
+  if(a<0||b<0) return 0;
+  var v=Math.min(a,b)-c; return v>0?v:0;
+}
+function valley(x,y,nx,ny){
+  var v1=valleyD(x,y,nx,ny,D1); if(v1<0) return -1;
+  var v2=valleyD(x,y,nx,ny,D2);
+  return Math.max(v1,v2>0?v2:0);      /* 細い線・太い線の両方を拾う */
+}
+function tangentAt(p,t){
+  var c=ctrl(p[0],p[1],p[2]);
+  var dx=2*(1-t)*(c[0]-p[0][0])+2*t*(p[2][0]-c[0]);
+  var dy=2*(1-t)*(c[1]-p[0][1])+2*t*(p[2][1]-c[1]);
+  var L=Math.hypot(dx,dy)||1; return [dx/L,dy/L];
+}
+
 /* ══ 曲線あてはめ ══ */
-function fit(frame){
-  var W=frame.R-frame.L, H=frame.B-frame.T, thumb=frame.thumb;
+function makeFitter(frame){
+  var W=frame.R-frame.L, H=frame.B-frame.T, thumb=frame.thumb, REF=(W+H)/2;
   function xy(u,v){return [thumb==="left"?frame.L+u*W:frame.R-u*W, frame.T+v*H];}
   function pts(c){
     var a=xy(c[0],c[1]), b=xy(c[2],c[3]);
     var mu=(c[0]+c[2])/2+(c[5]==="u"?c[4]:0), mv=(c[1]+c[3])/2+(c[5]==="v"?c[4]:0);
     return [a, xy(mu,mv), b];
   }
-  function score(c){
-    var p=pts(c), n=32, s=0, out=0, len=0, pr=null;
-    if(Math.hypot(p[2][0]-p[0][0],p[2][1]-p[0][1]) < Math.min(W,H)*0.45) return -1;
+  function score(c,sp){
+    var p=pts(c), n=30, s=0, out=0, len=0, pr=null;
+    var chord=Math.hypot(p[2][0]-p[0][0],p[2][1]-p[0][1]);
+    if(chord < REF*(sp.min||0.45)) return -1;
     for(var i=0;i<=n;i++){
-      var q=at(p,i/n), x=Math.round(q[0]), y=Math.round(q[1]);
+      var t=i/n, q=at(p,t), tg=tangentAt(p,t);
       if(pr) len+=Math.hypot(q[0]-pr[0],q[1]-pr[1]);
       pr=q;
-      if(x<0||y<0||x>=CW||y>=CH||!COMP[y*CW+x]){ out++; continue; }   /* 手の外に出た分は0点 */
-      s+=LN[y*CW+x];
+      var v=valley(q[0],q[1],-tg[1],tg[0]);     /* 進行方向に垂直な向きで測る */
+      if(v<0){ out++; continue; }               /* 手の外 */
+      var px=Math.round(q[0]), py=Math.round(q[1]);
+      if(CLAIM && !sp.noClaim){ var cl=CLAIM[py*CW+px]; if(cl>0) v*=(1-cl); }
+      s+=v;
     }
-    if(out>n*0.18) return -1;
-    return (s/(n+1)) * Math.pow(len/((W+H)/2), 0.30);   /* 線に乗ったまま長く伸びる形を優先 */
+    if(out > n*(sp.maxOut===undefined?0.18:sp.maxOut)) return -1;
+    return (s/(n+1)) * Math.pow(len/REF, sp.pow===undefined?0.30:sp.pow);
   }
-  var SPEC={   /* 手のひらを正規化した座標での、各線の存在範囲（u:親指側0→小指側1, v:指の付け根0→手首1） */
-    life :{su:[0.10,0.44],sv:[-0.04,0.20],eu:[0.00,0.34],ev:[0.78,1.06],b:[0.04,0.46],ax:"u"},
-    head :{su:[0.06,0.42],sv:[0.06,0.36],eu:[0.70,1.06],ev:[0.28,0.82],b:[-0.14,0.12],ax:"v"},
-    heart:{su:[0.72,1.08],sv:[-0.06,0.26],eu:[0.12,0.64],ev:[-0.10,0.22],b:[-0.16,0.08],ax:"v"}
-  };
-  var out={}, conf={};
-  for(var n2=0;n2<KEYS.length;n2++){
-    var k=KEYS[n2], sp=SPEC[k], bestC=null, bestS=-1;
+  function respOf(P,sp){              /* 長さ補正なしの、谷の深さの平均 */
+    var n=30, s2=0;
+    for(var i=0;i<=n;i++){
+      var t=i/n, q=at(P,t), tg=tangentAt(P,t);
+      var v=valley(q[0],q[1],-tg[1],tg[0]);
+      if(v<0) continue;
+      var px=Math.round(q[0]), py=Math.round(q[1]);
+      if(CLAIM && !(sp&&sp.noClaim)){ var cl=CLAIM[py*CW+px]; if(cl>0) v*=(1-cl); }
+      s2+=v;
+    }
+    return s2/(n+1);
+  }
+  function trim(P,sp){        /* 線の端を、谷が消えるところで切る（伸びすぎ・届かずを直す） */
+    var n=60, resp=[], sum=0, cnt=0, i;
+    for(i=0;i<=n;i++){
+      var t=i/n, q=at(P,t), tg=tangentAt(P,t);
+      var v=valley(q[0],q[1],-tg[1],tg[0]);
+      resp[i]=v>0?v:0;
+      if(v>0){sum+=v;cnt++;}
+    }
+    if(cnt<n*0.4) return P;
+    var th=(sum/cnt)*0.12, bs=-1, bl=0, cs=-1;
+    for(i=0;i<=n;i++){
+      if(resp[i]>=th){ if(cs<0)cs=i; if(i-cs+1>bl){bl=i-cs+1;bs=cs;} } else cs=-1;
+    }
+    var t0=bs/n, t1=(bs+bl-1)/n;
+    if(bl<n*0.75 || t1-t0>0.96) return P;   /* はっきり途切れているときだけ切る */
+    return [at(P,t0), at(P,(t0+t1)/2), at(P,t1)];
+  }
+  function search(sp){
+    var bestC=null, bestS=-1;
     var g=function(r,n){var a=[],st=(r[1]-r[0])/(n-1);for(var i=0;i<n;i++)a.push(r[0]+st*i);return a;};
-    var SU=g(sp.su,5),SV=g(sp.sv,4),EU=g(sp.eu,5),EV=g(sp.ev,5),BB=g(sp.b,5);
+    var nn=sp.grid||5;
+    var SU=g(sp.su,nn),SV=g(sp.sv,nn-1),EU=g(sp.eu,nn),EV=g(sp.ev,nn),BB=g(sp.b,5);
     for(var a1=0;a1<SU.length;a1++)for(var a2=0;a2<SV.length;a2++)
     for(var a3=0;a3<EU.length;a3++)for(var a4=0;a4<EV.length;a4++)
     for(var a5=0;a5<BB.length;a5++){
-      var c=[SU[a1],SV[a2],EU[a3],EV[a4],BB[a5],sp.ax], s2=score(c);
+      var c=[SU[a1],SV[a2],EU[a3],EV[a4],BB[a5],sp.ax], s2=score(c,sp);
       if(s2>bestS){bestS=s2;bestC=c;}
     }
-    if(!bestC){out[k]=null;conf[k]=0;continue;}
+    if(!bestC) return null;
     /* 局所調整。端点は2軸を同時に動かさないと線から外れるので、斜めの手も試す */
     var step=[(sp.su[1]-sp.su[0])/4,(sp.sv[1]-sp.sv[0])/3,(sp.eu[1]-sp.eu[0])/4,(sp.ev[1]-sp.ev[0])/4,(sp.b[1]-sp.b[0])/4];
     var moves=[];
@@ -494,28 +589,166 @@ function fit(frame){
     for(var pj=0;pj<pairs.length;pj++)
       for(var s1=-1;s1<=1;s1+=2) for(var s3=-1;s3<=1;s3+=2)
         moves.push([[pairs[pj][0],s1],[pairs[pj][1],s3]]);
+    var rng=[sp.su,sp.sv,sp.eu,sp.ev,sp.b];
     for(var pass=0;pass<6;pass++){
       var moved=false;
-      var rng=[sp.su,sp.sv,sp.eu,sp.ev,sp.b];
       for(var mv=0;mv<moves.length;mv++){
-        var t=bestC.slice(), mo=moves[mv];
+        var t2=bestC.slice(), mo=moves[mv];
         for(var q2=0;q2<mo.length;q2++){
           var pidx=mo[q2][0];
-          t[pidx]=clamp(t[pidx]+mo[q2][1]*step[pidx], rng[pidx][0], rng[pidx][1]);
+          t2[pidx]=clamp(t2[pidx]+mo[q2][1]*step[pidx], rng[pidx][0], rng[pidx][1]);
         }
-        var st2=score(t); if(st2>bestS){bestS=st2;bestC=t;moved=true;}
+        var st2=score(t2,sp); if(st2>bestS){bestS=st2;bestC=t2;moved=true;}
       }
       if(!moved){ for(var si=0;si<5;si++) step[si]*=0.5; }
     }
-    out[k]=pts(bestC).map(function(p){return [p[0]/S,p[1]/S];});
-    conf[k]=lnMean>0.01 ? bestS/lnMean : 0;
+    var P=trim(pts(bestC),sp);
+    return {pts:P, view:P.map(function(q){return [q[0]/S,q[1]/S];}), score:bestS,
+      resp:respOf(P,sp), conf:bestS/BASE};
   }
-  return {lines:out, conf:conf};
+  function claim(P){                     /* 使った線の周りを、次の線の探索から外す */
+    if(!CLAIM) return;
+    var n=40, w=D2+2;
+    for(var i=0;i<=n;i++){
+      var q=at(P,i/n);
+      for(var dy=-w;dy<=w;dy++)for(var dx=-w;dx<=w;dx++){
+        var x=Math.round(q[0]+dx), y=Math.round(q[1]+dy);
+        if(x<0||y<0||x>=CW||y>=CH) continue;
+        var f=1-Math.hypot(dx,dy)/(w+1); if(f<0) continue;
+        var id=y*CW+x; if(f>CLAIM[id]) CLAIM[id]=f;
+      }
+    }
+  }
+  return {search:search, claim:claim, xy:xy, W:W, H:H};
+}
+
+/* 三大線と、珍しい手相を含む補助線の探索範囲（u:親指側0→小指側1, v:指の付け根0→手首1） */
+var SPEC={
+  heart  :{su:[0.72,1.08],sv:[-0.06,0.26],eu:[0.12,0.64],ev:[-0.10,0.22],b:[-0.16,0.08],ax:"v"},
+  head   :{su:[0.06,0.42],sv:[0.06,0.36],eu:[0.70,1.06],ev:[0.28,0.82],b:[-0.14,0.12],ax:"v"},
+  life   :{su:[0.10,0.44],sv:[-0.04,0.20],eu:[0.00,0.34],ev:[0.78,1.06],b:[0.04,0.46],ax:"u"},
+  masukake:{su:[0.02,0.30],sv:[0.10,0.42],eu:[0.90,1.10],ev:[0.14,0.48],b:[-0.06,0.06],ax:"v",min:0.75},
+  fate   :{su:[0.28,0.78],sv:[0.82,1.10],eu:[0.30,0.76],ev:[-0.04,0.34],b:[-0.10,0.10],ax:"u",min:0.50},
+  sun    :{su:[0.56,0.82],sv:[0.48,0.86],eu:[0.56,0.82],ev:[-0.04,0.24],b:[-0.05,0.05],ax:"u",min:0.28,grid:4,floor:0.50},
+  money  :{su:[0.86,1.10],sv:[0.28,0.72],eu:[0.86,1.10],ev:[-0.04,0.22],b:[-0.05,0.05],ax:"u",min:0.22,grid:4,floor:0.45},
+  venus  :{su:[0.26,0.56],sv:[-0.14,0.10],eu:[0.72,1.04],ev:[-0.14,0.12],b:[-0.16,-0.02],ax:"v",min:0.35,grid:4,maxOut:0.03,floor:0.55},
+  solomon:{su:[0.04,0.24],sv:[0.04,0.24],eu:[0.28,0.52],ev:[-0.10,0.04],b:[-0.16,-0.01],ax:"v",min:0.20,grid:4,maxOut:0.03,floor:0.55},
+  mystic :{su:[0.34,0.60],sv:[0.08,0.30],eu:[0.54,0.84],ev:[0.24,0.54],b:[-0.06,0.06],ax:"v",min:0.18,grid:4,floor:0.32}
+};
+var RARE=["fate","sun","money","venus","solomon","mystic"];
+var RMETA={
+  masukake:{n:"ますかけ線", c:"#F2545B", rare:"約1割",
+    how:"知能線と感情線が一本に融合し、手のひらを横一直線に横切っている。",
+    read:"天下取りの相とも呼ばれる、いちばん有名な珍しい手相。振れ幅が大きく、一点に集中したときの突破力が桁違いに出ます。平均的にこなすことには向きません。決めた一つに寄せるほど、この線は効きます。"},
+  fate:{n:"運命線", c:"#7FC8C0", rare:"よくある",
+    how:"手首のあたりから中指の付け根へ、縦に伸びる線。",
+    read:"仕事や立場の軸がはっきりしている印。太くまっすぐなほど、自分で決めた道を歩いている状態です。"},
+  sun:{n:"太陽線", c:"#F0A96B", rare:"やや珍しい",
+    how:"薬指の付け根へ向かって、縦に短く伸びる線。",
+    read:"人から引き立てられ、評価が形になりやすい線。人気運と金運の両方に効きます。この線がある人は、表に出る仕事で伸びます。"},
+  money:{n:"財運線", c:"#9FD18B", rare:"やや珍しい",
+    how:"小指の付け根の下に、縦に短く入る線。",
+    read:"お金の入り口が複数ある印。稼ぐ力そのものより、入ってきたものを回す感覚に出ます。"},
+  venus:{n:"金星帯", c:"#E39BC8", rare:"珍しい",
+    how:"感情線のさらに上を、弓なりに横切る線。",
+    read:"感受性が強く、美しいものを見分ける目がある。惹きつける力が強い一方、気分の振れも大きい線です。"},
+  solomon:{n:"ソロモンの環", c:"#B9A6E8", rare:"珍しい",
+    how:"人差し指の付け根を、輪のように囲む線。",
+    read:"人を導く立場に立つ相。人の話の裏まで読める洞察が出ます。教える・まとめる役回りで力を発揮します。"},
+  mystic:{n:"神秘十字線", c:"#E4DECB", rare:"珍しい",
+    how:"知能線と感情線のあいだで、運命線と十字に交わる短い線。",
+    read:"直感が当たる、守られやすいと言われる相。理屈で説明できない勘が働いたときは、それに従ったほうが結果が出ます。"}
+};
+var RKEYS=["masukake"].concat(RARE);
+/* 「出ている」の判定は、三大線の深さに対する比で決める（fitAll 内の FLOOR） */
+
+function fitAll(frame){
+  var F=makeFitter(frame), out={lines:{}, conf:{}, rare:{}, masukake:false};
+  /* 三大線は互いに独立に探す（ますかけ線の判定を邪魔しないため） */
+  var prim={};
+  for(var i=0;i<KEYS.length;i++){
+    var k=KEYS[i], r=F.search(SPEC[k]);
+    prim[k]=r;
+    if(r){ out.lines[k]=r.view; out.conf[k]=r.conf; } else { out.conf[k]=0; }
+  }
+  /* 三大線の深さを基準にする。珍しい線は、これに対して十分深いときだけ「出ている」 */
+  var rs=[]; for(var pk=0;pk<KEYS.length;pk++) if(prim[KEYS[pk]]) rs.push(prim[KEYS[pk]].resp);
+  rs.sort(function(a,b){return a-b;});
+  var REF = rs.length ? rs[Math.floor(rs.length/2)] : 1;
+  out.ref=REF;
+  var floorOf=function(sp){return Math.max(3.0, REF*(sp.floor||0.40));};  /* この深さに届かない線は、無いものとして扱う */
+
+  /* ますかけ線 — 知能線と感情線が一本に融合しているか */
+  var mk=F.search(SPEC.masukake);
+  if(mk && prim.head && prim.heart){
+    var gapV=0, n=12;
+    for(var t=0;t<=n;t++){          /* 二本の縦の隔たりを、重なる範囲で測る */
+      var a=at(prim.head.pts,t/n), b=at(prim.heart.pts,1-t/n);
+      gapV+=Math.abs(a[1]-b[1]);
+    }
+    gapV=gapV/(n+1)/F.H;
+    out.masukakeGap=gapV;
+    out.masukakeConf=mk.conf; out.masukakeResp=mk.resp;
+    if(gapV<0.08 && mk.resp>=Math.max(4.0,REF*0.75)){
+      out.masukake=true; out.lines.masukake=mk.view; out.conf.masukake=mk.conf;
+    }
+  }
+  /* 使った線を消し込んでから、珍しい線を探す */
+  for(var j=0;j<KEYS.length;j++) if(prim[KEYS[j]]) F.claim(prim[KEYS[j]].pts);
+  if(out.masukake && mk) F.claim(mk.pts);
+  var order=["fate","mystic","sun","money","venus","solomon"];
+  var fitted={};
+  for(var q=0;q<order.length;q++){
+    var rk=order[q], sp=SPEC[rk], rr=F.search(sp);
+    if(!rr){ out.rare[rk]={on:false, conf:0, resp:0, ratio:0}; continue; }
+    var on=rr.resp>=floorOf(sp);
+    if(on && rk==="venus") on=above(rr.pts, prim.heart, F.H*0.05);   /* 金星帯は感情線より上に出る線 */
+    if(on && rk==="fate")  on=!nearLine(rr.pts, prim.life, D2*1.6);  /* 生命線をなぞっただけのものを外す */
+    if(rk==="mystic"){                 /* 運命線と交わって初めて十字になる */
+      on = on && !!(fitted.fate) && crosses(rr.view, fitted.fate.view)
+              && !nearLine(rr.pts, prim.head, D2*1.6);               /* 知能線そのものを拾わない */
+    }
+    out.rare[rk]={on:on, conf:rr.conf, resp:rr.resp, ratio:REF>0?rr.resp/REF:0};
+    if(on){ out.lines[rk]=rr.view; fitted[rk]=rr; }
+    /* 運命線は、神秘十字線を探し終えてから消し込む（交点で打ち消し合わないように） */
+    if(on && rk!=="fate") F.claim(rr.pts);
+    if(rk==="mystic" && fitted.fate) F.claim(fitted.fate.pts);
+  }
+  return out;
+}
+function meanY(P){var t,y=0;for(t=0;t<=10;t++)y+=at(P,t/10)[1];return y/11;}
+function above(P,other,margin){ return other ? meanY(P) < meanY(other.pts)-margin : true; }
+function nearLine(P,other,tol){
+  if(!other) return false;
+  var hit=0;
+  for(var i=0;i<=10;i++){
+    var q=at(P,i/10), best=1e9;
+    for(var j=0;j<=20;j++){ var r=at(other.pts,j/20); best=Math.min(best,Math.hypot(q[0]-r[0],q[1]-r[1])); }
+    if(best<tol) hit++;
+  }
+  return hit>=7;
+}
+function crosses(a,b){
+  if(!a||!b) return false;
+  var n=16;
+  for(var i=0;i<n;i++){
+    var p1=at(a,i/n), p2=at(a,(i+1)/n);
+    for(var j=0;j<n;j++){
+      var q1=at(b,j/n), q2=at(b,(j+1)/n);
+      if(seg(p1,p2,q1,q2)) return true;
+    }
+  }
+  return false;
+}
+function seg(p1,p2,q1,q2){
+  var d=function(a,b,c){return (b[0]-a[0])*(c[1]-a[1])-(b[1]-a[1])*(c[0]-a[0]);};
+  var d1=d(q1,q2,p1), d2=d(q1,q2,p2), d3=d(p1,p2,q1), d4=d(p1,p2,q2);
+  return ((d1>0)!==(d2>0)) && ((d3>0)!==(d4>0));
 }
 
 /* ══ 線の濃さ ══ */
 function lineDepth(){
-  if(!LN||!COMP) return null;
+  if(!LIN||!COMP) return null;
   var tot=0,c=0;
   for(var i=0;i<KEYS.length;i++){
     var p=state.lines[KEYS[i]];
@@ -523,7 +756,7 @@ function lineDepth(){
       var q=at(p,t/30), x=Math.round(q[0]*S), y=Math.round(q[1]*S);
       if(x<0||y<0||x>=CW||y>=CH) continue;
       var id=y*CW+x; if(!COMP[id]) continue;
-      tot+=LN[id]; c++;
+      tot+=LIN[id]; c++;
     }
   }
   return c>40 ? tot/c : null;
@@ -582,6 +815,13 @@ function readings(){
       [16,"標準","はっきり読める濃さ。生活の負荷と体力が釣り合っている状態です。"],
       [99,"濃い","強く刻まれた線。押し出しが強く、決めたことをやり切ります。力みが体に出やすいので、抜くほうを意識して。"]])]);
   }
+  var rareOn=[];
+  for(var ri=0;ri<RKEYS.length;ri++) if(state.rareOn[RKEYS[ri]]) rareOn.push(RKEYS[ri]);
+  for(var rj=0;rj<rareOn.length;rj++){
+    var rk=rareOn[rj], rm=RMETA[rk];
+    f.push([rk==="masukake"?"life":(rk==="sun"||rk==="money"?"heart":"head"),
+      rm.n, rm.rare, [0,"出ている",rm.read]]);
+  }
   var n={lifeLen:norm(m.lifeLen,0.65,1.10),lifeArc:norm(m.lifeArc,0.05,0.40),
     headLen:norm(m.headLen,0.50,1.00),headDesc:norm(m.headSlope,-0.05,0.70),
     heartLen:norm(m.heartLen,0.55,1.05),heartRise:norm(m.heartRise,-0.05,0.35),
@@ -592,9 +832,17 @@ function readings(){
     work:  40+55*(0.38*n.headLen+0.27*(1-n.headDesc)+0.20*n.gap+0.15*n.depth),
     love:  40+55*(0.36*n.heartLen+0.30*n.heartRise+0.34*(1-n.heartIdx)),
     money: 40+55*(0.30*n.headLen+0.25*n.gap+0.25*n.depth+0.20*n.lifeArc)};
-  for(var k in s) s[k]=Math.round(s[k]);
+  var BONUS={                       /* 珍しい手相は、四つの運に上乗せする */
+    masukake:{work:9,money:5,health:2,love:-3},
+    fate:{work:6,money:2}, sun:{money:6,love:4,work:2}, money:{money:7},
+    venus:{love:6,work:-2}, solomon:{work:5,love:2}, mystic:{love:3,health:3}};
+  for(var rb=0;rb<rareOn.length;rb++){
+    var bo=BONUS[rareOn[rb]]; if(!bo) continue;
+    for(var ax in bo) s[ax]+=bo[ax];
+  }
+  for(var k in s) s[k]=Math.round(clamp(s[k],1,99));
   s.total=Math.round((s.health+s.work+s.love+s.money)/4);
-  return {m:m,f:f,s:s};
+  return {m:m,f:f,s:s,rare:rareOn};
 }
 
 var AXES=[["work","仕事運","b-head"],["love","恋愛運","b-heart"],["health","健康運","b-life"],["money","金運","b-head"]];
@@ -610,8 +858,12 @@ function summary(r){
   var low=AXES.slice().sort(function(a,b){return r.s[a[0]]-r.s[b[0]];})[0];
   var hd=r.m.headSlope<0.18?"現実を数字で捉える型":(r.m.headSlope<0.50?"現実と発想を行き来する型":"発想が先に立つ型");
   var lf=r.m.lifeLen<0.78?"短期決戦で燃える体力":(r.m.lifeLen<0.98?"崩れにくい体力":"長く走れる体力");
-  return {lead:hd+"に、"+lf+"。いま最も強く出ているのは"+top[1]+"です。",
-    body:hw+"四つの運のうち、"+top[1]+"（"+r.s[top[0]]+"）が前に出て、"+low[1]+"（"+r.s[low[0]]+
+  var lead=hd+"に、"+lf+"。いま最も強く出ているのは"+top[1]+"です。";
+  if(state.rareOn.masukake) lead="ますかけ線。手のひらを一本で横切る、十人に一人の相です。";
+  else if(r.rare&&r.rare.length>=3) lead="珍しい線が"+r.rare.length+"本。"+hd+"に、"+lf+"。";
+  var extra=r.rare&&r.rare.length ? "あわせて、"+r.rare.map(function(k){return RMETA[k].n;}).join("・")+"が出ています。これらは四つの運に上乗せして計算しています。" : "";
+  return {lead:lead,
+    body:hw+extra+"四つの運のうち、"+top[1]+"（"+r.s[top[0]]+"）が前に出て、"+low[1]+"（"+r.s[low[0]]+
       "）が控えています。強いほうを伸ばすより、控えているほうに小さな手当てをするほうが、この手相は全体が上がります。",
     low:low[0]};
 }
@@ -625,6 +877,7 @@ function verdict(){
   var finds=r.f.map(function(x){return '<div class="find c-'+x[0]+'"><div class="t"><b>'+x[1]+'</b><i>'+x[2]+
     '</i></div><span class="chip">'+x[3][1]+'</span><p>'+x[3][2]+'</p></div>';}).join("");
   var src=state.palm?"写真から自動検出した線で計測":(state.img?"自動検出できず・標準の線で計測":"写真なし・標準の線で計測");
+  if(r.rare&&r.rare.length) src+="　／　珍しい線 "+r.rare.length+"本";
   $("verdict").innerHTML=
     '<div class="vd-top"><div><h2>鑑定書</h2><div class="meta">'+(state.hand==="right"?"右手・後天":"左手・先天")+'　／　'+src+'</div></div>'+
       '<div class="score"><b>'+r.s.total+'</b><span>total</span></div></div><div class="hr"></div>'+
@@ -635,6 +888,42 @@ function verdict(){
   lastText="【手相鑑定所】"+(state.hand==="right"?"右手":"左手")+"／総合 "+r.s.total+"\n"+sm.lead+"\n"+
     AXES.map(function(a){return a[1]+" "+r.s[a[0]];}).join("　")+"\n\n"+
     r.f.map(function(x){return "■"+x[1]+"（"+x[3][1]+"）\n"+x[3][2];}).join("\n\n")+"\n\n今日の一手："+ADVICE[sm.low];
+}
+
+/* ══ 珍しい手相の一覧 ══ */
+var rareOpen=null;
+function renderRare(){
+  var h="";
+  for(var i=0;i<RKEYS.length;i++){
+    var k=RKEYS[i], m=RMETA[k], on=!!state.rareOn[k];
+    var c=state.rare&&state.rare[k]?state.rare[k].conf:(k==="masukake"?(state.masukakeConf||0):0);
+    var st = state.img ? (on?"出ている":(c>0?"見あたらない":"—")) : (on?"あり":"なし");
+    h+='<div class="r" data-k="'+k+'" role="button" tabindex="0" aria-pressed="'+on+'" style="color:'+m.c+'">'+
+       '<span class="sw"></span><span class="nm">'+m.n+'</span><span class="st">'+st+'</span></div>';
+    if(rareOpen===k) h+='<p class="why"><b style="color:'+m.c+'">確かめ方</b> '+m.how+'　<b style="color:'+m.c+'">出現</b> '+m.rare+'</p>';
+  }
+  $("rares").innerHTML=h;
+  var rs=$("rares").querySelectorAll(".r");
+  for(var j=0;j<rs.length;j++){
+    rs[j].addEventListener("click",function(){ toggleRare(this.dataset.k); });
+    rs[j].addEventListener("keydown",function(e){ if(e.key==="Enter"||e.key===" "){e.preventDefault();toggleRare(this.dataset.k);} });
+  }
+}
+function toggleRare(k){
+  if(rareOpen!==k){ rareOpen=k; }
+  state.rareOn[k]=!state.rareOn[k];
+  if(state.rareOn[k] && !state.rareLines[k] && state.palm===null) state.rareLines[k]=guideRare(k);
+  renderRare(); renderLines(false); verdict();
+}
+/* 写真がないときの、標準の手の上での位置 */
+function guideRare(k){
+  var F=GUIDE_PALM, W=F.R-F.L, H=F.B-F.T;
+  var xy=function(u,v){return [F.L+u*W, F.T+v*H];};
+  var G={masukake:[[0.06,0.26],[0.50,0.24],[1.00,0.28]], fate:[[0.52,1.00],[0.52,0.55],[0.52,0.06]],
+    sun:[[0.74,0.72],[0.74,0.42],[0.74,0.10]], money:[[0.92,0.60],[0.92,0.36],[0.92,0.10]],
+    venus:[[0.36,0.04],[0.62,-0.06],[0.92,0.04]], solomon:[[0.10,0.16],[0.22,0.00],[0.40,-0.06]],
+    mystic:[[0.42,0.18],[0.56,0.30],[0.70,0.42]]};
+  return G[k].map(function(q){return xy(q[0],q[1]);});
 }
 
 /* ══ 読み取り状況 ══ */
@@ -683,17 +972,26 @@ function runDetect(){
   var frame=null;
   try{ frame=detect(); }catch(e){ frame=null; }
   if(!frame){
-    state.palm=null; state.conf=null; state.depth=null; LN=null; COMP=null;
-    state.lines=JSON.parse(JSON.stringify(DEFAULTS));
+    state.palm=null; state.conf=null; state.depth=null; GRAY=null; COMP=null;
+    state.lines=JSON.parse(JSON.stringify(DEFAULTS)); state.rare=null; state.rareOn={}; state.rareLines={};
+    renderRare();
     $("stageTag").textContent="not found";
     $("detNote").textContent="手のひらを検出できませんでした。明るい場所で、指を上に向けて手のひら全体が入るように撮り直すか、点をドラッグして手で線を合わせてください。";
     msg("手のひらを検出できませんでした");
     renderPhoto(); renderLines(false); renderDet(); verdict(); return;
   }
-  var res=fit(frame), lines=JSON.parse(JSON.stringify(DEFAULTS)), got=0;
-  for(var i=0;i<KEYS.length;i++){ if(res.lines[KEYS[i]]){ lines[KEYS[i]]=res.lines[KEYS[i]]; got++; } }
+  var res=fitAll(frame), lines=JSON.parse(JSON.stringify(DEFAULTS));
+  for(var i=0;i<KEYS.length;i++){ if(res.lines[KEYS[i]]){ lines[KEYS[i]]=res.lines[KEYS[i]]; } }
   state.palm={L:frame.L/S,R:frame.R/S,T:frame.T/S,B:frame.B/S,thumb:frame.thumb};
   state.lines=lines; state.conf=res.conf;
+  if(res.masukakeConf!==undefined) res.rare.masukake={on:!!res.masukake, conf:res.masukakeConf};
+  state.rare=res.rare; state.rareLines={}; state.rareOn={};
+  if(res.masukake){ state.rareOn.masukake=true; state.rareLines.masukake=res.lines.masukake; }
+  for(var rq=0;rq<RARE.length;rq++){
+    var rkk=RARE[rq];
+    if(res.rare[rkk]&&res.rare[rkk].on){ state.rareOn[rkk]=true; state.rareLines[rkk]=res.lines[rkk]; }
+  }
+  renderRare();
   state.depth=lineDepth();
   var lows=KEYS.filter(function(k){return res.conf[k]<1.45;});
   $("stageTag").textContent=(frame.thumb==="left"?"right hand":"left hand");
@@ -862,7 +1160,8 @@ $("handL").addEventListener("click",function(){setHand("left");});
 var tt; function toast(t){var el=$("toast");el.textContent=t;el.classList.add("on");clearTimeout(tt);
   tt=setTimeout(function(){el.classList.remove("on");},2200);}
 
-renderPhoto(); renderLines(false); renderDet(); msg("点をドラッグして、自分の線に合わせられます");
+renderPhoto(); renderLines(false); renderDet(); renderRare();
+msg("点をドラッグして、自分の線に合わせられます");
 setHand(state.hand);
 })();
 </script>
