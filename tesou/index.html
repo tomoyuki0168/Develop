@@ -60,6 +60,7 @@ svg.palm{display:block; width:100%; aspect-ratio:320/420; touch-action:none; pos
 .ln.glow{stroke-width:8; opacity:.20; filter:blur(3px)}
 .hd{cursor:grab; stroke:rgba(11,10,17,.85); stroke-width:1.5; opacity:.92}
 .hd:hover{opacity:1; stroke-width:2.5}
+.hd.hit{stroke:none}
 .note{fill:var(--faint); font-size:10.5px; letter-spacing:.16em}
 .busy{fill:var(--gold); font-size:11px; letter-spacing:.24em; font-family:var(--roman); font-style:italic}
 @keyframes draw{from{stroke-dashoffset:var(--len)}to{stroke-dashoffset:0}}
@@ -90,8 +91,8 @@ svg.palm{display:block; width:100%; aspect-ratio:320/420; touch-action:none; pos
 .camguide{position:absolute; inset:0; width:100%; height:100%; pointer-events:none}
 .camframe{fill:none; stroke:var(--gold); stroke-width:1.8; stroke-dasharray:7 5; opacity:.95}
 .camnote{fill:var(--gold); font-size:11px; letter-spacing:.14em; font-family:var(--serif)}
-.frameguide{fill:none; stroke:rgba(217,181,101,.55); stroke-width:1.6; stroke-dasharray:7 5}
-.framefill{fill:rgba(6,5,10,.42)}
+.frameguide{fill:none; stroke:rgba(217,181,101,.42); stroke-width:1.2; stroke-dasharray:5 5}
+.framefill{fill:rgba(6,5,10,.36)}
 .drop{outline:1px dashed var(--gold); outline-offset:-6px}
 .env{display:grid; gap:6px; margin-bottom:4px}
 .env div{display:flex; align-items:center; justify-content:space-between; gap:10px; font-size:11.5px; color:var(--muted)}
@@ -336,18 +337,33 @@ var META={life:{n:"生命線",c:"var(--shu)"},head:{n:"知能線",c:"var(--fuji)
 var GUIDE_PALM={L:100,R:262,T:170,B:395,thumb:"left"};
 var DEFAULTS={life:[[118,198],[152,300],[112,388]],head:[[122,212],[186,250],[250,276]],heart:[[262,206],[200,178],[142,172]]};
 var FINGERS=[{x:133,base:172,tip:58,w:27},{x:172,base:162,tip:40,w:28},{x:210,base:170,tip:60,w:27},{x:246,base:198,tip:92,w:24}];
-function handPath(){
-  var p=["M 104 400","C 80 384 62 356 58 320","C 40 306 26 256 40 232","C 52 212 74 220 86 244","C 94 260 100 250 106 226"];
+function handPath(tf){
+  var mp = tf || function(x,y){return [x,y];};
+  var P = function(x,y){ var q=mp(x,y); return q[0].toFixed(1)+" "+q[1].toFixed(1); };
+  var p=["M "+P(104,400),
+    "C "+P(80,384)+" "+P(62,356)+" "+P(58,320),
+    "C "+P(40,306)+" "+P(26,256)+" "+P(40,232),
+    "C "+P(52,212)+" "+P(74,220)+" "+P(86,244),
+    "C "+P(94,260)+" "+P(100,250)+" "+P(106,226)];
   for(var i=0;i<FINGERS.length;i++){
     var f=FINGERS[i], l=f.x-f.w/2, r=f.x+f.w/2, cap=f.w/2+3;
-    p.push("L "+l.toFixed(1)+" "+f.base);
-    p.push("C "+l.toFixed(1)+" "+(f.tip+cap)+" "+(l+1).toFixed(1)+" "+f.tip+" "+f.x+" "+f.tip);
-    p.push("C "+(r-1).toFixed(1)+" "+f.tip+" "+r.toFixed(1)+" "+(f.tip+cap)+" "+r.toFixed(1)+" "+f.base);
+    p.push("L "+P(l,f.base));
+    p.push("C "+P(l,f.tip+cap)+" "+P(l+1,f.tip)+" "+P(f.x,f.tip));
+    p.push("C "+P(r-1,f.tip)+" "+P(r,f.tip+cap)+" "+P(r,f.base));
     var nx=FINGERS[i+1];
-    if(nx) p.push("Q "+((r+(nx.x-nx.w/2))/2).toFixed(1)+" "+(Math.max(f.base,nx.base)+16)+" "+(nx.x-nx.w/2).toFixed(1)+" "+nx.base);
+    if(nx) p.push("Q "+P((r+(nx.x-nx.w/2))/2, Math.max(f.base,nx.base)+16)+" "+P(nx.x-nx.w/2, nx.base));
   }
-  p.push("C 268 232 272 320 250 372","C 244 388 232 398 224 402","Q 164 414 104 400 Z");
+  p.push("C "+P(268,232)+" "+P(272,320)+" "+P(250,372),
+         "C "+P(244,388)+" "+P(232,398)+" "+P(224,402),
+         "Q "+P(164,414)+" "+P(104,400)+" Z");
   return p.join(" ");
+}
+/* 検出した手のひらに、手型を重ねるための変換 */
+function guideTf(){
+  var P=state.palm; if(!P) return null;
+  var g=GUIDE_PALM, sx=(P.R-P.L)/(g.R-g.L), sy=(P.B-P.T)/(g.B-g.T);
+  if(P.thumb==="left") return function(x,y){ return [P.L+(x-g.L)*sx, P.T+(y-g.T)*sy]; };
+  return function(x,y){ return [P.R-(x-g.L)*sx, P.T+(y-g.T)*sy]; };   /* 左手は左右を返す */
 }
 
 /* ══ 曲線 ══ */
@@ -371,23 +387,23 @@ function palmFrame(){return state.palm||GUIDE_PALM;}
 var svg=$("palm");
 svg.innerHTML='<g id="lyPhoto"></g><path id="gFill" class="guide-fill"></path><path id="gLine" class="guide"></path>'+
   '<g id="lyFrame"></g><g id="lyLine"></g><g id="lyHd"></g><g id="lyMsg"></g>';
+$("gFill").setAttribute("d",handPath()); $("gLine").setAttribute("d",handPath());
 $("camMask").setAttribute("d","M0 0 H320 V420 H0 Z "+handPath());
 $("camLine").setAttribute("d",handPath());
-$("gFill").setAttribute("d",handPath()); $("gLine").setAttribute("d",handPath());
 
 function renderPhoto(){
   var g=$("lyPhoto"), on=!!state.photo;
   /* 写真があるときは、手型枠として外側を暗くして輪郭だけ残す */
   $("gFill").setAttribute("class", on?"framefill":"guide-fill");
   $("gLine").setAttribute("class", on?"frameguide":"guide");
-  $("gFill").setAttribute("d", on ? ("M0 0 H320 V420 H0 Z "+handPath()) : handPath());
+  var tf=guideTf();
+  $("gFill").setAttribute("d", on ? ("M0 0 H320 V420 H0 Z "+handPath(tf)) : handPath());
+  $("gLine").setAttribute("d", handPath(on?tf:null));
   $("gFill").setAttribute("fill-rule", on?"evenodd":"nonzero");
   g.innerHTML = on ? '<image href="'+state.photo+'" x="'+state.box.x+'" y="'+state.box.y+'" width="'+state.box.w+
     '" height="'+state.box.h+'" preserveAspectRatio="none"></image>' : "";
   var f=state.palm, fr=$("lyFrame");
-  fr.innerHTML = f ? '<rect class="frame" x="'+f.L.toFixed(1)+'" y="'+f.T.toFixed(1)+'" width="'+(f.R-f.L).toFixed(1)+
-    '" height="'+(f.B-f.T).toFixed(1)+'" rx="6"></rect><text class="frame-lbl" x="'+f.L.toFixed(1)+'" y="'+(f.T-6).toFixed(1)+
-    '">palm '+(f.thumb==="left"?"R":"L")+'</text>' : "";
+  fr.innerHTML = f ? '<text class="frame-lbl" x="10" y="16">'+(f.thumb==="left"?"right hand":"left hand")+'</text>' : "";
 }
 function renderLines(animate){
   var ln="",hd="", R=COARSE?9:7, RT=COARSE?18:13;
@@ -398,7 +414,7 @@ function renderLines(animate){
     for(var j=0;j<3;j++){
       var cx=p[j][0].toFixed(1), cy=p[j][1].toFixed(1);
       /* 指で触れる範囲を、見た目の点より大きく取る */
-      hd+='<circle class="hd" data-k="'+k+'" data-i="'+j+'" cx="'+cx+'" cy="'+cy+'" r="'+RT+'" fill="transparent"></circle>';
+      hd+='<circle class="hd hit" data-k="'+k+'" data-i="'+j+'" cx="'+cx+'" cy="'+cy+'" r="'+RT+'" fill="transparent"></circle>';
       if(on && !state.photo) hd+='<circle class="ring on" cx="'+cx+'" cy="'+cy+'" r="13"></circle>';
       hd+='<circle class="hd'+dim+'" data-k="'+k+'" data-i="'+j+'" cx="'+cx+'" cy="'+cy+
         '" r="'+(j===1?R-1.5:R)+'" fill="'+m.c+'"><title>'+m.n+(j===0?"の始点":j===1?"の途中":"の終点")+'（ドラッグで調整）</title></circle>';
