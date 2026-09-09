@@ -21,37 +21,50 @@ body{
   background-attachment:fixed; color:var(--text); font-family:var(--sans);
   font-size:15px; line-height:1.9; -webkit-text-size-adjust:100%; min-height:100vh;
 }
-.wrap{max-width:1120px; margin:0 auto; padding:44px 20px 72px}
+.app{max-width:560px; margin:0 auto; padding:18px 14px 56px; display:flex; flex-direction:column; gap:14px}
 h1,h2,h3{font-family:var(--serif); font-weight:500; text-wrap:balance; margin:0}
 .roman{font-family:var(--roman); font-style:italic; font-weight:300; letter-spacing:.34em; text-transform:uppercase}
 
-/* ── header ── */
-header{text-align:center; margin-bottom:40px}
-header .roman{font-size:12px; color:var(--gold-dim); display:block; margin-bottom:14px}
-header h1{font-size:clamp(30px,6vw,46px); letter-spacing:.28em; text-indent:.28em; color:var(--text)}
-header h1 em{font-style:normal; color:var(--gold)}
-.rule{height:1px; margin:20px auto 0; max-width:340px;
-  background:linear-gradient(90deg,transparent,var(--gold-glow),transparent); opacity:.7}
-.rule.wide{max-width:none; margin:0}
-header p{color:var(--muted); font-size:13.5px; max-width:46ch; margin:18px auto 0}
+/* ── 見出し ── */
+.bar{text-align:center; padding:4px 0 0}
+.bar .roman{display:block; font-size:10px; color:var(--gold-dim); letter-spacing:.3em; margin-bottom:7px}
+.bar h1{font-size:27px; letter-spacing:.22em; text-indent:.22em}
+.bar h1 em{font-style:normal; color:var(--gold)}
 
-/* ── plates ── */
-.cols{display:grid; grid-template-columns:minmax(0,1.35fr) minmax(0,1fr); gap:20px; align-items:start}
-@media (max-width:880px){ .cols{grid-template-columns:minmax(0,1fr)} }
+/* ── 掌の図と状態 ── */
+.stage-wrap{display:flex; flex-direction:column; gap:9px}
+.chips{display:flex; gap:6px; flex-wrap:wrap; justify-content:center}
+.chip-d{display:inline-flex; align-items:center; gap:6px; font-size:11.5px; letter-spacing:.06em;
+  padding:5px 11px; border:1px solid var(--gold-line); border-radius:99px; color:var(--muted)}
+.note-line{font-size:12.5px; color:var(--faint); text-align:center; margin:0; line-height:1.75}
+.note-line b{color:var(--warn)}
+
+/* ── 操作 ── */
+.acts{display:grid; gap:9px}
+.two{display:grid; grid-template-columns:1fr 1fr; gap:9px}
+
+/* ── 折りたたみ ── */
+.more{border:1px solid var(--gold-line); border-radius:3px;
+  background:linear-gradient(160deg,rgba(255,255,255,.05),rgba(255,255,255,.015))}
+.more>summary{list-style:none; cursor:pointer; padding:15px 16px; font-family:var(--serif);
+  font-size:14px; letter-spacing:.16em; color:var(--text); display:flex; justify-content:space-between; align-items:center}
+.more>summary::-webkit-details-marker{display:none}
+.more>summary::after{content:"＋"; color:var(--gold-dim); font-size:12px}
+.more[open]>summary::after{content:"－"}
+.more>summary:focus-visible{outline:1px solid var(--gold); outline-offset:-3px}
+.more-bd{padding:2px 16px 18px}
+
 .plate{background:linear-gradient(160deg,rgba(255,255,255,.055),rgba(255,255,255,.018));
   border:1px solid var(--gold-line); border-radius:3px; position:relative}
-.plate-hd{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:13px 16px}
-.plate-hd h2{font-size:14px; letter-spacing:.22em; color:var(--text)}
-.plate-hd .roman{font-size:10px; color:var(--faint); letter-spacing:.26em}
-.plate-bd{padding:16px}
 .hr{height:1px; background:linear-gradient(90deg,rgba(217,181,101,.03),var(--gold-line) 20%,var(--gold-line) 80%,rgba(217,181,101,.03))}
 
 /* ── stage ── */
-.stage{position:relative; padding:12px}
+.stage{position:relative; display:flex; justify-content:center}
 .stage::before{content:""; position:absolute; inset:14%; border-radius:50%;
   background:radial-gradient(circle,rgba(217,181,101,.13),transparent 68%); pointer-events:none}
-svg.palm{display:block; width:100%; aspect-ratio:320/420; touch-action:none; position:relative;
-  border-radius:2px; background:radial-gradient(circle at 50% 42%, #1D1A2C, #100E19 78%)}
+svg.palm{display:block; width:min(100%, calc(54vh * 320 / 420)); aspect-ratio:320/420; touch-action:none;
+  position:relative; border-radius:3px; border:1px solid var(--gold-line);
+  background:radial-gradient(circle at 50% 42%, #1D1A2C, #100E19 78%)}
 .guide{fill:none; stroke:rgba(217,181,101,.30); stroke-width:1.4; stroke-dasharray:4 6}
 .guide-fill{fill:rgba(217,181,101,.035)}
 .frame{fill:none; stroke:rgba(217,181,101,.45); stroke-width:1; stroke-dasharray:2 4}
@@ -67,11 +80,11 @@ svg.palm{display:block; width:100%; aspect-ratio:320/420; touch-action:none; pos
 .animate .ln{animation:draw .95s cubic-bezier(.32,.8,.3,1) both}
 
 /* ── controls ── */
-.btn{display:inline-flex; align-items:center; justify-content:center; gap:8px; font:inherit; font-size:13px;
-  letter-spacing:.12em; padding:11px 18px; border-radius:2px; cursor:pointer; color:var(--text);
+.btn{display:inline-flex; align-items:center; justify-content:center; gap:8px; font:inherit; font-size:14px;
+  letter-spacing:.12em; min-height:50px; padding:12px 18px; border-radius:3px; cursor:pointer; color:var(--text);
   background:rgba(255,255,255,.04); border:1px solid var(--gold-line); transition:background .2s,border-color .2s}
 .btn:hover{background:rgba(217,181,101,.10); border-color:rgba(217,181,101,.42)}
-.btn-main{width:100%; padding:15px 18px; font-size:14.5px; letter-spacing:.24em; color:#171020; font-weight:500;
+.btn-main{width:100%; min-height:56px; padding:15px 18px; font-size:15px; letter-spacing:.24em; color:#171020; font-weight:500;
   background:linear-gradient(135deg,#E9CB84,#C79E4C); border-color:transparent}
 .btn-main:hover{background:linear-gradient(135deg,#F2D794,#D2AA55); border-color:transparent}
 .btn[disabled]{opacity:.4; cursor:default}
@@ -92,7 +105,7 @@ svg.palm{display:block; width:100%; aspect-ratio:320/420; touch-action:none; pos
 .pastebox:focus{outline:1px solid var(--gold); outline-offset:2px}
 input[type=range]{width:100%; accent-color:var(--gold)}
 .steps{display:grid; grid-template-columns:repeat(3,1fr); gap:6px}
-.steps button{font:inherit; font-family:var(--serif); font-size:12.5px; letter-spacing:.1em; padding:10px 2px;
+.steps button{font:inherit; font-family:var(--serif); font-size:13px; letter-spacing:.08em; padding:13px 2px; min-height:48px;
   cursor:pointer; background:rgba(255,255,255,.03); border:1px solid var(--gold-line); border-radius:2px; color:inherit}
 .steps button[aria-pressed="true"]{background:rgba(217,181,101,.12); border-color:currentColor}
 .dim{opacity:.28}
@@ -101,8 +114,8 @@ input[type=range]{width:100%; accent-color:var(--gold)}
 .ring.on{animation:pulse 1.8s ease-in-out infinite}
 .rare-lbl{font-size:8.5px; letter-spacing:.12em; font-family:var(--serif)}
 .rares{display:grid; gap:2px}
-.rares .r{display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:9px;
-  padding:7px 2px; border-top:1px solid rgba(217,181,101,.10); cursor:pointer}
+.rares .r{display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:10px;
+  padding:12px 2px; min-height:46px; border-top:1px solid rgba(217,181,101,.10); cursor:pointer}
 .rares .r:first-child{border-top:0}
 .rares .sw{width:9px; height:9px; border-radius:50%; border:1px solid currentColor}
 .rares .r[aria-pressed="true"] .sw{background:currentColor}
@@ -114,7 +127,7 @@ input[type=range]{width:100%; accent-color:var(--gold)}
 .stack{display:grid; gap:9px}
 .lbl{font-family:var(--roman); font-size:10px; letter-spacing:.28em; color:var(--faint); display:block; margin-bottom:10px}
 .seg{display:flex; border:1px solid var(--gold-line); border-radius:2px; overflow:hidden}
-.seg button{flex:1; font:inherit; font-size:12.5px; padding:9px 4px; letter-spacing:.08em; cursor:pointer;
+.seg button{flex:1; font:inherit; font-size:13px; padding:13px 4px; min-height:46px; letter-spacing:.08em; cursor:pointer;
   background:transparent; border:0; color:var(--muted)}
 .seg button + button{border-left:1px solid var(--gold-line)}
 .seg button[aria-pressed="true"]{background:rgba(217,181,101,.14); color:var(--gold)}
@@ -130,7 +143,7 @@ input[type=range]{width:100%; accent-color:var(--gold)}
 .dot{display:inline-block; width:5px; height:5px; border-radius:50%; margin-right:6px; vertical-align:middle}
 
 /* ── verdict ── */
-.verdict{margin-top:20px}
+.verdict{margin-top:0}
 .vd-top{display:flex; gap:24px; align-items:center; justify-content:space-between; flex-wrap:wrap; padding:22px 24px}
 .vd-top h2{font-size:19px; letter-spacing:.3em}
 .vd-top .meta{font-size:11px; color:var(--faint); letter-spacing:.1em; margin-top:5px}
@@ -142,15 +155,15 @@ input[type=range]{width:100%; accent-color:var(--gold)}
 .lead b{display:block; font-family:var(--serif); font-size:18.5px; font-weight:500; letter-spacing:.06em;
   color:var(--gold); margin-bottom:8px; line-height:1.7}
 .lead p{margin:0; color:var(--muted); font-size:13.5px}
-.axes{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:4px 28px; padding:20px 24px}
-.ax{display:grid; grid-template-columns:4.6em 1fr 2.6em; align-items:center; gap:11px; padding:6px 0}
+.axes{display:grid; grid-template-columns:1fr 1fr; gap:14px 18px; padding:18px}
+.ax{display:grid; grid-template-columns:1fr auto; grid-template-areas:"n v" "t t"; align-items:center; gap:3px 8px}
+.ax .n{grid-area:n} .ax .v{grid-area:v; font-size:17px} .ax .tr{grid-area:t; height:4px}
 .ax .n{font-size:12.5px; color:var(--muted); letter-spacing:.1em}
 .ax .tr{display:block; height:3px; background:rgba(255,255,255,.08); border-radius:3px; overflow:hidden}
 .ax .fl{display:block; height:100%; border-radius:3px; transition:width .7s cubic-bezier(.22,.9,.3,1)}
 .ax .v{text-align:right; font-family:var(--serif); font-size:15px; font-variant-numeric:tabular-nums; color:var(--text)}
 .finds{display:grid; grid-template-columns:1fr}
-@media (min-width:600px){ .finds{grid-template-columns:1fr 1fr} }
-@media (min-width:960px){ .finds{grid-template-columns:repeat(4,1fr)} }
+@media (min-width:480px){ .finds{grid-template-columns:1fr 1fr} }
 .find{padding:17px 20px; border-top:1px solid rgba(217,181,101,.13); border-left:2px solid currentColor}
 .find .t{display:flex; align-items:baseline; gap:9px; margin-bottom:6px}
 .find .t b{font-family:var(--serif); font-size:14.5px; letter-spacing:.1em; font-weight:500}
@@ -171,141 +184,107 @@ input[type=range]{width:100%; accent-color:var(--gold)}
 .toast.on{opacity:1; transform:translateX(-50%) translateY(0)}
 @media (prefers-reduced-motion:reduce){ *{animation:none !important; transition:none !important} }
 
-/* ── スマホ ── */
-@media (max-width:880px){
-  .wrap{display:flex; flex-direction:column; gap:16px; padding:26px 14px 56px}
-  .cols{display:contents}
-  .wrap > header{order:0; margin-bottom:0}
-  .cols > .plate{order:1}          /* 掌紋 */
-  .verdict{order:2; margin-top:0}  /* 鑑定書を写真のすぐ下に */
-  .cols > aside{order:3}
-  .wrap > .foot{order:4; margin-top:0}
-  header p{margin-top:14px}
+/* ── 画面幅ごとの詰め ── */
+@media (max-width:400px){
+  .app{padding:14px 11px 48px; gap:12px}
+  .bar h1{font-size:24px}
+  .vd-top{padding:16px 14px 12px}
+  .lead{padding:14px}
+  .axes{padding:14px}
+  .find{padding:14px}
+  .closing{padding:14px}
+  .more-bd{padding:2px 13px 16px}
 }
-@media (max-width:600px){
-  header h1{letter-spacing:.16em; text-indent:.16em}
-  .plate-bd{padding:14px}
-  .vd-top{padding:18px 16px 14px; gap:14px}
-  .vd-top h2{font-size:18px; letter-spacing:.22em}
-  .score b{font-size:46px}
-  .lead{padding:16px}
-  .lead b{font-size:17px; line-height:1.75}
-  .lead p{font-size:13.5px}
-  .axes{grid-template-columns:1fr 1fr; gap:14px 18px; padding:16px}
-  .ax{grid-template-columns:1fr auto; grid-template-areas:"n v" "t t"; gap:3px 8px; padding:0}
-  .ax .n{grid-area:n} .ax .v{grid-area:v; font-size:17px} .ax .tr{grid-area:t; height:4px}
-  .find{padding:15px 16px}
-  .find .t b{font-size:15px}
-  .find p{font-size:13.5px; line-height:1.9}
-  .closing{padding:16px}
-  .closing p{font-size:14px}
-  .foot{font-size:11.5px; line-height:1.9}
+@media (min-width:560px){
+  .app{padding:26px 16px 64px}
+  .bar h1{font-size:32px}
 }
 </style>
 
-<div class="wrap">
-  <header>
+<div class="app">
+  <header class="bar">
     <span class="roman">Palmistry Studio</span>
     <h1>手相<em>鑑定</em>所</h1>
-    <div class="rule"></div>
-    <p>写真から手の輪郭と三大線を自動で読み取り、線の形を実測して鑑定書を組みます。写真が使えない画面でも、線を手で合わせれば同じ鑑定が出ます。</p>
   </header>
 
-  <div class="cols">
-    <section class="plate">
-      <div class="plate-hd"><h2>掌紋</h2><span class="roman" id="stageTag">no image</span></div>
-      <div class="hr"></div>
-      <div class="stage">
-        <svg class="palm" id="palm" viewBox="0 0 320 420" aria-label="手のひらの図。検出された三本の線。点をドラッグして手で直せます。"></svg>
-      </div>
-    </section>
+  <section class="stage-wrap">
+    <div class="stage">
+      <svg class="palm" id="palm" viewBox="0 0 320 420" aria-label="手のひらの図。検出された三本の線。点をドラッグして手で直せます。"></svg>
+    </div>
+    <div class="chips" id="det"></div>
+    <p class="note-line" id="detNote">写真アプリで手のひらを撮って、下のボタンから読み込んでください。</p>
+  </section>
 
-    <aside class="stack" style="gap:20px">
-      <div class="plate">
-        <div class="plate-hd"><h2>撮影</h2><span class="roman">capture</span></div>
-        <div class="hr"></div>
-        <div class="plate-bd stack">
-          <div class="env" id="env"></div>
-          <span class="pick"><span class="btn btn-main">写真アプリで撮る</span>
-            <input type="file" id="fileShot" accept="image/*" capture="environment" aria-label="カメラで撮影する"></span>
-          <span class="pick"><span class="btn">保存済みの写真から選ぶ</span>
-            <input type="file" id="filePick" accept="image/*" aria-label="写真を選ぶ"></span>
-          <div id="fitWrap" hidden>
-            <span class="lbl">手型枠に合わせる</span>
-            <input type="range" id="zoom" min="60" max="260" value="100" aria-label="写真の大きさ">
-            <p class="hint" style="margin-top:6px">写真を指でドラッグして動かせます。手のひらを枠に重ねてください。</p>
-          </div>
-          <button class="btn" id="btnClip">コピーした写真を貼り付ける</button>
-          <div class="pastebox" id="pasteBox" contenteditable="true" role="textbox" aria-label="ここに写真を貼り付け"></div>
-          <div class="stack" style="grid-auto-flow:column; gap:9px">
-            <button class="btn" id="again" disabled>再検出</button>
-            <button class="btn" id="clear" disabled>写真を外す</button>
-          </div>
-          <p class="hint">写真アプリで手のひらを撮ってから読み込んでください。<b style="color:var(--muted)">指を上に向けて</b>手のひら全体が入るように、明るい場所で。背景は手と色の違うものが写ると精度が上がります。多少の傾きは自動でまっすぐに直します。パソコンなら、画像をこの画面にドラッグするか貼り付け（⌘V）でも読み込めます。写真は端末の中だけで処理され、どこにも送信されません。</p>
-          <p class="hint" id="camErr" hidden style="color:var(--warn)"></p>
-        </div>
-      </div>
-
-      <div class="plate">
-        <div class="plate-hd"><h2>手で合わせる</h2><span class="roman">by hand</span></div>
-        <div class="hr"></div>
-        <div class="plate-bd">
-          <p class="hint" style="margin:0 0 12px">写真が使えない画面でも、こちらで鑑定できます。自分の手のひらを見ながら、三本の線を順に合わせてください。</p>
-          <div class="steps" role="group" aria-label="なぞる線を選ぶ">
-            <button data-k="life" class="c-life">壱　生命線</button>
-            <button data-k="head" class="c-head">弐　知能線</button>
-            <button data-k="heart" class="c-heart">参　感情線</button>
-          </div>
-          <p class="hint" id="stepHint"></p>
-        </div>
-      </div>
-
-      <div class="plate">
-        <div class="plate-hd"><h2>読み取り</h2><span class="roman">detection</span></div>
-        <div class="hr"></div>
-        <div class="plate-bd">
-          <div class="det" id="det"></div>
-          <p class="hint" id="detNote">まだ写真がありません。標準の手の形で鑑定を出しています。</p>
-          <div class="seg" id="diagSeg" role="group" aria-label="診断表示" style="margin-top:12px">
-            <button data-d="off" aria-pressed="true">診断オフ</button>
-            <button data-d="mask" aria-pressed="false">手の範囲</button>
-            <button data-d="resp" aria-pressed="false">線の反応</button>
-          </div>
-          <p class="hint" id="diagNote">「手の範囲」は、アプリが手だと判断した部分。「線の反応」は、線らしさの強さ。うまく読めないときは、ここを見ると原因が分かります。</p>
-        </div>
-      </div>
-
-      <div class="plate">
-        <div class="plate-hd"><h2>珍しい手相</h2><span class="roman">rare marks</span></div>
-        <div class="hr"></div>
-        <div class="plate-bd">
-          <p class="hint" style="margin:0 0 12px">自分の手のひらを見て、あてはまるものを押してください。押すと確かめ方が出ます。選んだものは鑑定に反映されます。<br>実物の手のひらは細かいシワが多く、写真からでは本物の補助線と見分けがつきません（実測で深さがほぼ同じ）。<b style="color:var(--muted)">当たらない自動判定を出すより、目で見て選ぶほうが確実</b>なので、ここは手動です。</p>
-          <div class="rares" id="rares"></div>
-        </div>
-      </div>
-
-      <div class="plate">
-        <div class="plate-hd"><h2>どちらの手</h2><span class="roman">hand</span></div>
-        <div class="hr"></div>
-        <div class="plate-bd">
-          <div class="seg" role="group" aria-label="鑑定する手">
-            <button id="handR" aria-pressed="true">右手・後天</button>
-            <button id="handL" aria-pressed="false">左手・先天</button>
-          </div>
-          <p class="hint" id="handNote">右手は、これまでの選択で後から作られた「いまのあなた」を映すとされます。</p>
-        </div>
-      </div>
-
-      <div class="stack" style="grid-auto-flow:column; gap:9px">
-        <button class="btn" id="reset">線を戻す</button>
-        <button class="btn" id="copy">結果を写す</button>
-      </div>
-    </aside>
-  </div>
+  <section class="acts">
+    <span class="pick"><span class="btn btn-main">写真アプリで撮る</span>
+      <input type="file" id="fileShot" accept="image/*" capture="environment" aria-label="カメラで撮影する"></span>
+    <span class="pick"><span class="btn">保存済みの写真から選ぶ</span>
+      <input type="file" id="filePick" accept="image/*" aria-label="写真を選ぶ"></span>
+    <div class="two">
+      <button class="btn" id="again" disabled>もう一度読む</button>
+      <button class="btn" id="clear" disabled>写真を外す</button>
+    </div>
+    <div id="fitWrap" hidden>
+      <span class="lbl">手型枠に合わせる</span>
+      <input type="range" id="zoom" min="60" max="260" value="100" aria-label="写真の大きさ">
+      <p class="hint" style="margin-top:6px">写真を指でドラッグして動かせます。手のひらを枠に重ねてください。</p>
+    </div>
+    <p class="hint" id="camErr" hidden style="color:var(--warn)"></p>
+    <p class="hint">明るい場所で、<b style="color:var(--muted)">指を上に向けて</b>手のひら全体が入るように撮ってください。多少の傾きは自動で直します。写真は端末の中だけで処理され、どこにも送信されません。</p>
+  </section>
 
   <section class="plate verdict" id="verdict" aria-live="polite"></section>
 
-  <p class="foot">娯楽としての手相の読み解きです。健康・お金・進路の判断材料には使わないでください。線の検出は写真の明暗差から行うため、照明・手の角度・肌の色によって外れることがあります。確度が「低」と出たときは、撮り直すか、点をドラッグして手で直してください。数値はすべて、その線の形から計算した実測値です。</p>
+  <details class="more" id="mHand">
+    <summary>線を手で直す</summary>
+    <div class="more-bd">
+      <p class="hint" style="margin:0 0 12px">写真がなくても、ここで線を合わせれば鑑定できます。合わせる線を選んで、図の点をドラッグしてください。</p>
+      <div class="steps" role="group" aria-label="なぞる線を選ぶ">
+        <button data-k="life" class="c-life">壱　生命線</button>
+        <button data-k="head" class="c-head">弐　知能線</button>
+        <button data-k="heart" class="c-heart">参　感情線</button>
+      </div>
+      <p class="hint" id="stepHint"></p>
+      <button class="btn" id="reset" style="width:100%">線を初期位置に戻す</button>
+    </div>
+  </details>
+
+  <details class="more" id="mRare">
+    <summary>珍しい手相を選ぶ</summary>
+    <div class="more-bd">
+      <p class="hint" style="margin:0 0 12px">自分の手のひらを見て、あてはまるものを押してください。押すと確かめ方が出ます。選んだものは鑑定に反映されます。<br>実物の手のひらは細かいシワが多く、写真からでは本物の補助線と見分けがつきません（実測で深さがほぼ同じ）。<b style="color:var(--muted)">当たらない自動判定を出すより、目で見て選ぶほうが確実</b>なので、ここは手動です。</p>
+      <div class="rares" id="rares"></div>
+    </div>
+  </details>
+
+  <details class="more" id="mMisc">
+    <summary>どちらの手・その他</summary>
+    <div class="more-bd">
+      <span class="lbl">鑑定する手</span>
+      <div class="seg" role="group" aria-label="鑑定する手">
+        <button id="handR" aria-pressed="true">右手・後天</button>
+        <button id="handL" aria-pressed="false">左手・先天</button>
+      </div>
+      <p class="hint" id="handNote">右手は、これまでの選択で後から作られた「いまのあなた」を映すとされます。</p>
+
+      <span class="lbl" style="margin-top:18px">ほかの読み込み方</span>
+      <button class="btn" id="btnClip" style="width:100%">コピーした写真を貼り付ける</button>
+      <div class="pastebox" id="pasteBox" contenteditable="true" role="textbox" aria-label="ここに写真を貼り付け"></div>
+      <div class="env" id="env" style="margin-top:12px"></div>
+
+      <span class="lbl" style="margin-top:18px">診断表示</span>
+      <div class="seg" id="diagSeg" role="group" aria-label="診断表示">
+        <button data-d="off" aria-pressed="true">オフ</button>
+        <button data-d="mask" aria-pressed="false">手の範囲</button>
+        <button data-d="resp" aria-pressed="false">線の反応</button>
+      </div>
+      <p class="hint" id="diagNote">読み取りが合わないときは、ここを見ると原因が分かります。「手の範囲」は手だと判断した部分、「線の反応」は線らしさの強さ。</p>
+
+      <button class="btn" id="copy" style="width:100%; margin-top:18px">鑑定結果を写す</button>
+    </div>
+  </details>
+
+  <p class="foot">娯楽としての手相の読み解きです。健康・お金・進路の判断材料には使わないでください。線の検出は写真の明暗差から行うため、照明・手の角度・肌の色によって外れることがあります。ずれているときは「線を手で直す」で合わせてください。数値はすべて、その線の形から計算した実測値です。</p>
 </div>
 <div class="toast" id="toast" role="status"></div>
 <script>
@@ -447,6 +426,7 @@ function renderDiag(){
     '" height="'+(f.B-f.T).toFixed(1)+'" fill="none" stroke="#7FC8C0" stroke-width="1.4" stroke-dasharray="4 3"></rect>';
   ly.innerHTML='<image href="'+c.toDataURL()+'" x="0" y="0" width="320" height="420" preserveAspectRatio="none"></image>'+extra;
 }
+function setTag(t){ var e=$("stageTag"); if(e) e.textContent=t; }
 function msg(text,cls){
   $("lyMsg").innerHTML = text ? '<text class="'+(cls||"note")+'" x="160" y="'+(cls==="busy"?214:406)+'" text-anchor="middle">'+text+'</text>' : "";
 }
@@ -1202,18 +1182,17 @@ function guideRare(k){
 
 /* ══ 読み取り状況 ══ */
 function renderDet(){
-  var c=state.conf, rows="";
-  var head='<div class="det-row"><span class="nm">手のひら</span><span class="mtr"><i style="width:'+
-    (state.palm?100:0)+'%;background:var(--ok)"></i></span><span class="st">'+
-    (state.palm?'<span class="dot" style="background:var(--ok)"></span>検出':'<span class="dot" style="background:var(--faint)"></span>未検出')+'</span></div>';
-  for(var i=0;i<KEYS.length;i++){
-    var k=KEYS[i], v=c?c[k]:0;
+  var c=state.conf, h="";
+  var dot=function(col){return '<span class="dot" style="background:'+col+'"></span>';};
+  if(state.palm) h+='<span class="chip-d">'+dot("var(--ok)")+'手のひら 検出</span>';
+  else if(state.img) h+='<span class="chip-d">'+dot("var(--bad)")+'手のひら 未検出</span>';
+  else h+='<span class="chip-d">'+dot("var(--faint)")+'写真なし・標準の手</span>';
+  if(c) for(var i=0;i<KEYS.length;i++){
+    var k=KEYS[i], v=c[k]||0;
     var lv=v>=2.0?["高","var(--ok)"]:v>=1.45?["中","var(--warn)"]:v>0?["低","var(--bad)"]:["—","var(--faint)"];
-    rows+='<div class="det-row"><span class="nm" style="color:'+META[k].c+'">'+META[k].n+'</span><span class="mtr"><i style="width:'+
-      Math.round(clamp((v-1)/1.4,0,1)*100)+'%;background:'+lv[1]+'"></i></span><span class="st"><span class="dot" style="background:'+
-      lv[1]+'"></span>'+lv[0]+'</span></div>';
+    h+='<span class="chip-d" style="color:'+META[k].c+'">'+dot(lv[1])+META[k].n+' <b style="font-weight:400;color:'+lv[1]+'">'+lv[0]+'</b></span>';
   }
-  $("det").innerHTML=head+rows;
+  $("det").innerHTML=h;
 }
 
 /* ══ 写真の読み込みと検出 ══ */
@@ -1236,7 +1215,7 @@ function usePhoto(url){
       state.box={x:(VB.w-bw)/2,y:(VB.h-bh)/2,w:bw,h:bh};
       $("again").disabled=false; $("clear").disabled=false; camErr("");
       $("fitWrap").hidden=false; $("zoom").value=100;
-      $("stageTag").textContent="analysing";
+      setTag("analysing");
       renderPhoto(); msg("読み取り中","busy");
       setTimeout(runDetect,40);
     };
@@ -1251,7 +1230,7 @@ function runDetect(){
     state.palm=null; state.conf=null; state.depth=null; state.rot=null; GRAY=null; COMP=null;
     state.lines=JSON.parse(JSON.stringify(DEFAULTS)); state.rare=null; state.rareOn={}; state.rareLines={};
     renderRare();
-    $("stageTag").textContent="not found";
+    setTag("not found");
     $("detNote").textContent="手のひらを検出できませんでした。明るい場所で、指を上に向けて手のひら全体が入るように撮り直すか、点をドラッグして手で線を合わせてください。";
     msg("手のひらを検出できませんでした");
     renderPhoto(); renderLines(false); renderDet(); renderDiag(); verdict(); return;
@@ -1270,13 +1249,14 @@ function runDetect(){
   renderRare();
   state.depth=lineDepth();
   var lows=KEYS.filter(function(k){return res.conf[k]<1.45;});
-  $("stageTag").textContent=(frame.thumb==="left"?"right hand":"left hand");
+  setTag((frame.thumb==="left"?"right hand":"left hand"));
   $("detNote").innerHTML = lows.length===0
     ? "三本とも読み取れました。ずれている線があれば、点をドラッグすると鑑定に反映されます。"
     : "<b style='color:var(--warn)'>"+lows.map(function(k){return META[k].n;}).join("・")+"</b> の確度が低めです。点をドラッグして合わせるか、撮り直してください。";
   msg("");
+  var mh=$("mHand"); if(mh) mh.open = lows.length>0;
   renderPhoto(); renderLines(true); renderDet(); renderDiag(); verdict();
-  if(window.innerWidth<=880 && $("verdict").scrollIntoView)
+  if($("verdict").scrollIntoView)
     setTimeout(function(){ $("verdict").scrollIntoView({behavior:"smooth", block:"start"}); },350);
 }
 
@@ -1384,7 +1364,7 @@ $("clear").addEventListener("click",function(){
   state.lines=JSON.parse(JSON.stringify(DEFAULTS));
   $("fileShot").value=""; $("filePick").value=""; $("again").disabled=true; $("clear").disabled=true;
   $("fitWrap").hidden=true;
-  $("stageTag").textContent="no image";
+  setTag("no image");
   $("detNote").textContent="まだ写真がありません。標準の手の形で鑑定を出しています。";
   msg(""); renderPhoto(); renderLines(false); renderDet(); verdict();
 });
